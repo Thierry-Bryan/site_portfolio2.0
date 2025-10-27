@@ -1,0 +1,26 @@
+<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Motif halftone - petits points clairs -->
+    <pattern id="halftone" x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
+      <circle cx="10" cy="10" r="2.5" fill="white" />
+    </pattern>
+    
+    <!-- Gradient de densité radial inversé -->
+    <radialGradient id="densityGradient" cx="50%" cy="50%" r="50%" >
+      <stop offset="0%" stop-color="rgba(206, 206, 206, 0.1)" />
+      <stop offset="30%" stop-color="rgba(185, 185, 185, 0.3)"/>
+      <stop offset="60%" stop-color="rgba(192, 192, 192, 0.6)"/>
+      <stop offset="80%" stop-color="rgba(188, 188, 188, 0.8)"/>
+      <stop offset="100%" stop-color="rgba(187, 187, 187, 1)"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Fond noir -->
+  <rect width="100%" height="100%" fill="black" opacity="0.5"/>
+  
+  <!-- Motif halftone -->
+  <rect width="100%" height="100%" fill="url(#halftone)" opacity="0.5"/>
+  
+  <!-- Gradient de densité par-dessus -->
+  <rect width="100%" height="100%" fill="url(#densityGradient)" opacity="1"/>
+</svg>
