@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import BackgroundDynamic from "../components/BackgroundDynamic.astro";
 import Hero from "../components/Hero.astro";
+import Header from "../components/Header.astro";
 ---
 
 <!doctype html>
@@ -13,7 +14,8 @@ import Hero from "../components/Hero.astro";
     <meta name="generator" content={Astro.generator} />
     <title>Portfolio</title>
   </head>
-  <body>
+  <body class="bg-var[(--color-blue)]">
+    <Header />
     <Hero />
     <slot />
   </body>

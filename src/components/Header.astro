@@ -1,0 +1,98 @@
+---
+import Button from "./Button.astro";
+
+interface Props {
+  theme?: "cyberpunk" | "ocean" | "sunset" | "forest" | "fire";
+}
+
+const { theme = "fire" } = Astro.props;
+---
+
+<header
+  id="header"
+  class={`w-full px-6 py-4 flex items-center justify-between fixed top-0 z-50 transition-all duration-300 theme-${theme}`}
+>
+  <style>
+    #header {
+      --text-color: var(--color-white);
+    }
+
+    #header.scrolled {
+      --text-color: var(--color-black);
+    }
+
+    .logo-link {
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      color: var(--text-color);
+    }
+
+    .logo-link:hover {
+      transform: scale(1.05) rotate(-1deg);
+      text-shadow:
+        0 0 20px var(--accent-primary),
+        3px 3px 0 var(--accent-primary),
+        6px 6px 0 var(--accent-secondary);
+      filter: drop-shadow(0 5px 15px var(--accent-glow));
+    }
+
+    .nav-link {
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      color: var(--text-color);
+    }
+
+    .nav-link:hover {
+      transform: scale(1.05) rotate(-1deg);
+      text-shadow:
+        0 0 15px var(--accent-primary),
+        2px 2px 0 var(--accent-primary),
+        4px 4px 0 var(--accent-secondary);
+      filter: drop-shadow(0 3px 10px var(--accent-glow));
+    }
+  </style>
+  <!-- Nom -->
+  <a href="/" class="logo-link font-primary text-4xl tracking-tight">
+    BRYAN THIERRY
+  </a>
+
+  <!-- Liens (desktop) -->
+  <nav class="hidden md:flex items-center gap-10">
+    <a href="#services" class="nav-link font-primary uppercase text-xl"
+      >MES SERVICES</a
+    >
+    <a href="#projects" class="nav-link font-primary uppercase text-xl"
+      >MES PROJETS</a
+    >
+    <a href="#about" class="nav-link font-primary uppercase text-xl">A PROPOS</a
+    >
+  </nav>
+
+  <!-- Bouton -->
+  <div class="ml-4">
+    <Button href="#contact" aria-label="Me contacter" theme={theme}
+      >ME CONTACTER</Button
+    >
+  </div>
+</header>
+
+<script>
+  function updateHeaderStyle() {
+    const header = document.getElementById("header");
+    if (!header) return;
+
+    const heroHeight = window.innerHeight;
+    const scrolled = window.scrollY > heroHeight - 100;
+
+    if (scrolled) {
+      // Texte noir quand on scroll (fond clair de la page)
+      header.classList.add("scrolled");
+    } else {
+      // Texte blanc en haut (fond sombre du hero)
+      header.classList.remove("scrolled");
+    }
+  }
+
+  window.addEventListener("scroll", updateHeaderStyle);
+  updateHeaderStyle();
+</script>

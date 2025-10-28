@@ -1,19 +1,29 @@
 ---
-// Hero Component avec Tailwind CSS et DaisyUI
+import Button from './Button.astro';
 ---
 
 <div class="hero min-h-screen w-screen relative overflow-hidden bg-black">
   <!-- Image héro -->
-  <div class="hero-content absolute inset-0 z-10">
-    <img 
-      src="/hero/hero.png" 
-      alt="Hero Image" 
-      class="absolute inset-0 w-full h-full object-cover object-center brightness-75 contrast-110"
-    />
-        
-    <!-- Contenu optionnel par-dessus l'image -->
-    <div class="relative z-30 flex flex-col items-center justify-center text-center text-white p-8 md:p-4">
-      <!-- Vous pouvez ajouter du contenu ici -->
+  <img
+    src="/hero/hero.png"
+    alt="Hero Image"
+    class="absolute inset-0 w-full h-full object-cover object-center brightness-90 contrast-110 z-10"
+  />
+
+  <!-- Contenu texte positionné -->
+  <div
+    class="absolute inset-0 z-30 flex items-start justify-end p-8 md:p-4 pt-20 md:pt-30 md:pr-15"
+  >
+    <div class="flex flex-col items-end">
+      <h1 class="font-primary text-[9rem] text-[var(--color-white)] text-right -rotate-2">BRYAN THIERRY</h1>
+      <div class="w-full flex justify-center">
+        <Button 
+          label="Voir mes projets" 
+          href="#projects" 
+          className="text-black transition-transform"
+          theme="fire"
+        />
+      </div>
     </div>
   </div>
 </div>

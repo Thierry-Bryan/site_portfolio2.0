@@ -1,2 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Cabin:ital,wght@0,400..700;1,400..700&display=swap');
+
 @import "tailwindcss";
 @plugin "daisyui";
+
+@theme {
+  --font-primary: Bangers, cursive;
+  --font-secondary: Cabin, sans-serif;
+
+  --color-white: #faf9f7;
+  --color-red: #D90404;
+  --color-blue: #3A86FF;
+}
+
+/* === SYSTÈME DE COULEURS DYNAMIQUES === */
+:root {
+  /* Palette par défaut */
+  --accent-primary: #ff0080;
+  --accent-secondary: #8b00ff;
+  --accent-glow: rgba(255, 0, 128, 0.3);
+  --accent-text-shadow: rgba(255, 0, 128, 0.3);
+  
+  /* Couleurs de fond */
+  --bg-primary: var(--color-white);
+  --bg-secondary: #000000;
+  --text-primary: #000000;
+  --text-secondary: var(--color-white);
+}
+body {
+  background: var(--color-white) !important;
+}
+
+/* === THÈMES PRÉDÉFINIS === */
+/* Thème Cyberpunk (défaut) */
+.theme-cyberpunk {
+  --accent-primary: #ff0080;
+  --accent-secondary: #8b00ff;
+  --accent-glow: rgba(255, 0, 128, 0.3);
+  --accent-text-shadow: rgba(255, 0, 128, 0.3);
+}
+
+/* Thème Ocean */
+.theme-ocean {
+  --accent-primary: #00ffff;
+  --accent-secondary: #0044aa;
+  --accent-glow: rgba(0, 255, 255, 0.3);
+  --accent-text-shadow: rgba(0, 255, 255, 0.3);
+}
+
+/* Thème Sunset */
+.theme-sunset {
+  --accent-primary: #ff4500;
+  --accent-secondary: #ffd700;
+  --accent-glow: rgba(255, 69, 0, 0.3);
+  --accent-text-shadow: rgba(255, 69, 0, 0.3);
+}
+
+/* Thème Forest */
+.theme-forest {
+  --accent-primary: #32cd32;
+  --accent-secondary: #006400;
+  --accent-glow: rgba(50, 205, 50, 0.3);
+  --accent-text-shadow: rgba(50, 205, 50, 0.3);
+}
+
+/* Thème Fire */
+.theme-fire {
+  --accent-primary: #ff1744;
+  --accent-secondary: #ff9800;
+  --accent-glow: rgba(255, 23, 68, 0.3);
+  --accent-text-shadow: rgba(255, 23, 68, 0.3);
+}

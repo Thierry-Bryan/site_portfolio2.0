@@ -1,0 +1,94 @@
+---
+interface Props {
+  label?: string;
+  background?: string;
+  shadowColor?: string;
+  href?: string;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+  className?: string;
+  theme?: 'cyberpunk' | 'ocean' | 'sunset' | 'forest' | 'fire';
+}
+
+const {
+  label = "Bouton",
+  background = "var(--color-white)",
+  shadowColor = "#D90404",
+  href,
+  type = "button",
+  disabled = false,
+  className = "",
+  theme = 'cyberpunk',
+} = Astro.props;
+
+const btnStyle = {
+  display: "inline-flex",
+  height: "45px",
+  padding: "0 32px",
+  justifyContent: "center",
+  alignItems: "center",
+  background: background,
+  "--shadow-color": shadowColor,
+};
+
+const btnClass = `
+  font-primary 
+  relative 
+  transition-all 
+  duration-200
+  cursor-pointer
+  btn-hover
+  theme-${theme}
+  ${className}
+`.trim();
+---
+
+<style>
+  .btn-hover {
+    box-shadow: -5px 5px 0 0 var(--shadow-color);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn-hover::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, var(--accent-primary), var(--accent-secondary));
+    transform: translate(-50%, -50%);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border-radius: 50%;
+    z-index: -1;
+  }
+  
+  .btn-hover:hover::before {
+    width: 120%;
+    height: 300%;
+  }
+  
+  .btn-hover:hover {
+    box-shadow: -5px 5px 0 0 var(--color-black);
+    mix-blend-mode: difference;
+    text-shadow: 
+      2px 2px 0 #000,
+      4px 4px 0 #333;
+    color: white;
+    filter: drop-shadow(0 8px 16px var(--accent-glow));
+  }
+</style>
+
+{
+  href ? (
+    <a {href} class={btnClass} style={btnStyle} role="button">
+      <slot>{label}</slot>
+    </a>
+  ) : (
+    <button class={btnClass} style={btnStyle} {type} {disabled}>
+      <slot>{label}</slot>
+    </button>
+  )
+}
