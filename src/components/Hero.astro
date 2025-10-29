@@ -1,11 +1,20 @@
 ---
-import Button from './Button.astro';
+import Button from "./Button.astro";
+
+interface Props {
+  theme?: "cyberpunk" | "ocean" | "sunset" | "forest" | "fire";
+}
+
+const { theme = "fire" } = Astro.props;
 ---
 
-<div class="hero min-h-screen w-screen relative overflow-hidden bg-black">
+<div
+  class="hero min-h-screen w-screen relative overflow-hidden bg-black"
+  data-theme={theme}
+>
   <!-- Image héro -->
   <img
-    src="/hero/hero.png"
+    src="/hero/hero.webp"
     alt="Hero Image"
     class="absolute inset-0 w-full h-full object-cover object-center brightness-90 contrast-110 z-10"
   />
@@ -15,13 +24,17 @@ import Button from './Button.astro';
     class="absolute inset-0 z-30 flex items-start justify-end p-8 md:p-4 pt-20 md:pt-30 md:pr-15"
   >
     <div class="flex flex-col items-end">
-      <h1 class="font-primary text-[9rem] text-[var(--color-white)] text-right -rotate-2">BRYAN THIERRY</h1>
+      <h1
+        class="font-primary text-[9rem] text-[var(--color-white)] text-right -rotate-2"
+      >
+        BRYAN THIERRY
+      </h1>
       <div class="w-full flex justify-center">
-        <Button 
-          label="Voir mes projets" 
-          href="#projects" 
-          className="text-black transition-transform"
-          theme="fire"
+        <Button
+          label="Voir mes projets"
+          href="#projects"
+          className="text-black"
+          theme={theme}
         />
       </div>
     </div>

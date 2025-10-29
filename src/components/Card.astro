@@ -1,0 +1,26 @@
+---
+interface Props {
+  imgSrc: string;
+  imgAlt?: string;
+  children?: any;
+  theme?: "cyberpunk" | "ocean" | "sunset" | "forest" | "fire";
+}
+
+const { imgSrc, imgAlt = "Image", children, theme } = Astro.props;
+---
+
+<div
+  data-theme={theme}
+  class="grid grid-rows-[auto_1fr] w-full max-w-[250px] h-[350px] border-4 bg-[var(--b1)] overflow-hidden"
+>
+  <div class="flex items-center justify-center h-48">
+    <img
+      src={imgSrc}
+      alt={imgAlt}
+      class="object-contain h-32 w-32 mix-blend-darken"
+    />
+  </div>
+  <div class="p-4 flex flex-col justify-center text-[var(--bc)]">
+    <slot>{children}</slot>
+  </div>
+</div>

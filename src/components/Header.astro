@@ -10,69 +10,83 @@ const { theme = "fire" } = Astro.props;
 
 <header
   id="header"
-  class={`w-full px-6 py-4 flex items-center justify-between fixed top-0 z-50 transition-all duration-300 theme-${theme}`}
+  data-theme={theme}
+  class="navbar w-full px-6 py-4 fixed top-0 z-50 transition-all duration-300 bg-transparent"
 >
   <style>
+    /* Minimum obligatoire pour vos effets */
     #header {
       --text-color: var(--color-white);
     }
-
+    
     #header.scrolled {
       --text-color: var(--color-black);
     }
 
-    .logo-link {
-      position: relative;
-      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    .logo-link,
+    .nav-link {
       color: var(--text-color);
     }
 
     .logo-link:hover {
-      transform: scale(1.05) rotate(-1deg);
       text-shadow:
-        0 0 20px var(--accent-primary),
-        3px 3px 0 var(--accent-primary),
-        6px 6px 0 var(--accent-secondary);
+        0 0 20px var(--p),
+        3px 3px 0 var(--p),
+        6px 6px 0 var(--s);
       filter: drop-shadow(0 5px 15px var(--accent-glow));
     }
 
-    .nav-link {
-      position: relative;
-      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      color: var(--text-color);
-    }
-
     .nav-link:hover {
-      transform: scale(1.05) rotate(-1deg);
       text-shadow:
-        0 0 15px var(--accent-primary),
-        2px 2px 0 var(--accent-primary),
-        4px 4px 0 var(--accent-secondary);
+        0 0 15px var(--p),
+        2px 2px 0 var(--p),
+        4px 4px 0 var(--s);
       filter: drop-shadow(0 3px 10px var(--accent-glow));
     }
   </style>
-  <!-- Nom -->
-  <a href="/" class="logo-link font-primary text-4xl tracking-tight">
-    BRYAN THIERRY
-  </a>
 
-  <!-- Liens (desktop) -->
-  <nav class="hidden md:flex items-center gap-10">
-    <a href="#services" class="nav-link font-primary uppercase text-xl"
-      >MES SERVICES</a
+  <div class="navbar-start">
+    <a
+      href="/"
+      class="logo-link font-primary text-4xl tracking-tight relative transition-all duration-300 hover:scale-105 hover:-rotate-1"
     >
-    <a href="#projects" class="nav-link font-primary uppercase text-xl"
-      >MES PROJETS</a
-    >
-    <a href="#about" class="nav-link font-primary uppercase text-xl">A PROPOS</a
-    >
-  </nav>
+      BRYAN THIERRY
+    </a>
+  </div>
 
-  <!-- Bouton -->
-  <div class="ml-4">
-    <Button href="#contact" aria-label="Me contacter" theme={theme}
-      >ME CONTACTER</Button
-    >
+  <div class="navbar-center hidden md:flex">
+    <ul class="menu menu-horizontal gap-10 px-1">
+      <li>
+        <a
+          href="#services"
+          class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1"
+        >
+          MES SERVICES
+        </a>
+      </li>
+      <li>
+        <a
+          href="#projects"
+          class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1"
+        >
+          MES PROJETS
+        </a>
+      </li>
+      <li>
+        <a
+          href="#about"
+          class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1"
+        >
+          A PROPOS
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="navbar-end">
+    <Button href="#contact" aria-label="Me contacter" theme={theme}>
+      ME CONTACTER
+    </Button>
   </div>
 </header>
 
@@ -85,10 +99,8 @@ const { theme = "fire" } = Astro.props;
     const scrolled = window.scrollY > heroHeight - 100;
 
     if (scrolled) {
-      // Texte noir quand on scroll (fond clair de la page)
       header.classList.add("scrolled");
     } else {
-      // Texte blanc en haut (fond sombre du hero)
       header.classList.remove("scrolled");
     }
   }

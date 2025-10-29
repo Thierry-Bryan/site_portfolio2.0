@@ -1,3 +1,4 @@
+/*global.css*/
 @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Cabin:ital,wght@0,400..700;1,400..700&display=swap');
 
 @import "tailwindcss";
@@ -12,61 +13,68 @@
   --color-blue: #3A86FF;
 }
 
-/* === SYSTÈME DE COULEURS DYNAMIQUES === */
-:root {
-  /* Palette par défaut */
-  --accent-primary: #ff0080;
-  --accent-secondary: #8b00ff;
+/* === THÈMES DAISYUI PERSONNALISÉS === */
+
+[data-theme="cyberpunk"] {
+  --p: #ff0080;
+  --s: #8b00ff;
+  --a: #ff0080;
+  --b1: #faf9f7;
+  --bc: #181818;
   --accent-glow: rgba(255, 0, 128, 0.3);
-  --accent-text-shadow: rgba(255, 0, 128, 0.3);
-  
-  /* Couleurs de fond */
-  --bg-primary: var(--color-white);
-  --bg-secondary: #000000;
-  --text-primary: #000000;
-  --text-secondary: var(--color-white);
 }
+
+[data-theme="ocean"] {
+  --p: #00ffff;
+  --s: #0044aa;
+  --a: #00ffff;
+  --b1: #faf9f7;
+  --bc: #181818;
+  --accent-glow: rgba(0, 255, 255, 0.3);
+}
+
+[data-theme="sunset"] {
+  --p: #ff4500;
+  --s: #ffd700;
+  --a: #ff4500;
+  --b1: #faf9f7;
+  --bc: #181818;
+  --glow: rgba(255, 69, 0, 0.3);
+}
+
+[data-theme="forest"] {
+  --p: #32cd32;
+  --s: #006400;
+  --a: #32cd32;
+  --b1: #faf9f7;
+  --bc: #181818;
+  --accent-glow: rgba(50, 205, 50, 0.3);
+}
+
+[data-theme="fire"] {
+  --p: #ff1744;
+  --s: #ff9800;
+  --a: #ff1744;
+  --b1: #faf9f7;
+  --bc: #181818;
+  --accent-glow: rgba(255, 23, 68, 0.3);
+}
+
 body {
   background: var(--color-white) !important;
 }
 
-/* === THÈMES PRÉDÉFINIS === */
-/* Thème Cyberpunk (défaut) */
-.theme-cyberpunk {
-  --accent-primary: #ff0080;
-  --accent-secondary: #8b00ff;
-  --accent-glow: rgba(255, 0, 128, 0.3);
-  --accent-text-shadow: rgba(255, 0, 128, 0.3);
-}
-
-/* Thème Ocean */
-.theme-ocean {
-  --accent-primary: #00ffff;
-  --accent-secondary: #0044aa;
-  --accent-glow: rgba(0, 255, 255, 0.3);
-  --accent-text-shadow: rgba(0, 255, 255, 0.3);
-}
-
-/* Thème Sunset */
-.theme-sunset {
-  --accent-primary: #ff4500;
-  --accent-secondary: #ffd700;
-  --accent-glow: rgba(255, 69, 0, 0.3);
-  --accent-text-shadow: rgba(255, 69, 0, 0.3);
-}
-
-/* Thème Forest */
-.theme-forest {
-  --accent-primary: #32cd32;
-  --accent-secondary: #006400;
-  --accent-glow: rgba(50, 205, 50, 0.3);
-  --accent-text-shadow: rgba(50, 205, 50, 0.3);
-}
-
-/* Thème Fire */
-.theme-fire {
-  --accent-primary: #ff1744;
-  --accent-secondary: #ff9800;
-  --accent-glow: rgba(255, 23, 68, 0.3);
-  --accent-text-shadow: rgba(255, 23, 68, 0.3);
+@layer base {
+  h1 {
+    @apply text-6xl font-primary text-[var(--p)] mb-6;
+  }
+  h2 {
+    @apply text-4xl font-primary text-[var(--p)] mb-4;
+  }
+  h3 {
+    @apply text-xl font-primary text-[var(--bc)] mb-2;
+  }
+  p {
+    @apply text-base font-secondary text-[var(--bc)] mb-2;
+  }
 }
