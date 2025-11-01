@@ -1,18 +1,17 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Card from "../components/Card.astro";
+import Button from "../components/Button.astro";
+import Hero from "../components/Hero.astro";
 
-interface Props {
-  theme?: "cyberpunk" | "ocean" | "sunset" | "forest" | "fire";
-}
-
-const { theme = "fire" } = Astro.props;
+const theme = "redfire";
 ---
 
-<Layout data-theme={theme}>
+<Layout theme={theme} title="Accueil - Portfolio Bryan Thierry">
+  <Hero />
   <section class="pt-15 pb-20">
     <div class="flex items-center justify-center mb-5">
-      <h2 class="text-4xl">MES SERVICES</h2>
+      <h2 class="text-black">MES SERVICES</h2>
     </div>
     <div class="mx-4 md:mx-25">
       <div
@@ -37,24 +36,22 @@ const { theme = "fire" } = Astro.props;
           theme={theme}
         >
           <h3 class="mb-2 text-center flex justify-center">
-            refontes de sites
+            Refontes de sites
           </h3>
           <p class="">
             Je redonne vie à votre site pour qu'il soit moderne, rapide et
-            agréable å utiliser.
+            agréable à utiliser.
           </p>
         </Card>
         <Card
-          imgSrc="/public/card/icon_sur-mesure.webp"
+          imgSrc="/public/card/icon_wordpress.webp"
           imgAlt="Site web sur-mesure"
           theme={theme}
         >
-          <h3 class="mb-2 text-center flex justify-center">
-            Sites web sur mesure
-          </h3>
+          <h3 class="mb-2 text-center flex justify-center">Wordpress</h3>
           <p class="">
-            Je conçois des sites web uniques, pensés pour vous et votre
-            activité.
+            Je redonne vie à votre site pour qu'il soit moderne, rapide et
+            agréable à utiliser.
           </p>
         </Card>
       </div>
@@ -129,13 +126,24 @@ const { theme = "fire" } = Astro.props;
       </div>
     </div>
   </section>
-  <section class="pt-10 pb-10">
+  <section class="pt-10 pb-25">
     <div class="flex items-center justify-center mb-5">
-      <h2 class="text-4xl">À PROPOS</h2>
+      <h2 class="text-black">À PROPOS</h2>
     </div>
-    <div class="grid grid-cols-3">
-      <div>
-        <h3>Salut, moi c’est Bryan !</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0">
+      <div
+        class="order-1 md:order-2 flex justify-center items-center mb-6 md:mb-0"
+      >
+        <img
+          src="/public/avatar/a-propos.webp"
+          alt="Photo de Bryan Thierry"
+          class="object-contain h-full w-full max-h-[450px] max-w-[400px] brightness-90 contrast-110 mx-auto"
+        />
+      </div>
+      <div
+        class="order-2 md:order-1 px-4 md:pl-10 flex flex-col gap-4 mb-6 md:mb-0"
+      >
+        <h3 class="">Salut, moi c’est Bryan !</h3>
         <p>
           Webdesigner & Développeur Front-End, j’aime créer des contenus
           numériques qui ont du sens.
@@ -150,13 +158,36 @@ const { theme = "fire" } = Astro.props;
           m’adapte à vous, j’écoute vos envies et je trouve la solution qui vous
           ressemble.
         </p>
+        <div class="w-full flex justify-center">
+          <Button
+            label="Voir mes projets"
+            href="#a-propos"
+            className="text-black"
+            theme={theme}
+          />
+        </div>
       </div>
-      <div>
-        <img
-          src="/public/avatar/a-propos.webp"
-          alt="Photo de Bryan Thierry"
-          class="object-contain h-full w-full rounded-lg brightness-90 contrast-110"
-        />
+      <div
+        class="order-3 md:order-3 grid grid-rows-3 justify-center gap-8 md:gap-0"
+      >
+        <div class="flex flex-col items-center text-center">
+          <h3>Ma promesse</h3>
+          <div>Expérience Utilisateur (UX)</div>
+          <div>Site Ultra-Rapide</div>
+          <div>Identité Visuelle</div>
+        </div>
+        <div class="flex flex-col items-center text-center">
+          <h3>Ma promesse</h3>
+          <div>Expérience Utilisateur (UX)</div>
+          <div>Site Ultra-Rapide</div>
+          <div>Identité Visuelle</div>
+        </div>
+        <div class="flex flex-col items-center text-center">
+          <h3>Ma promesse</h3>
+          <div>Expérience Utilisateur (UX)</div>
+          <div>Site Ultra-Rapide</div>
+          <div>Identité Visuelle</div>
+        </div>
       </div>
     </div>
   </section>

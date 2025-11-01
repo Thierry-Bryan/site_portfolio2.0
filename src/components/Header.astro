@@ -2,10 +2,10 @@
 import Button from "./Button.astro";
 
 interface Props {
-  theme?: "cyberpunk" | "ocean" | "sunset" | "forest" | "fire";
+  theme?: "cyberpunk" | "ocean" | "sunset" | "forest" | "fire" | "redfire" | "blue";
 }
 
-const { theme = "fire" } = Astro.props;
+const { theme = "redfire" } = Astro.props;
 ---
 
 <header
@@ -13,42 +13,11 @@ const { theme = "fire" } = Astro.props;
   data-theme={theme}
   class="navbar w-full px-6 py-4 fixed top-0 z-50 transition-all duration-300 bg-transparent"
 >
-  <style>
-    /* Minimum obligatoire pour vos effets */
-    #header {
-      --text-color: var(--color-white);
-    }
-    
-    #header.scrolled {
-      --text-color: var(--color-black);
-    }
-
-    .logo-link,
-    .nav-link {
-      color: var(--text-color);
-    }
-
-    .logo-link:hover {
-      text-shadow:
-        0 0 20px var(--p),
-        3px 3px 0 var(--p),
-        6px 6px 0 var(--s);
-      filter: drop-shadow(0 5px 15px var(--accent-glow));
-    }
-
-    .nav-link:hover {
-      text-shadow:
-        0 0 15px var(--p),
-        2px 2px 0 var(--p),
-        4px 4px 0 var(--s);
-      filter: drop-shadow(0 3px 10px var(--accent-glow));
-    }
-  </style>
 
   <div class="navbar-start">
     <a
       href="/"
-      class="logo-link font-primary text-4xl tracking-tight relative transition-all duration-300 hover:scale-105 hover:-rotate-1"
+      class="logo-link font-primary text-4xl tracking-tight relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover"
     >
       BRYAN THIERRY
     </a>
@@ -59,7 +28,7 @@ const { theme = "fire" } = Astro.props;
       <li>
         <a
           href="#services"
-          class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1"
+          class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link"
         >
           MES SERVICES
         </a>
@@ -67,7 +36,7 @@ const { theme = "fire" } = Astro.props;
       <li>
         <a
           href="#projects"
-          class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1"
+          class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link"
         >
           MES PROJETS
         </a>
@@ -75,7 +44,7 @@ const { theme = "fire" } = Astro.props;
       <li>
         <a
           href="#about"
-          class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1"
+          class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link"
         >
           A PROPOS
         </a>

@@ -1,22 +1,46 @@
 ---
 import "../styles/global.css";
-import BackgroundDynamic from "../components/BackgroundDynamic.astro";
 import Hero from "../components/Hero.astro";
 import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+  title?: string;
+  theme?:
+    | "cyberpunk"
+    | "ocean"
+    | "sunset"
+    | "forest"
+    | "fire"
+    | "redfire"
+    | "blue"
+    | "pink";
+}
+
+// Système de thèmes automatique basé sur la route
+const getThemeFromUrl = (url: string) => {
+  if (url.includes("/a-propos")) return "ocean";
+  if (url.includes("/contact")) return "cyberpunk";
+  if (url.includes("/projets") && !url.includes("/projets/")) return "sunset"; // Liste des projets
+  return "redfire"; // thème par défaut
+};
+
+const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname) } =
+  Astro.props;
 ---
 
 <!doctype html>
-<html lang="fr" data-theme="synthwave">
+<html lang="fr" data-theme={theme}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>Portfolio</title>
+    <title>{title}</title>
   </head>
   <body class="overflow-x-hidden">
-    <Header />
-    <Hero />
+    <Header theme={theme} />
     <slot />
+    <Footer theme={theme} />
   </body>
 </html>

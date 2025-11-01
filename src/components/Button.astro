@@ -7,7 +7,7 @@ interface Props {
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   className?: string;
-  theme?: 'cyberpunk' | 'ocean' | 'sunset' | 'forest' | 'fire';
+  theme?: "cyberpunk" | "ocean" | "sunset" | "forest" | "fire" | "redfire";
 }
 
 const {
@@ -18,7 +18,7 @@ const {
   type = "button",
   disabled = false,
   className = "",
-  theme = 'cyberpunk',
+  theme = "cyberpunk",
 } = Astro.props;
 
 const btnStyle = {
@@ -42,8 +42,8 @@ const btnClass = `
   ${className}
 `.trim();
 ---
+
 <!-- Button -->
- 
 <style>
   .btn-hover {
     box-shadow: -5px 5px 0 0 var(--shadow-color);
@@ -51,9 +51,9 @@ const btnClass = `
     position: relative;
     overflow: hidden;
   }
-  
+
   .btn-hover::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     left: 50%;
@@ -65,16 +65,15 @@ const btnClass = `
     border-radius: 50%;
     z-index: -1;
   }
-  
+
   .btn-hover:hover::before {
     width: 120%;
     height: 300%;
   }
-  
+
   .btn-hover:hover {
     box-shadow: -5px 5px 0 0 var(--color-black);
-    mix-blend-mode: difference;
-    text-shadow: 
+    text-shadow:
       2px 2px 0 #000,
       4px 4px 0 #333;
     color: white;
@@ -84,11 +83,23 @@ const btnClass = `
 
 {
   href ? (
-    <a {href} class={btnClass} style={btnStyle} role="button">
+    <a
+      {href}
+      class={btnClass}
+      style={btnStyle}
+      role="button"
+      data-theme={theme}
+    >
       <slot>{label}</slot>
     </a>
   ) : (
-    <button class={btnClass} style={btnStyle} {type} {disabled}>
+    <button
+      class={btnClass}
+      style={btnStyle}
+      {type}
+      {disabled}
+      data-theme={theme}
+    >
       <slot>{label}</slot>
     </button>
   )

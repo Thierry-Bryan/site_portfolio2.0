@@ -1,0 +1,519 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Button from "../components/Button.astro";
+
+const theme = "ocean"; // Thème pour la page à propos
+---
+
+<Layout theme={theme} title="À propos - Bryan Thierry">
+  <!-- Hero moderne style webtoon -->
+  <section class="hero-about">
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="profile-section">
+          <div class="profile-image">
+            <img src="/avatar/bryan-profile.webp" alt="Bryan Thierry" />
+          </div>
+          <div class="profile-text">
+            <h1>BRYAN THIERRY</h1>
+            <p class="subtitle">Développeur Web • Designer • Créateur</p>
+            <div class="transition-line">
+              <span class="icon">🎮</span>
+              <div class="line"></div>
+              <span class="icon">💻</span>
+              <div class="line"></div>
+              <span class="icon">🚀</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section : Mon parcours -->
+  <section class="journey-section">
+    <div class="section-container">
+      <h2>MON PARCOURS</h2>
+      
+      <div class="journey-grid">
+        <!-- Étape 1 -->
+        <div class="journey-card" data-step="1">
+          <div class="card-header">
+            <div class="step-number">01</div>
+            <h3>PASSION GAMING</h3>
+          </div>
+          <div class="card-content">
+            <p>Passionné de jeux vidéo depuis l'enfance</p>
+            <span class="highlight">Design & UX</span>
+          </div>
+        </div>
+
+        <!-- Étape 2 -->
+        <div class="journey-card" data-step="2">
+          <div class="card-header">
+            <div class="step-number">02</div>
+            <h3>DÉCOUVERTE CODE</h3>
+          </div>
+          <div class="card-content">
+            <p>Première ligne de code à 16 ans</p>
+            <span class="highlight">Le déclic !</span>
+          </div>
+        </div>
+
+        <!-- Étape 3 -->
+        <div class="journey-card" data-step="3">
+          <div class="card-header">
+            <div class="step-number">03</div>
+            <h3>FORMATION</h3>
+          </div>
+          <div class="card-content">
+            <p>BUT Métiers du Multimédia</p>
+            <span class="highlight">Spécialisation web</span>
+          </div>
+        </div>
+
+        <!-- Étape 4 -->
+        <div class="journey-card" data-step="4">
+          <div class="card-header">
+            <div class="step-number">04</div>
+            <h3>FREELANCE</h3>
+          </div>
+          <div class="card-content">
+            <p>À mon compte depuis 2024</p>
+            <span class="highlight">Projets variés</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chapitre 2 : Formation -->
+  <section class="comic-chapter" data-chapter="2">
+    <div class="section-container">
+      <h2>MA PROMESSE</h2>
+      
+      <div class="promise-grid">
+        <div class="promise-card">
+          <div class="promise-icon">🎯</div>
+          <h3>CRÉATIVITÉ</h3>
+          <p>Des sites web qui se démarquent</p>
+        </div>
+        
+        <div class="promise-card">
+          <div class="promise-icon">⚡</div>
+          <h3>PERFORMANCE</h3>
+          <p>Rapides et optimisés</p>
+        </div>
+        
+        <div class="promise-card">
+          <div class="promise-icon">🤝</div>
+          <h3>COLLABORATION</h3>
+          <p>À vos côtés du début à la fin</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chapitre 3 : Compétences visuelles -->
+  <section class="comic-chapter" data-chapter="3">
+    <div class="section-container">
+      <h2>MES COMPÉTENCES</h2>
+      
+      <div class="skills-grid">
+        <!-- Design -->
+        <div class="skill-category">
+          <h3>DESIGN</h3>
+          <div class="skills-list">
+            <span class="skill-tag">Figma</span>
+            <span class="skill-tag">Illustrator</span>
+            <span class="skill-tag">Photoshop</span>
+            <span class="skill-tag">After Effects</span>
+            <span class="skill-tag">Premiere Pro</span>
+          </div>
+        </div>
+
+        <!-- Développement -->
+        <div class="skill-category">
+          <h3>CODING</h3>
+          <div class="skills-list">
+            <span class="skill-tag">JavaScript</span>
+            <span class="skill-tag">CSS</span>
+            <span class="skill-tag">HTML</span>
+            <span class="skill-tag">WordPress</span>
+          </div>
+        </div>
+
+        <!-- 3D -->
+        <div class="skill-category">
+          <h3>PRODUCTIVITY</h3>
+          <div class="skills-list">
+            <span class="skill-tag">Notion</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chapitre 4 : Call to action -->
+  <section class="comic-final">
+    <div class="section-container">
+      <div class="cta-content">
+        <h2>MON PROCHAIN CHAPITRE</h2>
+        <p>Partenaire web fiable</p>
+        <div class="cta-features">
+          <div class="feature">
+            <span class="icon">🚀</span>
+            <span>Créateur de contenu et storytelling</span>
+          </div>
+          <div class="feature">
+            <span class="icon">🎯</span>
+            <span>Projets et innovation future</span>
+          </div>
+        </div>
+        <Button
+          label="Voir le site fini"
+          href="/contact"
+          theme={theme}
+        />
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  /* Style moderne inspiré de Figma */
+  .hero-about {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-container {
+    max-width: 1200px;
+    width: 100%;
+    padding: 0 2rem;
+  }
+
+  .hero-content {
+    text-align: center;
+    color: white;
+  }
+
+  .profile-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .profile-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 5px solid rgba(255,255,255,0.2);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+
+  .profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .profile-text h1 {
+    font-size: 4rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .subtitle {
+    font-size: 1.5rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+  }
+
+  .transition-line {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .transition-line .icon {
+    font-size: 2rem;
+    padding: 0.5rem;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    backdrop-filter: blur(10px);
+  }
+
+  .transition-line .line {
+    width: 50px;
+    height: 2px;
+    background: rgba(255,255,255,0.5);
+  }
+
+  /* Sections communes */
+  .section-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .comic-chapter {
+    padding: 5rem 0;
+    background: var(--b1);
+  }
+
+  .comic-chapter:nth-child(even) {
+    background: var(--b2);
+  }
+
+  .comic-chapter h2 {
+    text-align: center;
+    font-size: 3rem;
+    color: var(--bc);
+    margin-bottom: 3rem;
+    position: relative;
+  }
+
+  .comic-chapter h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: var(--p);
+  }
+
+  /* Journey section */
+  .journey-section {
+    padding: 5rem 0;
+    background: var(--b1);
+  }
+
+  .journey-section h2 {
+    text-align: center;
+    font-size: 3rem;
+    color: var(--bc);
+    margin-bottom: 3rem;
+  }
+
+  .journey-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .journey-card {
+    background: var(--b2);
+    padding: 2rem;
+    border-radius: 15px;
+    border: 2px solid var(--bc);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .journey-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--p);
+  }
+
+  .journey-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .step-number {
+    background: var(--p);
+    color: var(--pc);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+
+  .card-header h3 {
+    color: var(--bc);
+    font-size: 1.2rem;
+    margin: 0;
+  }
+
+  .card-content p {
+    color: var(--bc);
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+  }
+
+  .highlight {
+    background: var(--s);
+    color: var(--sc);
+    padding: 0.25rem 0.5rem;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  /* Promise grid */
+  .promise-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .promise-card {
+    text-align: center;
+    padding: 2rem;
+    background: var(--b2);
+    border-radius: 15px;
+    border: 2px solid var(--bc);
+    transition: all 0.3s ease;
+  }
+
+  .promise-card:hover {
+    transform: scale(1.05);
+  }
+
+  .promise-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .promise-card h3 {
+    color: var(--p);
+    margin-bottom: 1rem;
+  }
+
+  .promise-card p {
+    color: var(--bc);
+    opacity: 0.8;
+  }
+
+  /* Skills section */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+    margin-top: 3rem;
+  }
+
+  .skill-category {
+    background: var(--b2);
+    padding: 2rem;
+    border-radius: 15px;
+    border: 2px solid var(--bc);
+  }
+
+  .skill-category h3 {
+    color: var(--p);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 1.5rem;
+  }
+
+  .skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .skill-tag {
+    background: var(--s);
+    color: var(--sc);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  /* CTA Section */
+  .comic-final {
+    background: linear-gradient(135deg, var(--p), var(--s));
+    padding: 5rem 0;
+    text-align: center;
+  }
+
+  .cta-content {
+    color: white;
+  }
+
+  .cta-content h2 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .cta-content p {
+    font-size: 1.5rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+  }
+
+  .cta-features {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+  }
+
+  .feature {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255,255,255,0.1);
+    padding: 1rem;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+  }
+
+  .feature .icon {
+    font-size: 1.5rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .profile-text h1 {
+      font-size: 2.5rem;
+    }
+    
+    .journey-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .cta-features {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .comic-chapter h2 {
+      font-size: 2rem;
+    }
+  }
+</style>

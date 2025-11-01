@@ -1,16 +1,15 @@
-/*global.css*/
-@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Cabin:ital,wght@0,400..700;1,400..700&display=swap');
-
+/* === GLOBAL.CSS === */
+@import url("https://fonts.googleapis.com/css2?family=Bangers&family=Cabin:ital,wght@0,400..700;1,400..700&display=swap");
 @import "tailwindcss";
 @plugin "daisyui";
 
+/* === VARIABLES GLOBALES === */
 @theme {
   --font-primary: Bangers, cursive;
   --font-secondary: Cabin, sans-serif;
-
   --color-white: #faf9f7;
-  --color-red: #D90404;
-  --color-blue: #3A86FF;
+  --color-red: #d90404;
+  --color-blue: #3a86ff;
 }
 
 /* === THÈMES DAISYUI PERSONNALISÉS === */
@@ -52,9 +51,36 @@
 }
 
 [data-theme="fire"] {
-  --p: #ff1744;
-  --s: #ff9800;
+  --p: #fe5c05;
+  --s: #ff6f00;
   --a: #ff1744;
+  --b1: #faf9f7;
+  --bc: #181818;
+  --accent-glow: rgba(255, 23, 68, 0.3);
+}
+
+[data-theme="redfire"] {
+  --p: #fa0435;
+  --s: #ff0000;
+  --a: #ff5757;
+  --b1: #faf9f7;
+  --bc: #181818;
+  --accent-glow: rgba(255, 23, 68, 0.3);
+}
+
+[data-theme="blue"] {
+  --p: #0414fa;
+  --s: #00eaff;
+  --a: #4edcff;
+  --b1: #faf9f7;
+  --bc: #181818;
+  --accent-glow: rgba(255, 23, 68, 0.3);
+}
+
+[data-theme="pink"] {
+  --p: #3104fa;
+  --s: #e100ff;
+  --a: #ff4ef6;
   --b1: #faf9f7;
   --bc: #181818;
   --accent-glow: rgba(255, 23, 68, 0.3);
@@ -76,5 +102,126 @@ body {
   }
   p {
     @apply text-base font-secondary text-[var(--bc)] mb-2;
+  }
+}
+
+/* === HEADER STYLES === */
+
+/* Variables de couleur du header selon le scroll */
+#header {
+  --text-color: var(--color-white);
+}
+
+#header.scrolled {
+  --text-color: var(--color-black);
+}
+
+.logo-link,
+.nav-link {
+  color: var(--text-color);
+}
+
+/* === EFFETS COMICS COMMUNS === */
+
+/* Effet comics principal pour hover */
+.comics-glow-hover:hover {
+  text-shadow: 0 0 20px var(--a), 3px 3px 0 var(--a), 6px 6px 0 var(--s);
+}
+
+/* Effet comics navigation - Plus subtil */
+.comics-glow-hover-link:hover {
+  text-shadow: 0 0 20px var(--a), 2px 2px 0 var(--a), 4px 4px 0 var(--s);
+}
+
+/* Effet comics pour texte dans cards (via hover sur card) */
+.comics-card:hover .comics-glow-hover {
+  color: var(--bc);
+  text-shadow: 0 0 20px var(--p), 2px 2px 0 var(--a), 4px 4px 0 var(--s);
+}
+
+/* Effet comics pour icônes (via hover sur card) */
+.comics-card:hover .comics-icon-hover {
+  color: var(--bc);
+  transform: scale(1.1);
+  text-shadow: 0 0 20px var(--bc), 3px 3px 0 var(--a), 6px 6px 0 var(--s);
+}
+
+/* Transformation comics avec rotation (via hover sur card) */
+.comics-card:hover .comics-transform-hover {
+  transform: scale(1.05) rotate(-1deg);
+  transition: all 0.3s;
+}
+
+/* Cards style comics */
+.comics-card {
+  background: var(--b1);
+  border: 3px solid var(--bc);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.comics-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 6px 6px 0 var(--b1);
+  border-color: var(--bc);
+}
+
+/* Email box style */
+.email-box {
+  background: var(--b1);
+  border: 3px solid var(--bc);
+  padding: 1.25rem 2.5rem;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.email-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 7px 7px 0 var(--b1);
+  border-color: var(--bc);
+}
+
+/* Arrow circle avec rotation */
+.arrow-circle {
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--bc);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: auto;
+  transition: all 0.3s ease;
+}
+
+.arrow-circle svg {
+  transition: transform 0.3s;
+}
+
+.comics-card:hover .arrow-circle svg {
+  transform: rotate(-90deg);
+}
+
+/* Social grid responsive */
+.social-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media (min-width: 600px) {
+  .social-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .social-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
