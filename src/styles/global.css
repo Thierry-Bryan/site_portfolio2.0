@@ -86,6 +86,15 @@
   --accent-glow: rgba(255, 23, 68, 0.3);
 }
 
+[data-theme="purple"] {
+  --p: #3104fa;
+  --s: #5100ff;
+  --a: #9e4eff;
+  --b1: #faf9f7;
+  --bc: #181818;
+  --accent-glow: rgba(255, 23, 68, 0.3);
+}
+
 body {
   background: var(--color-white) !important;
 }
@@ -110,6 +119,7 @@ body {
 /* Variables de couleur du header selon le scroll */
 #header {
   --text-color: var(--color-white);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 #header.scrolled {
@@ -119,6 +129,7 @@ body {
 .logo-link,
 .nav-link {
   color: var(--text-color);
+  
 }
 
 /* === EFFETS COMICS COMMUNS === */

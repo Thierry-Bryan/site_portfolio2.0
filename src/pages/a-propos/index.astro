@@ -1,0 +1,518 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Button from "../../components/Button.astro";
+
+const theme = "blue"; // Thème pour la page à propos
+---
+
+<Layout theme={theme} title="À propos - Bryan Thierry" class="">
+  <section
+    class="mx-4 md:mx-8 lg:mx-16 py-10 pt-25 bg-[var(--color-white)]"
+    data-theme="blue"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="md:col-span-1 flex justify-center items-center">
+        <img
+          src="/public/avatar/a-propos_1.webp"
+          alt="Photo de Bryan Thierry"
+          class="w-full max-w-[300px] h-auto object-cover"
+        />
+      </div>
+      <div class="md:col-span-2 flex flex-col justify-center">
+        <!-- Contenu de droite à ajouter ici -->
+        <h1 class="text-4xl font-primary mb-6">À propos de moi</h1>
+        <p class="mb-4">
+          Salut ! Je m'appelle Bryan et je suis un Développeur Front-End
+          passionné spécialisé dans la création d'expériences numériques qui
+          font la différence.
+        </p>
+        <p class="mb-4">
+          Ma mission est de construire des sites web qui sont à la fois
+          performants, accessibles et parfaitement adaptés à tous les supports.
+        </p>
+        <p class="mb-4">
+          Mon cœur de métier ? Rendre votre Identité Visuelle éclatante et
+          fluide grâce à un Design Responsive rigoureux et une Optimisation SEO
+          dès la première ligne de code.
+        </p>
+        <p class="mb-4">
+          Je crois fermement qu'un code soigné n'est pas seulement technique,
+          c'est aussi un engagement : c'est pourquoi je mets la Sobriété
+          Numérique au centre de chaque projet pour un web plus rapide et plus
+          durable.
+        </p>
+      </div>
+    </div>
+  </section>
+  <!-- Section Parcours avec frise chronologique -->
+  <section
+    class="mx-4 md:mx-8 lg:mx-16 py-10 bg-[var(--color-white)]"
+    data-theme="pink"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Frise chronologique à gauche (2/3) -->
+      <div class="md:col-span-2 order-2 md:order-1">
+        <h2 class="font-primary mb-8 text-center">Mon Parcours</h2>
+        <div class="relative">
+          <!-- Ligne verticale de la frise -->
+          <div
+            class="absolute left-6 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-600 to-purple-900 shadow-lg"
+          >
+          </div>
+
+          <!-- Élément de timeline -->
+          <div class="relative flex items-start mb-10">
+            <div
+              class="flex-shrink-0 w-14 h-14 bg-purple-600 border-4 border-white shadow-xl flex items-center justify-center z-10 transform rotate-45"
+            >
+              <span class="text-white font-primary text-xs transform -rotate-45"
+                >BAC</span
+              >
+            </div>
+            <div
+              class="ml-8 bg-white p-6 rounded-none border-4 border-purple-600 shadow-lg transform -rotate-1 hover:rotate-0 transition-transform duration-300"
+            >
+              <h3 class="font-primary text-xl text-purple-700 mb-2">
+                APRÈS LE BAC
+              </h3>
+              <p class="text-gray-800 font-medium">
+                J'ai choisi le BUT Métiers du Multimédia et de l'Internet (MMI)
+                pour maîtriser l'ensemble de la conception web.
+              </p>
+            </div>
+          </div>
+
+          <!-- Formation MMI -->
+          <div class="relative flex items-start mb-10">
+            <div
+              class="flex-shrink-0 w-14 h-14 bg-purple-700 border-4 border-white shadow-xl flex items-center justify-center z-10 transform rotate-12"
+            >
+              <span class="text-white font-primary text-xs transform -rotate-12"
+                >MMI</span
+              >
+            </div>
+            <div
+              class="ml-8 bg-white p-6 rounded-none border-4 border-purple-700 shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-300"
+            >
+              <h3 class="font-primary text-xl text-purple-800 mb-2">
+                FORMATION BUT MMI
+              </h3>
+              <p class="text-gray-800 font-medium">
+                Cours complet couvrant la gestion de projet, la communication,
+                le design UI/UX et la maîtrise du code (HTML, CSS, JavaScript).
+              </p>
+            </div>
+          </div>
+
+          <!-- Projets pratiques -->
+          <div class="relative flex items-start mb-10">
+            <div
+              class="flex-shrink-0 w-14 h-14 bg-purple-800 border-4 border-white shadow-xl flex items-center justify-center z-10 transform -rotate-12"
+            >
+              <span class="text-white font-primary text-xs transform rotate-12"
+                >PRO</span
+              >
+            </div>
+            <div
+              class="ml-8 bg-white p-6 rounded-none border-4 border-purple-800 shadow-lg transform -rotate-1 hover:rotate-0 transition-transform duration-300"
+            >
+              <h3 class="font-primary text-xl text-purple-900 mb-3">
+                MISE EN PRATIQUE
+              </h3>
+              <p class="text-gray-800 font-medium mb-4">
+                J'ai mis ces bases en pratique à travers une série de projets
+                concrets et variés, prouvant ma capacité à traduire une vision
+                créative en un produit technique solide et performant.
+              </p>
+
+              <!-- Liste des projets - Descriptions détaillées -->
+              <div class="grid grid-cols-2 gap-2">
+                <div
+                  class="bg-purple-100 p-3 border-2 border-purple-600 shadow-sm transform rotate-1 hover:rotate-0 transition-transform duration-300 h-32 flex flex-col justify-center text-center"
+                >
+                  <h4 class="font-primary text-purple-700 text-sm mb-1">
+                    ECHO SAFE
+                  </h4>
+                  <p class="text-xs text-gray-600">
+                    Application solidaire contre le harcèlement avec messagerie
+                    sécurisée
+                  </p>
+                </div>
+
+                <div
+                  class="bg-purple-100 p-3 border-2 border-purple-600 shadow-sm transform -rotate-1 hover:rotate-0 transition-transform duration-300 h-32 flex flex-col justify-center text-center"
+                >
+                  <h4 class="font-primary text-purple-700 text-sm mb-1">
+                    ÇA VA TRAILER
+                  </h4>
+                  <p class="text-xs text-gray-600">
+                    Vitrine immersive pour un festival de cinéma avec identité
+                    visuelle forte
+                  </p>
+                </div>
+
+                <div
+                  class="bg-purple-100 p-3 border-2 border-purple-600 shadow-sm transform rotate-1 hover:rotate-0 transition-transform duration-300 h-32 flex flex-col justify-center text-center"
+                >
+                  <h4 class="font-primary text-purple-700 text-sm mb-1">RBA</h4>
+                  <p class="text-xs text-gray-600">
+                    Refonte complète de l'identité visuelle pour l'association
+                    biodiversité
+                  </p>
+                </div>
+
+                <div
+                  class="bg-purple-100 p-3 border-2 border-purple-600 shadow-sm transform -rotate-1 hover:rotate-0 transition-transform duration-300 h-32 flex flex-col justify-center text-center"
+                >
+                  <h4 class="font-primary text-purple-700 text-sm mb-1">
+                    12 FRAGMENTS
+                  </h4>
+                  <p class="text-xs text-gray-600">
+                    Site créatif et narratif autour de 12 avatars en pixel art
+                  </p>
+                </div>
+
+                <div
+                  class="bg-purple-100 p-3 border-2 border-purple-600 shadow-sm transform rotate-1 hover:rotate-0 transition-transform duration-300 h-32 flex flex-col justify-center text-center col-span-2"
+                >
+                  <h4 class="font-primary text-purple-700 text-sm mb-1">
+                    OMNISPHERE
+                  </h4>
+                  <p class="text-xs text-gray-600">
+                    Site immersif questionnant l'avenir des relations humaines
+                    avec design futuriste
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Objectif -->
+          <div class="relative flex items-start">
+            <div
+              class="flex-shrink-0 w-14 h-14 bg-purple-900 border-4 border-white shadow-xl flex items-center justify-center z-10 transform rotate-45"
+            >
+              <span class="text-white font-primary text-xs transform -rotate-45"
+                >GO!</span
+              >
+            </div>
+            <div
+              class="ml-8 bg-white p-6 rounded-none border-4 border-purple-900 shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-300"
+            >
+              <h3 class="font-primary text-xl text-purple-900 mb-3">
+                MON OBJECTIF
+              </h3>
+              <p class="text-gray-800 font-medium mb-6">
+                Livrer des solutions numériques qui sont à la fois performantes
+                et pleines de sens.
+              </p>
+
+              <div class="p-4 text-center">
+                <Button
+                  href="#projets"
+                  className="bg-white text-purple-900 hover:bg-purple-100 font-primary text-lg"
+                  theme="pink"
+                >
+                  VOIR MES PROJETS !
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image sticky à droite (1/3) -->
+      <div class="md:col-span-1 order-1 md:order-2">
+        <div class="sticky top-32">
+          <img
+            src="/public/avatar/a-propos_2.webp"
+            alt="Bryan Thierry - Mon parcours"
+            class="w-full max-w-[300px] h-auto object-cover mx-auto"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Section Mes Compétences -->
+  <section
+    class="mx-4 md:mx-8 lg:mx-16 py-10 bg-[var(--color-white)]"
+    data-theme="fire"
+  >
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+      <!-- Image du personnage à gauche (1/3) -->
+      <div class="lg:col-span-1 flex justify-center">
+        <div class="sticky top-32 h-fit">
+          <img
+            src="/public/avatar/a-propos_3.webp"
+            alt="Bryan Thierry - Character"
+            class="w-full h-auto max-w-sm"
+          />
+        </div>
+      </div>
+
+      <!-- Contenu des compétences à droite (2/3) -->
+      <div class="lg:col-span-2">
+        <!-- Titre principal -->
+        <h2 class="font-primary text-center mb-5">
+          MES COMPÉTENCES
+        </h2>
+
+        <!-- Section Compétences -->
+        <div class="mb-8">
+          <!-- Première ligne : Design et Vidéo -->
+          <div class="flex justify-center mb-6">
+            <div class="grid grid-cols-5 gap-8">
+              <!-- Figma -->
+              <div class="text-center group cursor-pointer">
+                <div
+                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
+                >
+                  <img
+                    src="/competences/figma.svg"
+                    alt="Figma"
+                    class="h-10"
+                  />
+                </div>
+                <p class="font-primary text-sm">
+                  FIGMA
+                </p>
+              </div>
+
+              <!-- Illustrator -->
+              <div class="text-center group cursor-pointer">
+                <div
+                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
+                >
+                  <img
+                    src="/competences/adobe_illustrator.svg"
+                    alt="Illustrator"
+                    class="w-10 h-10"
+                  />
+                </div>
+                <p class="font-primary text-sm">
+                  ILLUSTRATOR
+                </p>
+              </div>
+
+              <!-- Photoshop -->
+              <div class="text-center group cursor-pointer">
+                <div
+                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
+                >
+                  <img
+                    src="/competences/adobe_photoshop.svg"
+                    alt="Photoshop"
+                    class="w-10 h-10"
+                  />
+                </div>
+                <p class="font-primary text-sm">
+                  PHOTOSHOP
+                </p>
+              </div>
+
+              <!-- After Effect -->
+              <div class="text-center group cursor-pointer">
+                <div
+                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
+                >
+                  <img
+                    src="/competences/adobe_after_effects.svg"
+                    alt="After Effects"
+                    class="w-10 h-10"
+                  />
+                </div>
+                <p class="font-primary text-sm">
+                  AFTER EFFECT
+                </p>
+              </div>
+
+              <!-- Premiere Pro -->
+              <div class="text-center group cursor-pointer">
+                <div
+                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
+                >
+                  <img
+                    src="/competences/adobe_premiere.svg"
+                    alt="Premiere Pro"
+                    class="w-10 h-10"
+                  />
+                </div>
+                <p class="font-primary text-sm">
+                  PREMIERE PRO
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Deuxième ligne : Développement -->
+        <div class="mb-10">
+          <div class="flex justify-center">
+            <div class="grid grid-cols-5 gap-8">
+              <!-- VS Code -->
+              <div class="text-center group cursor-pointer">
+                <div
+                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
+                >
+                  <img
+                    src="/competences/vs_code.svg"
+                    alt="VS Code"
+                    class="w-10 h-10"
+                  />
+                </div>
+                <p class="font-primary text-sm">
+                  VS CODE
+                </p>
+              </div>
+
+              <!-- JavaScript -->
+              <div class="text-center group cursor-pointer">
+                <div
+                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
+                >
+                  <img
+                    src="/competences/js.svg"
+                    alt="JavaScript"
+                    class="w-10 h-10"
+                  />
+                </div>
+                <p class="font-primary text-sm">
+                  JAVASCRIPT
+                </p>
+              </div>
+
+              <!-- CSS -->
+              <div class="text-center group cursor-pointer">
+                <div
+                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
+                >
+                  <img
+                    src="/competences/css_3.svg"
+                    alt="CSS"
+                    class="w-10 h-10"
+                  />
+                </div>
+                <p class="font-primary text-sm">CSS</p>
+              </div>
+
+              <!-- HTML -->
+              <div class="text-center group cursor-pointer">
+                <div
+                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
+                >
+                  <img
+                    src="/competences/html_5.svg"
+                    alt="HTML"
+                    class="w-10 h-10"
+                  />
+                </div>
+                <p class="font-primary text-sm">HTML</p>
+              </div>
+
+              <!-- WordPress -->
+              <div class="text-center group cursor-pointer">
+                <div
+                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
+                >
+                  <img
+                    src="/competences/wordpress-tile1.svg"
+                    alt="WordPress"
+                    class="w-10 h-10"
+                  />
+                </div>
+                <p class="font-primary text-sm">
+                  WORDPRESS
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Troisième ligne : Productivité (Notion seul, centré) -->
+        <div class="flex justify-center">
+          <div class="text-center group cursor-pointer">
+            <div
+              class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
+            >
+              <img
+                src="/competences/notion.svg"
+                alt="Notion"
+                class="w-10 h-10"
+              />
+            </div>
+            <p class="font-primary text-sm">NOTION</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Section Mon Prochain Chapitre -->
+  <section
+    class="mx-4 md:mx-8 lg:mx-16 py-10 bg-[var(--color-white)]"
+    data-theme="forest"
+  >
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+      <!-- Contenu texte à gauche (2/3) -->
+      <div class="lg:col-span-2 order-2 lg:order-1">
+        <!-- Titre principal -->
+        <h2 class="font-primary text-4xl mb-8 transform -rotate-1" style="color: #16a34a;">
+          MON PROCHAIN CHAPITRE
+        </h2>
+
+        <!-- Sous-sections -->
+        <div class="space-y-8">
+          <!-- Partenaire Web Fiable -->
+          <div class="bg-white p-6 border-4 border-green-600 shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-300">
+            <h3 class="font-primary text-2xl mb-4 text-green-700">
+              PARTENAIRE WEB FIABLE
+            </h3>
+            <p class="text-gray-800 font-medium leading-relaxed">
+              Ma priorité ? Devenir un partenaire fiable et polyvalent. Je souhaite créer des solutions web qui allient performance technique et identité visuelle marquante.
+            </p>
+          </div>
+
+          <!-- Créateur de Contenu -->
+          <div class="bg-white p-6 border-4 border-green-700 shadow-lg transform -rotate-1 hover:rotate-0 transition-transform duration-300">
+            <h3 class="font-primary text-2xl mb-4 text-green-800">
+              CRÉATEUR DE CONTENU ET STORYTELLING
+            </h3>
+            <p class="text-gray-800 font-medium leading-relaxed">
+              Mon ambition principale est d'étendre mon domaine de création : je souhaite devenir un créateur de contenu polyvalent avec ma future chaîne YouTube et mon blog.
+            </p>
+          </div>
+
+          <!-- Projets et Innovation -->
+          <div class="bg-white p-6 border-4 border-green-800 shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-300">
+            <h3 class="font-primary text-2xl mb-4 text-green-900">
+              PROJETS ET INNOVATION FUTURE
+            </h3>
+            <p class="text-gray-800 font-medium leading-relaxed">
+              Ma curiosité m'incite à repousser les limites techniques. Je prévois de maîtriser la 3D avec Blender et Unreal Engine pour créer des expériences immersives.
+            </p>
+          </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="text-center mt-12">
+          <Button
+            href="#contact"
+            className="font-primary text-xl px-8 py-4"
+            theme="forest"
+          >
+            COLLABORONS ENSEMBLE !
+          </Button>
+        </div>
+      </div>
+
+      <!-- Image sticky à droite (1/3) -->
+      <div class="lg:col-span-1 order-1 lg:order-2">
+        <div class="sticky top-32">
+          <img
+            src="/public/avatar/a-propos_4.webp"
+            alt="Bryan Thierry - Futur"
+            class="w-full max-w-[300px] h-auto object-cover mx-auto transform"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
