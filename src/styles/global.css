@@ -126,6 +126,34 @@ body {
   text-shadow: 0 0 20px var(--a), 2px 2px 0 var(--a), 4px 4px 0 var(--s);
 }
 
+/* === STYLES SPÉCIFIQUES PAGE PROJET === */
+
+/* Header sur pages de projets - texte en couleur primaire par défaut */
+.projet-page .logo-link,
+.projet-page .nav-link {
+  color: var(--p);
+}
+
+/* Au hover, texte noir avec ombres colorées (effet comics existant) */
+.projet-page .logo-link:hover,
+.projet-page .nav-link:hover {
+  color: var(--bc);
+}
+
+/* === STYLES SPÉCIFIQUES PAGE À PROPOS === */
+
+/* Header sur page à propos - texte en couleur primaire par défaut */
+.apropos-page .logo-link,
+.apropos-page .nav-link {
+  color: var(--p);
+}
+
+/* Au hover, texte noir avec ombres colorées (effet comics existant) */
+.apropos-page .logo-link:hover,
+.apropos-page .nav-link:hover {
+  color: var(--bc);
+}
+
 /* Effet comics pour texte dans cards (via hover sur card) */
 .comics-card:hover .comics-glow-hover {
   color: var(--bc);

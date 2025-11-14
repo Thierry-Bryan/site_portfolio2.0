@@ -27,7 +27,7 @@ const { theme = "ca-va-trailer" } = Astro.props;
       <li>
         <a
           href="#services"
-          class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link"
+          class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link hover:bg-transparent"
         >
           MES SERVICES
         </a>
@@ -35,7 +35,7 @@ const { theme = "ca-va-trailer" } = Astro.props;
       <li>
         <a
           href="#projects"
-          class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link"
+          class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link hover:bg-transparent"
         >
           MES PROJETS
         </a>
@@ -43,7 +43,7 @@ const { theme = "ca-va-trailer" } = Astro.props;
       <li>
         <a
           href="#about"
-          class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link"
+          class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link hover:bg-transparent"
         >
           A PROPOS
         </a>
@@ -52,7 +52,7 @@ const { theme = "ca-va-trailer" } = Astro.props;
   </div>
 
   <div class="navbar-end">
-    <Button href="#contact" aria-label="Me contacter" theme={theme}>
+    <Button href="#contact" aria-label="Me contacter" theme={theme} className="header-button">
       ME CONTACTER
     </Button>
   </div>
@@ -61,11 +61,14 @@ const { theme = "ca-va-trailer" } = Astro.props;
 <script>
   let lastScrollY = 0;
   let ticking = false;
+  let isInHero = true; // Track si on est dans le hero
 
-  // Détection de la page d'accueil
+  // Détection du type de page
   const isHomePage =
     window.location.pathname === "/" ||
     window.location.pathname === "/index.html";
+  const isProjetPage = window.location.pathname.includes("/projets/");
+  const isAProposPage = window.location.pathname.includes("/a-propos");
 
   function updateHeaderStyle() {
     const header = document.getElementById("header");
@@ -79,6 +82,7 @@ const { theme = "ca-va-trailer" } = Astro.props;
       // Comportement pour la page d'accueil (logique existante)
       const heroHeight = window.innerHeight;
       const scrolled = currentScrollY > heroHeight - 100;
+      const headerButton = document.querySelector(".header-button");
 
       // Fond blanc après le hero
       if (scrolled) {
@@ -86,11 +90,47 @@ const { theme = "ca-va-trailer" } = Astro.props;
         header.style.backgroundColor = "rgba(250, 249, 247, 0.95)";
         header.style.backdropFilter = "blur(10px)";
         header.style.boxShadow = "0 2px 10px rgba(0, 0, 0, 0.1)";
+        
+        // Seulement si on change d'état (hero -> après hero)
+        if (isInHero && headerButton) {
+          isInHero = false;
+          headerButton.classList.remove("hero-button");
+          
+          // Forcer la réinitialisation complète des styles
+          const textEl = headerButton.querySelector(".btn-text");
+          if (textEl) {
+            textEl.style.color = "white";
+            textEl.style.textShadow = "none";
+            // Supprimer les événements hover en cours
+            textEl.style.removeProperty("transition");
+            setTimeout(() => {
+              if (textEl) textEl.style.transition = "color 0.3s ease, text-shadow 0.3s ease";
+            }, 10);
+          }
+        }
       } else {
         header.classList.remove("scrolled");
         header.style.backgroundColor = "transparent";
         header.style.backdropFilter = "none";
         header.style.boxShadow = "none";
+        
+        // Seulement si on change d'état (après hero -> hero)
+        if (!isInHero && headerButton) {
+          isInHero = true;
+          headerButton.classList.add("hero-button");
+          
+          // Forcer la réinitialisation complète des styles
+          const textEl = headerButton.querySelector(".btn-text");
+          if (textEl) {
+            textEl.style.color = "#181818";
+            textEl.style.textShadow = "none";
+            // Supprimer les événements hover en cours
+            textEl.style.removeProperty("transition");
+            setTimeout(() => {
+              if (textEl) textEl.style.transition = "color 0.3s ease, text-shadow 0.3s ease";
+            }, 10);
+          }
+        }
       }
 
       // Animation disparition/apparition
@@ -102,6 +142,47 @@ const { theme = "ca-va-trailer" } = Astro.props;
         }
       } else {
         header.style.transform = "translateY(0)";
+      }
+    } else if (isProjetPage) {
+      // Comportement pour les pages de projets
+      const scrollThreshold = 50;
+
+      header.classList.add("scrolled", "projet-page");
+      header.style.backgroundColor = "rgba(250, 249, 247, 0.95)";
+      header.style.backdropFilter = "blur(10px)";
+
+      // Animation disparition/apparition basée sur le scroll
+      if (currentScrollY > scrollThreshold) {
+        if (scrollingDown && currentScrollY > lastScrollY + 5) {
+          header.style.transform = "translateY(-100%)";
+        } else if (scrollingUp) {
+          header.style.transform = "translateY(0)";
+        }
+      } else {
+        header.style.transform = "translateY(0)";
+      }
+    } else if (isAProposPage) {
+      // Comportement pour la page à propos avec changement de thème selon la section
+      header.classList.add("scrolled", "apropos-page");
+      header.style.backgroundColor = "rgba(250, 249, 247, 0.95)";
+      header.style.backdropFilter = "blur(10px)";
+      header.style.transform = "translateY(0)"; // Toujours visible
+
+      // Détecter la section visible
+      const sections = document.querySelectorAll("section[data-theme]");
+      let currentTheme = null;
+
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        // Si la section est visible dans le viewport (en prenant en compte le header)
+        if (rect.top <= 100 && rect.bottom >= 100) {
+          currentTheme = section.getAttribute("data-theme");
+        }
+      });
+
+      // Mettre à jour le thème du header
+      if (currentTheme) {
+        header.setAttribute("data-theme", currentTheme);
       }
     } else {
       // Comportement pour les autres pages
@@ -140,5 +221,19 @@ const { theme = "ca-va-trailer" } = Astro.props;
   }
 
   window.addEventListener("scroll", onScroll);
+  
+  // Initialisation au chargement
+  if (isHomePage) {
+    const headerButton = document.querySelector(".header-button");
+    if (headerButton && window.scrollY <= window.innerHeight - 100) {
+      headerButton.classList.add("hero-button");
+      const textEl = headerButton.querySelector(".btn-text");
+      if (textEl) {
+        textEl.style.color = "#181818";
+        textEl.style.textShadow = "none";
+      }
+    }
+  }
+  
   updateHeaderStyle();
 </script>
