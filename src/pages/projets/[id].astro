@@ -1,0 +1,391 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Button from "../../components/Button.astro";
+import BackgroundComics from "../../components/BackgroundComics.astro";
+import ArrowButton from "../../components/ArrowButton.astro";
+import {
+  projets,
+  getProjet,
+  getNextProjet,
+  getPreviousProjet,
+} from "../../data/projets.js";
+
+// Générer les routes statiques pour tous les projets
+export async function getStaticPaths() {
+  return projets.map((projet) => ({
+    params: { id: projet.id },
+  }));
+}
+
+// Récupérer l'ID depuis les paramètres de l'URL
+const { id } = Astro.params;
+
+// Récupérer les données du projet
+const projet = getProjet(id);
+const nextProjet = getNextProjet(id);
+const previousProjet = getPreviousProjet(id);
+
+// Si le projet n'existe pas, rediriger vers la page d'accueil
+if (!projet) {
+  return Astro.redirect("/");
+}
+---
+
+<Layout
+  theme={projet.theme as any}
+  title={`${projet.title} - Portfolio Bryan Thierry`}
+>
+  <!-- Hero Section -->
+  <section
+    class="relative h-[calc(120vh-7rem)] flex items-stretch overflow-hidden"
+  >
+    <div class="w-full h-full relative">
+      <!-- Zone gauche : Texte sur fond blanc avec angle prononcé -->
+      <div
+        class="absolute left-0 top-0 h-full flex flex-col justify-center pl-12 md:pl-16 lg:pl-20 pr-8 py-12 w-[35%] min-w-[340px] bg-white z-30"
+        style="clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);"
+      >
+        <div
+          style="box-shadow: 8px 0 24px rgba(0, 0, 0, 0.2); position: absolute; inset: 0; z-index: -1; clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);"
+        >
+        </div>
+        <h1
+          class="hero-title text-4xl md:text-5xl lg:text-6xl font-bold mb-5 md:mb-6 leading-[0.95] transition-colors duration-700"
+          style="color: var(--p); font-style: italic; text-transform: uppercase; transform: rotate(-2deg);"
+        >
+          {projet.hero.title}
+        </h1>
+        <p
+          class="hero-description text-sm md:text-base lg:text-lg font-medium max-w-md leading-relaxed transition-colors duration-700"
+          style="color: var(--bc);"
+        >
+          {projet.hero.description}
+        </p>
+      </div>
+
+      <!-- Zone centrale : comics + device -->
+      <div
+        class="absolute left-[38%] top-0 h-full flex items-center justify-center w-[60%] z-20"
+        style="clip-path: polygon(30% 0, 100% 0, 94% 100%, 0 100%);"
+        id="hero-center"
+      >
+        <div
+          style="box-shadow: 8px 0 24px rgba(0, 0, 0, 0.2); position: absolute; inset: 0; z-index: -1; clip-path: polygon(6% 0, 100% 0, 94% 100%, 0 100%);"
+        >
+        </div>
+        <!-- Background pattern comics -->
+        <div
+          class="absolute inset-0 w-full h-full overflow-hidden transition-all duration-700"
+          id="background-comics"
+        >
+          <BackgroundComics theme={projet.theme as any} />
+        </div>
+        <!-- Device image -->
+        <div class="relative z-10">
+          <img
+            src={projet.hero.backgroundImage}
+            alt={projet.title}
+            class="max-h-[220px] md:max-h-[340px] lg:max-h-[450px] w-auto transition-opacity duration-500"
+            style="filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4)); transform: rotate(-18deg);"
+            id="hero-device"
+          />
+        </div>
+      </div>
+
+      <!-- Zone droite : triangle avec angle prononcé -->
+      <div
+        class="triangle-right absolute right-0 top-0 h-full w-[25%] min-w-[160px] z-25 pointer-events-none transition-all duration-700"
+        style="background: var(--p); clip-path: polygon(60% 0, 100% 0, 100% 100%, 0 100%);"
+      >
+        <div
+          style="box-shadow: -8px 0 24px rgba(0, 0, 0, 0.2); position: absolute; inset: 0; z-index: -1; clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);"
+        >
+        </div>
+      </div>
+
+      <!-- Flèches de navigation style comics avec angles -->
+      <div class="absolute bottom-20 left-[35%] z-40 cursor-pointer" id="prev-arrow-wrapper" data-prev-projet={previousProjet.id}>
+        <ArrowButton
+          direction="prev"
+          dataAttribute={previousProjet.id}
+          theme={projet.theme as any}
+        />
+      </div>
+      <div class="absolute bottom-20 right-[17%] z-40 cursor-pointer" id="next-arrow-wrapper" data-next-projet={nextProjet.id}>
+        <ArrowButton
+          direction="next"
+          dataAttribute={nextProjet.id}
+          theme={projet.theme as any}
+        />
+      </div>
+    </div>
+  </section>
+
+  <script define:vars={{ currentTheme: projet.theme }}>
+    // Données des projets pour navigation sans rechargement (ordre comme dans projets.js)
+    const projetsData = {
+      echosafe: {
+        theme: "blue",
+        backgroundImage: "/mes-projets/mes-projets_echosafe.webp",
+        title: "ECHO SAFE",
+        description:
+          "Application solidaire pour lutter contre le harcèlement : messagerie sécurisée, mood tracker et kit de secours, pensée pour l'humain et la simplicité.",
+        prevId: "rba",
+        nextId: "12-fragments",
+      },
+      "12-fragments": {
+        theme: "forest",
+        backgroundImage: "/mes-projets/mes-projets_12-fragments.webp",
+        title: "LES 12 FRAGMENTS",
+        description:
+          "Site créatif autour de 12 avatars pixel art, chacun avec son histoire, ses univers interactif et narratif unique.",
+        prevId: "echosafe",
+        nextId: "omnisphere",
+      },
+      omnisphere: {
+        theme: "pink",
+        backgroundImage: "/mes-projets/mes-projets_omnisphere.webp",
+        title: "OMNISPHERE",
+        description:
+          "Site immersif questionnant l'avenir des relations humaines avec design futuriste.",
+        prevId: "12-fragments",
+        nextId: "cavatrailer",
+      },
+      cavatrailer: {
+        theme: "redfire",
+        backgroundImage: "/mes-projets/mes-projets_cavatrailer.webp",
+        title: "ÇA VA TRAILER",
+        description:
+          "Vitrine immersive pour un festival de cinéma avec identité visuelle forte.",
+        prevId: "omnisphere",
+        nextId: "rba",
+      },
+      rba: {
+        theme: "sunset",
+        backgroundImage: "/mes-projets/mes-projets_rba.webp",
+        title: "RBA",
+        description: "Refonte identité visuelle association biodiversité.",
+        prevId: "cavatrailer",
+        nextId: "echosafe",
+      },
+    };
+
+    // Mapping des couleurs par thème (exactement les mêmes que dans global.css)
+    const themeColors = {
+      blue: { primary: "#0414fa", secondary: "#00eaff" },
+      forest: { primary: "#32cd32", secondary: "#006400" },
+      pink: { primary: "#3104fa", secondary: "#e100ff" },
+      redfire: { primary: "#fa0435", secondary: "#ff0000" },
+      sunset: { primary: "#ff4500", secondary: "#ffd700" },
+    };
+
+    // Animation fluide avec changement de thème et contenu sans rechargement
+    document.addEventListener("DOMContentLoaded", () => {
+      // Initialiser le thème au chargement de la page
+      const htmlElement = document.documentElement;
+      
+      // Simplement définir le data-theme, le CSS global.css s'occupera du reste
+      htmlElement.setAttribute("data-theme", currentTheme);
+      const prevArrowWrapper = document.getElementById("prev-arrow-wrapper");
+      const nextArrowWrapper = document.getElementById("next-arrow-wrapper");
+      const heroDevice = document.getElementById("hero-device");
+      const heroTitle = document.querySelector(".hero-title");
+      const heroDescription = document.querySelector(".hero-description");
+      const triangleRight = document.querySelector(".triangle-right");
+      const backgroundComics = document.getElementById("background-comics");
+
+      // Récupérer l'ID du projet actuel depuis l'URL
+      const getCurrentProjetId = () => {
+        const path = window.location.pathname;
+        const match = path.match(/\/projets\/([^\/]+)/);
+        return match ? match[1] : null;
+      };
+
+      const handleArrowClick = async (isPrev) => {
+        const currentId = getCurrentProjetId();
+
+        if (!currentId || !projetsData[currentId])
+          return;
+
+        const currentProjet = projetsData[currentId];
+        const nextId = isPrev ? currentProjet.prevId : currentProjet.nextId;
+
+        if (!nextId || !projetsData[nextId])
+          return;
+
+        const newProjet = projetsData[nextId];
+        const newColors = themeColors[newProjet.theme];
+
+        if (!heroDevice || !newColors) return;
+
+        // Animation de sortie fluide de l'image uniquement
+        heroDevice.style.opacity = "0";
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        // Mise à jour du thème global (header, footer, boutons, titres)
+        htmlElement.setAttribute("data-theme", newProjet.theme);
+        
+        // Mettre à jour le data-theme du header et footer
+        const header = document.getElementById("header");
+        const footer = document.querySelector("footer");
+        if (header) {
+          header.setAttribute("data-theme", newProjet.theme);
+        }
+        if (footer) {
+          footer.setAttribute("data-theme", newProjet.theme);
+        }
+
+        // Mise à jour du contenu
+        heroDevice.src = newProjet.backgroundImage;
+        if (heroTitle) {
+          heroTitle.textContent = newProjet.title;
+        }
+        if (heroDescription) {
+          heroDescription.textContent = newProjet.description;
+        }
+
+        // Mise à jour du triangle de droite
+        if (triangleRight) {
+          triangleRight.style.background = newColors.primary;
+        }
+
+        // Mise à jour du gradient du BackgroundComics
+        if (backgroundComics) {
+          const gradientDiv = backgroundComics.querySelector(
+            'div[style*="linear-gradient"]'
+          );
+          if (gradientDiv) {
+            gradientDiv.style.background = `linear-gradient(90deg, ${newColors.secondary} 0%, ${newColors.primary} 100%)`;
+          }
+        }
+
+        // Mise à jour des attributs data des flèches
+        const prevWrapper = document.getElementById("prev-arrow-wrapper");
+        const nextWrapper = document.getElementById("next-arrow-wrapper");
+        if (prevWrapper) {
+          prevWrapper.setAttribute("data-prev-projet", newProjet.prevId);
+          const prevButton = prevWrapper.querySelector("button");
+          if (prevButton) {
+            prevButton.setAttribute("data-theme", newProjet.theme);
+            prevButton.style.background = newColors.primary;
+            prevButton.style.boxShadow = `-5px 5px 0 0 rgba(255, 255, 255, 1)`;
+          }
+        }
+        if (nextWrapper) {
+          nextWrapper.setAttribute("data-next-projet", newProjet.nextId);
+          const nextButton = nextWrapper.querySelector("button");
+          if (nextButton) {
+            nextButton.setAttribute("data-theme", newProjet.theme);
+            nextButton.style.boxShadow = `-5px 5px 0 0 ${newColors.primary}`;
+            const nextSvg = nextButton.querySelector("svg");
+            if (nextSvg) {
+              nextSvg.style.color = newColors.primary;
+            }
+          }
+        }
+
+        // Mise à jour de la section contenu
+        const contenuSection = document.getElementById("contenu");
+        if (contenuSection) {
+          contenuSection.setAttribute("data-theme", newProjet.theme);
+          
+          // Mettre à jour les bordures des features
+          const featureDivs = contenuSection.querySelectorAll(".space-y-6 > div");
+          featureDivs.forEach((div, index) => {
+            if (index % 2 === 0) {
+              div.style.borderColor = newColors.primary;
+            } else {
+              div.style.borderColor = newColors.secondary;
+            }
+          });
+        }
+
+        // Mise à jour de l'URL sans rechargement
+        window.history.pushState({}, "", `/projets/${nextId}`);
+        document.title = `${newProjet.title} - Portfolio Bryan Thierry`;
+
+        // Animation d'entrée de l'image
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        heroDevice.style.opacity = "1";
+      };
+
+      // Attacher les event listeners
+      if (prevArrowWrapper) {
+        prevArrowWrapper.addEventListener("click", () => handleArrowClick(true));
+      }
+      if (nextArrowWrapper) {
+        nextArrowWrapper.addEventListener("click", () => handleArrowClick(false));
+      }
+    });
+  </script>
+
+  <!-- Section Contenu -->
+  <section id="contenu" class="py-20 bg-white" data-theme={projet.theme}>
+    <div class="mx-4 md:mx-8 lg:mx-16">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <!-- Contenu texte -->
+        <div class="space-y-8">
+          <div>
+            <h2 class="font-primary text-4xl mb-6 transform -rotate-1">
+              DESCRIPTION
+            </h2>
+            <p class="text-lg leading-relaxed text-gray-800 mb-8">
+              {projet.content.description}
+            </p>
+          </div>
+
+          <!-- Fonctionnalités -->
+          <div class="space-y-6">
+            {
+              projet.content.features.map((feature, index) => (
+                <div
+                  class={`bg-white p-6 border-4 shadow-lg transform transition-transform duration-300 hover:rotate-0 ${
+                    index % 2 === 0
+                      ? "rotate-1"
+                      : "-rotate-1"
+                  }`}
+                  style={index % 2 === 0 ? "border-color: var(--p);" : "border-color: var(--s);"}
+                >
+                  <p class="text-gray-800 font-medium leading-relaxed">
+                    {feature}
+                  </p>
+                </div>
+              ))
+            }
+          </div>
+
+          <!-- Bouton vers le site (si disponible) -->
+          <div class="text-center pt-8">
+            <Button
+              href="#"
+              className="font-primary text-lg px-8 py-4"
+              theme={projet.theme as any}
+            >
+              VOIR LE SITE FINAL
+            </Button>
+          </div>
+        </div>
+
+        <!-- Images du projet -->
+        <div class="space-y-8">
+          {
+            projet.images.mockups.map((image, index) => (
+              <div class="relative">
+                <img
+                  src={image}
+                  alt={`${projet.title} - Mockup ${index + 1}`}
+                  class={`w-full h-auto object-cover shadow-2xl transform transition-transform duration-300 hover:scale-105 ${
+                    index % 2 === 0
+                      ? "rotate-1 hover:rotate-0"
+                      : "-rotate-1 hover:rotate-0"
+                  }`}
+                />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

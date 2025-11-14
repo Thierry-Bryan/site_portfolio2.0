@@ -38,7 +38,7 @@
   --a: #ff8800;
   --b1: #faf9f7;
   --bc: #181818;
-  --glow: rgba(255, 69, 0, 0.3);
+  --accent-glow: rgba(255, 69, 0, 0.3);
 }
 
 [data-theme="forest"] {
@@ -234,5 +234,106 @@ body {
 @media (min-width: 1024px) {
   .social-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* === ARROW BUTTON STYLES === */
+
+/* Arrow wrapper with shadow */
+.arrow-wrapper::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%);
+  z-index: -1;
+  transition: all 0.3s ease;
+}
+
+.arrow-wrapper-prev::after {
+  background: white;
+  top: 5px;
+  left: 4px;
+}
+
+.arrow-wrapper-next::after {
+  background: var(--p);
+  top: 5px;
+  left: -6px;
+}
+
+/* Arrow button base styles */
+.arrow-prev,
+.arrow-next {
+  clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%);
+}
+
+.arrow-prev {
+  background: var(--p);
+  transition: all 0.3s ease;
+}
+
+.arrow-next {
+  background: white;
+  transition: all 0.3s ease;
+}
+
+/* Arrow button hover gradient effect */
+.arrow-prev::before,
+.arrow-next::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: translate(-50%, -50%);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.arrow-prev::before {
+  background: radial-gradient(circle, #ffffff, #f0f0f0);
+}
+
+.arrow-next::before {
+  background: var(--p);
+}
+
+.arrow-prev:hover::before,
+.arrow-next:hover::before {
+  width: 120%;
+  height: 300%;
+}
+
+/* Arrow shadow color on hover */
+.arrow-wrapper-prev:hover::after {
+  background: var(--p);
+}
+
+.arrow-wrapper-next:hover::after {
+  background: white;
+}
+
+/* Arrow icon color on hover */
+.arrow-prev:hover svg {
+  color: var(--p) !important;
+}
+
+.arrow-next:hover svg {
+  color: white !important;
+}
+
+/* === PROJECT PAGE STYLES === */
+
+/* Hero section animations */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
   }
 }

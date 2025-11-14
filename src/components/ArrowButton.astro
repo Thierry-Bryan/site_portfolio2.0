@@ -1,0 +1,55 @@
+---
+interface Props {
+  direction: "prev" | "next";
+  dataAttribute: string;
+  className?: string;
+  theme?: "blue" | "forest" | "pink" | "redfire" | "sunset";
+}
+
+const {
+  direction,
+  dataAttribute,
+  className = "",
+  theme = "blue",
+} = Astro.props;
+
+const isPrev = direction === "prev";
+
+const btnClass = `
+  arrow-${direction}
+  flex items-center justify-center
+  relative
+  transition-all duration-300
+  cursor-pointer
+  w-full h-full
+  ${className}
+`.trim();
+
+const wrapperClass = `arrow-wrapper arrow-wrapper-${direction} relative inline-block w-28 h-15 md:w-36 md:h-18`;
+---
+
+<div class={wrapperClass}>
+  <button
+    data-prev-projet={isPrev ? dataAttribute : undefined}
+    data-next-projet={!isPrev ? dataAttribute : undefined}
+    class={btnClass}
+    data-theme={theme}
+  >
+    <svg
+      class={`w-10 h-8 md:w-12 md:h-9 relative z-10 ${isPrev ? "text-white" : ""}`}
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 28 24"
+      stroke-width="2.5"
+      style={!isPrev ? "color: var(--p);" : ""}
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d={isPrev ? "M23 12H5m0 0l7 7m-7-7l7-7" : "M5 12h18m0 0l-7-7m7 7l-7 7"}
+      ></path>
+    </svg>
+  </button>
+</div>
+
+

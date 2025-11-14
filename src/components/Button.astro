@@ -13,7 +13,7 @@ interface Props {
 const {
   label = "Bouton",
   background = "var(--color-white)",
-  shadowColor = "#D90404",
+  shadowColor,
   href,
   type = "button",
   disabled = false,
@@ -28,7 +28,7 @@ const btnStyle = {
   justifyContent: "center",
   alignItems: "center",
   background: background,
-  "--shadow-color": shadowColor,
+  ...(shadowColor && { "--shadow-color": shadowColor }),
 };
 
 const btnClass = `
@@ -46,7 +46,7 @@ const btnClass = `
 <!-- Button -->
 <style>
   .btn-hover {
-    box-shadow: -5px 5px 0 0 var(--shadow-color);
+    box-shadow: -5px 5px 0 0 var(--shadow-color, var(--p));
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -77,7 +77,7 @@ const btnClass = `
       2px 2px 0 #000,
       4px 4px 0 #333;
     color: white;
-    filter: drop-shadow(0 8px 16px var(--accent-glow));
+    filter: drop-shadow(0 8px 16px var(--accent-glow, var(--glow, rgba(0, 0, 0, 0.3))));
   }
 </style>
 
@@ -88,7 +88,6 @@ const btnClass = `
       class={btnClass}
       style={btnStyle}
       role="button"
-      data-theme={theme}
     >
       <slot>{label}</slot>
     </a>
@@ -98,7 +97,6 @@ const btnClass = `
       style={btnStyle}
       {type}
       {disabled}
-      data-theme={theme}
     >
       <slot>{label}</slot>
     </button>
