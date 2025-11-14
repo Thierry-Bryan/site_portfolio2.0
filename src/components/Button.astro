@@ -141,9 +141,9 @@ const btnClass = `
         
         if (textEl) {
           if (isHeroButton) {
-            // Hero button: noir → blanc avec ombre noire
+            // Hero button: noir → blanc sans ombre
             textEl.style.color = "white";
-            textEl.style.textShadow = "2px 2px 0 #333, 4px 4px 0 #000";
+            textEl.style.textShadow = "none";
           } else {
             // Bouton normal: couleurs du thème → noir sans ombre
             textEl.style.color = "#181818";

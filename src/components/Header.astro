@@ -77,6 +77,11 @@ const { theme = "ca-va-trailer" } = Astro.props;
     const currentScrollY = window.scrollY;
     const scrollingDown = currentScrollY > lastScrollY;
     const scrollingUp = currentScrollY < lastScrollY;
+    
+    // Vérifier si on est près du bas de page
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const isNearBottom = currentScrollY + windowHeight >= documentHeight - 100;
 
     if (isHomePage) {
       // Comportement pour la page d'accueil (logique existante)
@@ -135,7 +140,10 @@ const { theme = "ca-va-trailer" } = Astro.props;
 
       // Animation disparition/apparition
       if (scrolled) {
-        if (scrollingDown && currentScrollY > heroHeight + 100) {
+        // Toujours afficher si on est en bas de page
+        if (isNearBottom) {
+          header.style.transform = "translateY(0)";
+        } else if (scrollingDown && currentScrollY > heroHeight + 100) {
           header.style.transform = "translateY(-100%)";
         } else if (scrollingUp || currentScrollY <= heroHeight + 100) {
           header.style.transform = "translateY(0)";
@@ -153,7 +161,10 @@ const { theme = "ca-va-trailer" } = Astro.props;
 
       // Animation disparition/apparition basée sur le scroll
       if (currentScrollY > scrollThreshold) {
-        if (scrollingDown && currentScrollY > lastScrollY + 5) {
+        // Toujours afficher si on est en bas de page
+        if (isNearBottom) {
+          header.style.transform = "translateY(0)";
+        } else if (scrollingDown && currentScrollY > lastScrollY + 5) {
           header.style.transform = "translateY(-100%)";
         } else if (scrollingUp) {
           header.style.transform = "translateY(0)";
@@ -195,7 +206,10 @@ const { theme = "ca-va-trailer" } = Astro.props;
 
       // Animation disparition/apparition basée sur le scroll
       if (currentScrollY > scrollThreshold) {
-        if (scrollingDown && currentScrollY > lastScrollY + 5) {
+        // Toujours afficher si on est en bas de page
+        if (isNearBottom) {
+          header.style.transform = "translateY(0)";
+        } else if (scrollingDown && currentScrollY > lastScrollY + 5) {
           header.style.transform = "translateY(-100%)";
         } else if (scrollingUp) {
           header.style.transform = "translateY(0)";

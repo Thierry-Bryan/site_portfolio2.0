@@ -160,6 +160,18 @@ body {
   text-shadow: 0 0 20px var(--p), 2px 2px 0 var(--a), 4px 4px 0 var(--s);
 }
 
+/* Style de base pour les liens dans cards */
+.comics-glow-hover-link {
+  transition: all 0.3s ease;
+}
+
+/* Effet glow pour liens dans cards (via hover sur card) */
+.comics-card:hover .comics-glow-hover-link {
+  color: var(--bc);
+  text-shadow: 0 0 20px var(--p), 2px 2px 0 var(--a), 4px 4px 0 var(--s);
+  transform: scale(1.05) rotate(-1deg);
+}
+
 /* Effet comics pour icônes (via hover sur card) */
 .comics-card:hover .comics-icon-hover {
   color: var(--bc);
