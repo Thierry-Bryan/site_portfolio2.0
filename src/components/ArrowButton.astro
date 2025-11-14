@@ -30,7 +30,7 @@ const btnClass = `
   ${className}
 `.trim();
 
-const wrapperClass = `arrow-wrapper arrow-wrapper-${direction} relative inline-block w-28 h-15 md:w-36 md:h-18`;
+const wrapperClass = `arrow-wrapper arrow-wrapper-${direction} relative inline-block w-28 h-10 md:w-36 md:h-14`;
 ---
 
 <div class={wrapperClass}>
@@ -41,7 +41,7 @@ const wrapperClass = `arrow-wrapper arrow-wrapper-${direction} relative inline-b
     data-theme={theme}
   >
     <svg
-      class={`w-10 h-8 md:w-12 md:h-9 relative z-10 ${isPrev ? "text-white" : ""}`}
+      class={`w-10 h-6 md:w-12 md:h-7 relative z-10 ${isPrev ? "text-white" : ""}`}
       fill="none"
       stroke="currentColor"
       viewBox="0 0 28 24"

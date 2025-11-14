@@ -50,7 +50,6 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
       <!-- Zone gauche : Texte sur fond blanc avec angle prononcé -->
       <div
         class="absolute left-0 top-0 h-full flex flex-col justify-center pl-12 md:pl-16 lg:pl-20 pr-8 py-12 w-[35%] min-w-[340px] bg-white z-30"
-        style="clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);"
       >
         <div
           style="box-shadow: 8px 0 24px rgba(0, 0, 0, 0.2); position: absolute; inset: 0; z-index: -1; clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);"
@@ -77,26 +76,26 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
         id="hero-center"
       >
         <div
-          style="box-shadow: 8px 0 24px rgba(0, 0, 0, 0.2); position: absolute; inset: 0; z-index: -1; clip-path: polygon(6% 0, 100% 0, 94% 100%, 0 100%);"
         >
         </div>
         <!-- Background pattern comics -->
         <div
-          class="absolute inset-0 w-full h-full overflow-hidden transition-all duration-700"
+          class="absolute inset-0 w-full h-full overflow-visible transition-all duration-700"
           id="background-comics"
         >
           <BackgroundComics theme={projet.theme as any} />
         </div>
-        <!-- Device image -->
-        <div class="relative z-10">
-          <img
-            src={heroImageUrl}
-            alt={projet.title}
-            class="max-h-[220px] md:max-h-[340px] lg:max-h-[450px] w-auto transition-opacity duration-500"
-            style="filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4)); transform: rotate(-18deg);"
-            id="hero-device"
-          />
-        </div>
+      </div>
+
+      <!-- Device image en absolute qui dépasse -->
+      <div class="absolute left-1/2 top-1/2 -translate-x-[70px] -translate-y-1/2 z-22">
+        <img
+          src={heroImageUrl}
+          alt={projet.title}
+          class="max-h-[180px] md:max-h-[280px] lg:max-h-[360px] w-auto transition-opacity duration-500"
+          style="filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4));"
+          id="hero-device"
+        />
       </div>
 
       <!-- Zone droite : triangle avec angle prononcé -->
@@ -135,6 +134,41 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
       </div>
     </div>
   </section>
+
+  <!-- Bandeau de défilement du nom du projet -->
+  <section class="bg-black py-4 overflow-hidden border-t-4 border-b-4" style="border-color: var(--p);" id="projet-banner">
+    <div class="flex whitespace-nowrap animate-scroll">
+      <div class="flex items-center gap-8 pr-8" id="banner-content">
+        {Array.from({ length: 20 }).map(() => (
+          <>
+            <span class="text-white font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title">
+              {projet.title.toUpperCase()}
+            </span>
+            <span class="text-4xl" style="color: var(--p);">★</span>
+          </>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <style>
+    @keyframes scroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .animate-scroll {
+      animation: scroll 30s linear infinite;
+    }
+
+    .animate-scroll:hover {
+      animation-play-state: paused;
+    }
+  </style>
 
   <script
     define:vars={{
@@ -323,6 +357,22 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
               buttonContainer.style.display = "none";
             }
           }
+        }
+
+        // Mise à jour du bandeau défilant
+        const bannerContent = document.getElementById("banner-content");
+        const projetBanner = document.getElementById("projet-banner");
+        if (bannerContent) {
+          const newBannerHTML = Array.from({ length: 20 }).map(() => `
+            <span class="text-white font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title">
+              ${newProjet.title}
+            </span>
+            <span class="text-4xl" style="color: ${newColors.primary};">★</span>
+          `).join('');
+          bannerContent.innerHTML = newBannerHTML;
+        }
+        if (projetBanner) {
+          projetBanner.style.borderColor = newColors.primary;
         }
 
         // Mise à jour de l'URL sans rechargement
