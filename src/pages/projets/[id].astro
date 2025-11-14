@@ -4,31 +4,38 @@ import Button from "../../components/Button.astro";
 import BackgroundComics from "../../components/BackgroundComics.astro";
 import ArrowButton from "../../components/ArrowButton.astro";
 import {
-  projets,
-  getProjet,
+  getProjets,
+  getProjetBySlug,
+  getFileUrl,
+  getMultipleFileUrls,
   getNextProjet,
   getPreviousProjet,
-} from "../../data/projets.js";
+} from "../../lib/pocketbase.js";
 
 // Générer les routes statiques pour tous les projets
 export async function getStaticPaths() {
+  const projets = await getProjets();
   return projets.map((projet) => ({
-    params: { id: projet.id },
+    params: { id: projet.slug },
   }));
 }
 
-// Récupérer l'ID depuis les paramètres de l'URL
+// Récupérer le slug depuis les paramètres de l'URL
 const { id } = Astro.params;
 
 // Récupérer les données du projet
-const projet = getProjet(id);
-const nextProjet = getNextProjet(id);
-const previousProjet = getPreviousProjet(id);
+const projet = await getProjetBySlug(id);
+const nextProjet = await getNextProjet(id);
+const previousProjet = await getPreviousProjet(id);
 
 // Si le projet n'existe pas, rediriger vers la page d'accueil
 if (!projet) {
   return Astro.redirect("/");
 }
+
+// Récupérer les URLs des images
+const heroImageUrl = getFileUrl(projet, projet.hero_image);
+const imagesUrls = getMultipleFileUrls(projet, "images");
 ---
 
 <Layout
@@ -50,16 +57,16 @@ if (!projet) {
         >
         </div>
         <h1
-          class="hero-title text-4xl md:text-5xl lg:text-6xl font-bold mb-5 md:mb-6 leading-[0.95] transition-colors duration-700"
+          class="hero-title text-4xl md:text-5xl lg:text-7xl mb-5 md:mb-6 leading-[0.95] transition-colors duration-700"
           style="color: var(--p); font-style: italic; text-transform: uppercase; transform: rotate(-2deg);"
         >
-          {projet.hero.title}
+          {projet.title}
         </h1>
         <p
           class="hero-description text-sm md:text-base lg:text-lg font-medium max-w-md leading-relaxed transition-colors duration-700"
           style="color: var(--bc);"
         >
-          {projet.hero.description}
+          {projet.hero_description}
         </p>
       </div>
 
@@ -83,7 +90,7 @@ if (!projet) {
         <!-- Device image -->
         <div class="relative z-10">
           <img
-            src={projet.hero.backgroundImage}
+            src={heroImageUrl}
             alt={projet.title}
             class="max-h-[220px] md:max-h-[340px] lg:max-h-[450px] w-auto transition-opacity duration-500"
             style="filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4)); transform: rotate(-18deg);"
@@ -104,86 +111,80 @@ if (!projet) {
       </div>
 
       <!-- Flèches de navigation style comics avec angles -->
-      <div class="absolute bottom-20 left-[35%] z-40 cursor-pointer" id="prev-arrow-wrapper" data-prev-projet={previousProjet.id}>
+      <div
+        class="absolute bottom-20 left-[35%] z-40 cursor-pointer"
+        id="prev-arrow-wrapper"
+        data-prev-projet={previousProjet?.slug || ""}
+      >
         <ArrowButton
           direction="prev"
-          dataAttribute={previousProjet.id}
+          dataAttribute={previousProjet?.slug || ""}
           theme={projet.theme as any}
         />
       </div>
-      <div class="absolute bottom-20 right-[17%] z-40 cursor-pointer" id="next-arrow-wrapper" data-next-projet={nextProjet.id}>
+      <div
+        class="absolute bottom-20 right-[17%] z-40 cursor-pointer"
+        id="next-arrow-wrapper"
+        data-next-projet={nextProjet?.slug || ""}
+      >
         <ArrowButton
           direction="next"
-          dataAttribute={nextProjet.id}
+          dataAttribute={nextProjet?.slug || ""}
           theme={projet.theme as any}
         />
       </div>
     </div>
   </section>
 
-  <script define:vars={{ currentTheme: projet.theme }}>
-    // Données des projets pour navigation sans rechargement (ordre comme dans projets.js)
-    const projetsData = {
-      echosafe: {
-        theme: "blue",
-        backgroundImage: "/mes-projets/mes-projets_echosafe.webp",
-        title: "ECHO SAFE",
-        description:
-          "Application solidaire pour lutter contre le harcèlement : messagerie sécurisée, mood tracker et kit de secours, pensée pour l'humain et la simplicité.",
-        prevId: "rba",
-        nextId: "12-fragments",
-      },
-      "12-fragments": {
-        theme: "forest",
-        backgroundImage: "/mes-projets/mes-projets_12-fragments.webp",
-        title: "LES 12 FRAGMENTS",
-        description:
-          "Site créatif autour de 12 avatars pixel art, chacun avec son histoire, ses univers interactif et narratif unique.",
-        prevId: "echosafe",
-        nextId: "omnisphere",
-      },
-      omnisphere: {
-        theme: "pink",
-        backgroundImage: "/mes-projets/mes-projets_omnisphere.webp",
-        title: "OMNISPHERE",
-        description:
-          "Site immersif questionnant l'avenir des relations humaines avec design futuriste.",
-        prevId: "12-fragments",
-        nextId: "cavatrailer",
-      },
-      cavatrailer: {
-        theme: "redfire",
-        backgroundImage: "/mes-projets/mes-projets_cavatrailer.webp",
-        title: "ÇA VA TRAILER",
-        description:
-          "Vitrine immersive pour un festival de cinéma avec identité visuelle forte.",
-        prevId: "omnisphere",
-        nextId: "rba",
-      },
-      rba: {
-        theme: "sunset",
-        backgroundImage: "/mes-projets/mes-projets_rba.webp",
-        title: "RBA",
-        description: "Refonte identité visuelle association biodiversité.",
-        prevId: "cavatrailer",
-        nextId: "echosafe",
-      },
-    };
+  <script
+    define:vars={{
+      currentTheme: projet.theme,
+      allProjets: (await getProjets()).map((p) => ({
+        slug: p.slug,
+        theme: p.theme,
+        backgroundImage: getFileUrl(p, p.hero_image),
+        title: p.title.toUpperCase(),
+        description: p.hero_description,
+        contentDescription: p.content_description,
+        images: getMultipleFileUrls(p, "images"),
+        siteUrl: p.site_url,
+      })),
+    }}
+  >
+    // Générer projetsData avec navigation circulaire
+    const projetsData = {};
+    allProjets.forEach((p, index) => {
+      const prevIndex = index === 0 ? allProjets.length - 1 : index - 1;
+      const nextIndex = index === allProjets.length - 1 ? 0 : index + 1;
+      projetsData[p.slug] = {
+        theme: p.theme,
+        backgroundImage: p.backgroundImage,
+        title: p.title,
+        description: p.description,
+        contentDescription: p.contentDescription,
+        images: p.images,
+        siteUrl: p.siteUrl,
+        prevId: allProjets[prevIndex].slug,
+        nextId: allProjets[nextIndex].slug,
+      };
+    });
 
     // Mapping des couleurs par thème (exactement les mêmes que dans global.css)
     const themeColors = {
-      blue: { primary: "#0414fa", secondary: "#00eaff" },
-      forest: { primary: "#32cd32", secondary: "#006400" },
-      pink: { primary: "#3104fa", secondary: "#e100ff" },
-      redfire: { primary: "#fa0435", secondary: "#ff0000" },
-      sunset: { primary: "#ff4500", secondary: "#ffd700" },
+      blue: { primary: "#0080ff", secondary: "#00c3ff" },
+      "les-12-fragments": { primary: "#32cd32", secondary: "#006400" },
+      pink: { primary: "#ff1493", secondary: "#ff69b4" },
+      "ca-va-trailer": { primary: "#fa0435", secondary: "#ff0000" },
+      RBA: { primary: "#ff4500", secondary: "#ffd700" },
+      "echo-safe": { primary: "#0414fa", secondary: "#00eaff" },
+      omnisphere: { primary: "#3104fa", secondary: "#e100ff" },
     };
 
     // Animation fluide avec changement de thème et contenu sans rechargement
     document.addEventListener("DOMContentLoaded", () => {
       // Initialiser le thème au chargement de la page
       const htmlElement = document.documentElement;
-      
+
       // Simplement définir le data-theme, le CSS global.css s'occupera du reste
       htmlElement.setAttribute("data-theme", currentTheme);
       const prevArrowWrapper = document.getElementById("prev-arrow-wrapper");
@@ -204,14 +205,12 @@ if (!projet) {
       const handleArrowClick = async (isPrev) => {
         const currentId = getCurrentProjetId();
 
-        if (!currentId || !projetsData[currentId])
-          return;
+        if (!currentId || !projetsData[currentId]) return;
 
         const currentProjet = projetsData[currentId];
         const nextId = isPrev ? currentProjet.prevId : currentProjet.nextId;
 
-        if (!nextId || !projetsData[nextId])
-          return;
+        if (!nextId || !projetsData[nextId]) return;
 
         const newProjet = projetsData[nextId];
         const newColors = themeColors[newProjet.theme];
@@ -225,7 +224,7 @@ if (!projet) {
 
         // Mise à jour du thème global (header, footer, boutons, titres)
         htmlElement.setAttribute("data-theme", newProjet.theme);
-        
+
         // Mettre à jour le data-theme du header et footer
         const header = document.getElementById("header");
         const footer = document.querySelector("footer");
@@ -289,16 +288,41 @@ if (!projet) {
         const contenuSection = document.getElementById("contenu");
         if (contenuSection) {
           contenuSection.setAttribute("data-theme", newProjet.theme);
-          
-          // Mettre à jour les bordures des features
-          const featureDivs = contenuSection.querySelectorAll(".space-y-6 > div");
-          featureDivs.forEach((div, index) => {
-            if (index % 2 === 0) {
-              div.style.borderColor = newColors.primary;
+
+          // Mettre à jour la description avec l'ID spécifique
+          const descriptionDiv = document.getElementById("projet-description");
+          if (descriptionDiv) {
+            descriptionDiv.innerHTML = newProjet.contentDescription || "";
+          }
+
+          // Mettre à jour les images avec l'ID spécifique
+          const imagesContainer = document.getElementById("projet-images-container");
+          if (imagesContainer && newProjet.images) {
+            imagesContainer.innerHTML = newProjet.images.map((image, index) => `
+              <div>
+                <img
+                  src="${image}"
+                  alt="${newProjet.title} - Mockup ${index + 1}"
+                  class="w-full h-auto object-cover"
+                />
+              </div>
+            `).join('');
+          }
+
+          // Mettre à jour le bouton site web avec l'ID spécifique
+          const buttonContainer = document.getElementById("projet-button-container");
+          if (buttonContainer) {
+            if (newProjet.siteUrl) {
+              buttonContainer.style.display = "block";
+              const buttonLink = buttonContainer.querySelector("a");
+              if (buttonLink) {
+                buttonLink.href = newProjet.siteUrl;
+                buttonLink.setAttribute("data-theme", newProjet.theme);
+              }
             } else {
-              div.style.borderColor = newColors.secondary;
+              buttonContainer.style.display = "none";
             }
-          });
+          }
         }
 
         // Mise à jour de l'URL sans rechargement
@@ -312,74 +336,60 @@ if (!projet) {
 
       // Attacher les event listeners
       if (prevArrowWrapper) {
-        prevArrowWrapper.addEventListener("click", () => handleArrowClick(true));
+        prevArrowWrapper.addEventListener("click", () =>
+          handleArrowClick(true)
+        );
       }
       if (nextArrowWrapper) {
-        nextArrowWrapper.addEventListener("click", () => handleArrowClick(false));
+        nextArrowWrapper.addEventListener("click", () =>
+          handleArrowClick(false)
+        );
       }
     });
   </script>
 
   <!-- Section Contenu -->
-  <section id="contenu" class="py-20 bg-white" data-theme={projet.theme}>
+  <section id="contenu" class="pt-8 pb-35 bg-white" data-theme={projet.theme}>
     <div class="mx-4 md:mx-8 lg:mx-16">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        <!-- Contenu texte -->
-        <div class="space-y-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+        <!-- Contenu texte sticky -->
+        <div class="lg:sticky lg:top-8">
           <div>
             <h2 class="font-primary text-4xl mb-6 transform -rotate-1">
               DESCRIPTION
             </h2>
-            <p class="text-lg leading-relaxed text-gray-800 mb-8">
-              {projet.content.description}
-            </p>
-          </div>
-
-          <!-- Fonctionnalités -->
-          <div class="space-y-6">
-            {
-              projet.content.features.map((feature, index) => (
-                <div
-                  class={`bg-white p-6 border-4 shadow-lg transform transition-transform duration-300 hover:rotate-0 ${
-                    index % 2 === 0
-                      ? "rotate-1"
-                      : "-rotate-1"
-                  }`}
-                  style={index % 2 === 0 ? "border-color: var(--p);" : "border-color: var(--s);"}
-                >
-                  <p class="text-gray-800 font-medium leading-relaxed">
-                    {feature}
-                  </p>
-                </div>
-              ))
-            }
+            <div
+              id="projet-description"
+              class="text-lg leading-relaxed text-gray-800 mb-8"
+              set:html={projet.content_description}
+            />
           </div>
 
           <!-- Bouton vers le site (si disponible) -->
-          <div class="text-center pt-8">
-            <Button
-              href="#"
-              className="font-primary text-lg px-8 py-4"
-              theme={projet.theme as any}
-            >
-              VOIR LE SITE FINAL
-            </Button>
-          </div>
+          {
+            projet.site_url && (
+              <div id="projet-button-container" class="text-center pt-8">
+                <Button
+                  href={projet.site_url}
+                  className="font-primary text-lg px-8 py-4"
+                  theme={projet.theme as any}
+                >
+                  VOIR LE SITE FINAL
+                </Button>
+              </div>
+            )
+          }
         </div>
 
         <!-- Images du projet -->
-        <div class="space-y-8">
+        <div id="projet-images-container" class="space-y-8 pb-20">
           {
-            projet.images.mockups.map((image, index) => (
-              <div class="relative">
+            imagesUrls.map((image, index) => (
+              <div>
                 <img
                   src={image}
                   alt={`${projet.title} - Mockup ${index + 1}`}
-                  class={`w-full h-auto object-cover shadow-2xl transform transition-transform duration-300 hover:scale-105 ${
-                    index % 2 === 0
-                      ? "rotate-1 hover:rotate-0"
-                      : "-rotate-1 hover:rotate-0"
-                  }`}
+                  class="w-full h-auto object-cover"
                 />
               </div>
             ))

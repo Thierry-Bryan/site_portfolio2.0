@@ -3,7 +3,12 @@ interface Props {
   direction: "prev" | "next";
   dataAttribute: string;
   className?: string;
-  theme?: "blue" | "forest" | "pink" | "redfire" | "sunset";
+  theme?:
+    | "echo-safe"
+    | "les-12-fragments"
+    | "omnisphere"
+    | "ca-va-trailer"
+    | "RBA";
 }
 
 const {
@@ -51,5 +56,3 @@ const wrapperClass = `arrow-wrapper arrow-wrapper-${direction} relative inline-b
     </svg>
   </button>
 </div>
-
-

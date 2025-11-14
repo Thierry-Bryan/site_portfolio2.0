@@ -2,13 +2,13 @@
 import Layout from "../../layouts/Layout.astro";
 import Button from "../../components/Button.astro";
 
-const theme = "sunset"; // Thème pour la page à propos
+const theme = "RBA"; // Thème pour la page à propos
 ---
 
 <Layout theme={theme} title="À propos - Bryan Thierry" class="">
   <section
     class="mx-4 md:mx-8 lg:mx-16 py-10 pt-25 bg-[var(--color-white)]"
-    data-theme="blue"
+    data-theme="echo-safe"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div class="md:col-span-1 flex justify-center items-center">
@@ -47,7 +47,7 @@ const theme = "sunset"; // Thème pour la page à propos
   <!-- Section Parcours avec frise chronologique -->
   <section
     class="mx-4 md:mx-8 lg:mx-16 py-10 bg-[var(--color-white)]"
-    data-theme="pink"
+    data-theme="omnisphere"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <!-- Frise chronologique à gauche (2/3) -->
@@ -211,7 +211,7 @@ const theme = "sunset"; // Thème pour la page à propos
                 <Button
                   href="#projets"
                   className="bg-white text-purple-900 hover:bg-purple-100 font-primary text-lg"
-                  theme="pink"
+                  theme="omnisphere"
                 >
                   VOIR MES PROJETS !
                 </Button>
@@ -236,7 +236,7 @@ const theme = "sunset"; // Thème pour la page à propos
   <!-- Section Mes Compétences -->
   <section
     class="mx-4 md:mx-8 lg:mx-16 py-10 bg-[var(--color-white)]"
-    data-theme="fire"
+    data-theme="orange"
   >
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
       <!-- Image du personnage à gauche (1/3) -->
@@ -253,9 +253,7 @@ const theme = "sunset"; // Thème pour la page à propos
       <!-- Contenu des compétences à droite (2/3) -->
       <div class="lg:col-span-2">
         <!-- Titre principal -->
-        <h2 class="font-primary text-center mb-5">
-          MES COMPÉTENCES
-        </h2>
+        <h2 class="font-primary text-center mb-5">MES COMPÉTENCES</h2>
 
         <!-- Section Compétences -->
         <div class="mb-8">
@@ -267,15 +265,9 @@ const theme = "sunset"; // Thème pour la page à propos
                 <div
                   class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
                 >
-                  <img
-                    src="/competences/figma.svg"
-                    alt="Figma"
-                    class="h-10"
-                  />
+                  <img src="/competences/figma.svg" alt="Figma" class="h-10" />
                 </div>
-                <p class="font-primary text-sm">
-                  FIGMA
-                </p>
+                <p class="font-primary text-sm">FIGMA</p>
               </div>
 
               <!-- Illustrator -->
@@ -289,9 +281,7 @@ const theme = "sunset"; // Thème pour la page à propos
                     class="w-10 h-10"
                   />
                 </div>
-                <p class="font-primary text-sm">
-                  ILLUSTRATOR
-                </p>
+                <p class="font-primary text-sm">ILLUSTRATOR</p>
               </div>
 
               <!-- Photoshop -->
@@ -305,9 +295,7 @@ const theme = "sunset"; // Thème pour la page à propos
                     class="w-10 h-10"
                   />
                 </div>
-                <p class="font-primary text-sm">
-                  PHOTOSHOP
-                </p>
+                <p class="font-primary text-sm">PHOTOSHOP</p>
               </div>
 
               <!-- After Effect -->
@@ -321,9 +309,7 @@ const theme = "sunset"; // Thème pour la page à propos
                     class="w-10 h-10"
                   />
                 </div>
-                <p class="font-primary text-sm">
-                  AFTER EFFECT
-                </p>
+                <p class="font-primary text-sm">AFTER EFFECT</p>
               </div>
 
               <!-- Premiere Pro -->
@@ -337,9 +323,7 @@ const theme = "sunset"; // Thème pour la page à propos
                     class="w-10 h-10"
                   />
                 </div>
-                <p class="font-primary text-sm">
-                  PREMIERE PRO
-                </p>
+                <p class="font-primary text-sm">PREMIERE PRO</p>
               </div>
             </div>
           </div>
@@ -360,9 +344,7 @@ const theme = "sunset"; // Thème pour la page à propos
                     class="w-10 h-10"
                   />
                 </div>
-                <p class="font-primary text-sm">
-                  VS CODE
-                </p>
+                <p class="font-primary text-sm">VS CODE</p>
               </div>
 
               <!-- JavaScript -->
@@ -376,9 +358,7 @@ const theme = "sunset"; // Thème pour la page à propos
                     class="w-10 h-10"
                   />
                 </div>
-                <p class="font-primary text-sm">
-                  JAVASCRIPT
-                </p>
+                <p class="font-primary text-sm">JAVASCRIPT</p>
               </div>
 
               <!-- CSS -->
@@ -420,9 +400,7 @@ const theme = "sunset"; // Thème pour la page à propos
                     class="w-10 h-10"
                   />
                 </div>
-                <p class="font-primary text-sm">
-                  WORDPRESS
-                </p>
+                <p class="font-primary text-sm">WORDPRESS</p>
               </div>
             </div>
           </div>
@@ -448,45 +426,60 @@ const theme = "sunset"; // Thème pour la page à propos
   <!-- Section Mon Prochain Chapitre -->
   <section
     class="mx-4 md:mx-8 lg:mx-16 py-10 bg-[var(--color-white)]"
-    data-theme="forest"
+    data-theme="les-12-fragments"
   >
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
       <!-- Contenu texte à gauche (2/3) -->
       <div class="lg:col-span-2 order-2 lg:order-1">
         <!-- Titre principal -->
-        <h2 class="font-primary text-4xl mb-8 transform -rotate-1" style="color: #16a34a;">
+        <h2
+          class="font-primary text-4xl mb-8 transform -rotate-1"
+          style="color: #16a34a;"
+        >
           MON PROCHAIN CHAPITRE
         </h2>
 
         <!-- Sous-sections -->
         <div class="space-y-8">
           <!-- Partenaire Web Fiable -->
-          <div class="bg-white p-6 border-4 border-green-600 shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-300">
+          <div
+            class="bg-white p-6 border-4 border-green-600 shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-300"
+          >
             <h3 class="font-primary text-2xl mb-4 text-green-700">
               PARTENAIRE WEB FIABLE
             </h3>
             <p class="text-gray-800 font-medium leading-relaxed">
-              Ma priorité ? Devenir un partenaire fiable et polyvalent. Je souhaite créer des solutions web qui allient performance technique et identité visuelle marquante.
+              Ma priorité ? Devenir un partenaire fiable et polyvalent. Je
+              souhaite créer des solutions web qui allient performance technique
+              et identité visuelle marquante.
             </p>
           </div>
 
           <!-- Créateur de Contenu -->
-          <div class="bg-white p-6 border-4 border-green-700 shadow-lg transform -rotate-1 hover:rotate-0 transition-transform duration-300">
+          <div
+            class="bg-white p-6 border-4 border-green-700 shadow-lg transform -rotate-1 hover:rotate-0 transition-transform duration-300"
+          >
             <h3 class="font-primary text-2xl mb-4 text-green-800">
               CRÉATEUR DE CONTENU ET STORYTELLING
             </h3>
             <p class="text-gray-800 font-medium leading-relaxed">
-              Mon ambition principale est d'étendre mon domaine de création : je souhaite devenir un créateur de contenu polyvalent avec ma future chaîne YouTube et mon blog.
+              Mon ambition principale est d'étendre mon domaine de création : je
+              souhaite devenir un créateur de contenu polyvalent avec ma future
+              chaîne YouTube et mon blog.
             </p>
           </div>
 
           <!-- Projets et Innovation -->
-          <div class="bg-white p-6 border-4 border-green-800 shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-300">
+          <div
+            class="bg-white p-6 border-4 border-green-800 shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-300"
+          >
             <h3 class="font-primary text-2xl mb-4 text-green-900">
               PROJETS ET INNOVATION FUTURE
             </h3>
             <p class="text-gray-800 font-medium leading-relaxed">
-              Ma curiosité m'incite à repousser les limites techniques. Je prévois de maîtriser la 3D avec Blender et Unreal Engine pour créer des expériences immersives.
+              Ma curiosité m'incite à repousser les limites techniques. Je
+              prévois de maîtriser la 3D avec Blender et Unreal Engine pour
+              créer des expériences immersives.
             </p>
           </div>
         </div>
@@ -496,7 +489,7 @@ const theme = "sunset"; // Thème pour la page à propos
           <Button
             href="#contact"
             className="font-primary text-xl px-8 py-4"
-            theme="forest"
+            theme="les-12-fragments"
           >
             COLLABORONS ENSEMBLE !
           </Button>

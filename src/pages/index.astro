@@ -4,8 +4,12 @@ import Card from "../components/Card.astro";
 import Button from "../components/Button.astro";
 import Hero from "../components/Hero.astro";
 import BackgroundComics from "../components/BackgroundComics.astro";
+import { getProjets, getFileUrl } from "../lib/pocketbase.js";
 
-const theme = "redfire";
+const theme = "basique";
+
+// Récupérer tous les projets depuis PocketBase
+const projets = await getProjets();
 ---
 
 <Layout theme={theme} title="Accueil - Portfolio Bryan Thierry">
@@ -60,148 +64,42 @@ const theme = "redfire";
   </section>
   <section class="bg-black pt-15 pb-20">
     <div class="flex items-center justify-center mb-5">
-      <h2 class="text-4xl text-[var(--color-white)] font-primary">
-        MES PROJETS
-      </h2>
+      <h2 class="text-4xl text-white font-primary">MES PROJETS</h2>
     </div>
     <div class="mx-4 md:mx-16">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4 place-items-center">
-        <!-- Projet 1 - EchoSafe -->
-        <a href="/projets/echosafe" class="block w-full max-w-[350px]">
-          <div
-            class="w-full max-w-[350px] h-[220px] flex items-center justify-center overflow-visible relative group cursor-pointer"
-            data-theme="blue"
-          >
-            <BackgroundComics theme="blue" />
-            <img
-              src="/mes-projets/mes-projets_echosafe.webp"
-              alt="EchoSafe Project"
-              class="absolute z-10 h-[220px] object-cover drop-shadow-2xl transform transition-all duration-300 group-hover:h-[250px]"
-            />
-            <div
-              class="absolute z-30 bg-black opacity-0 group-hover:opacity-50 transition-all duration-300 w-[340px] h-[210px] group-hover:w-[380px] group-hover:h-[250px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-            >
-            </div>
-            <div
-              class="absolute inset-0 z-40 flex items-center justify-center comics-glow-hover-link"
-            >
-              <h3
-                class="text-white text-2xl font-primary opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105 group-hover:-rotate-1 comics-glow-hover-link"
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4 place-items-center"
+      >
+        {
+          projets.map((projet) => {
+            const imageUrl = getFileUrl(projet, projet.hero_image);
+            return (
+              <a
+                href={`/projets/${projet.slug}`}
+                class="block w-full max-w-[350px]"
               >
-                ECHOSAFE
-              </h3>
-            </div>
-          </div>
-        </a>
-        <!-- Projet 2 - Omnisphere -->
-        <a href="/projets/omnisphere" class="block w-full max-w-[350px]">
-          <div
-            class="w-full max-w-[350px] h-[220px] flex items-center justify-center overflow-visible relative group cursor-pointer"
-            data-theme="pink"
-          >
-            <BackgroundComics theme="pink" />
-            <img
-              src="/mes-projets/mes-projets_omnisphere.webp"
-              alt="Omnisphere Project"
-              class="absolute z-10 h-[220px] object-cover drop-shadow-2xl transform transition-all duration-300 group-hover:h-[250px]"
-            />
-            <div
-              class="absolute z-30 bg-black opacity-0 group-hover:opacity-50 transition-all duration-300 w-[340px] h-[210px] group-hover:w-[380px] group-hover:h-[250px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-            >
-            </div>
-            <div
-              class="absolute inset-0 z-40 flex items-center justify-center comics-glow-hover-link"
-            >
-              <h3
-                class="text-white text-2xl font-primary opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105 group-hover:-rotate-1 comics-glow-hover-link"
-              >
-                OMNISPHERE
-              </h3>
-            </div>
-          </div>
-        </a>
-        <!-- Projet 3 - CavaTrailer -->
-        <a href="/projets/cavatrailer" class="block w-full max-w-[350px]">
-          <div
-            class="w-full max-w-[350px] h-[220px] flex items-center justify-center overflow-visible relative group cursor-pointer"
-            data-theme="redfire"
-          >
-            <BackgroundComics theme="redfire" />
-          <img
-            src="/mes-projets/mes-projets_cavatrailer.webp"
-            alt="CavaTrailer Project"
-            class="absolute z-10 h-[210px] object-cover drop-shadow-2xl transform transition-all duration-300 group-hover:h-[250px] group-hover:-translate-x-2.5"
-          />
-          <div
-            class="absolute z-30 bg-black opacity-0 group-hover:opacity-50 transition-all duration-300 w-[340px] h-[210px] group-hover:w-[380px] group-hover:h-[250px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 group-hover:-translate-x-[calc(50%+10px)]"
-          >
-          </div>
-          <div
-            class="absolute inset-0 z-40 flex items-center justify-center comics-glow-hover-link"
-          >
-            <h3
-              class="text-white text-2xl font-primary opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105 group-hover:-rotate-1 comics-glow-hover-link"
-            >
-              CAVATRAILER
-            </h3>
-          </div>
-        </div>
-        </a>
-        <!-- Projet 4 - RBA -->
-        <a href="/projets/rba" class="block w-full max-w-[350px]">
-          <div
-            class="w-full max-w-[350px] h-[220px] flex items-center justify-center overflow-visible relative group cursor-pointer"
-            data-theme="sunset"
-          >
-            <BackgroundComics theme="sunset" />
-          <img
-            src="/mes-projets/mes-projets_rba.webp"
-            alt="RBA Project"
-            class="absolute z-10 h-[220px] object-cover drop-shadow-2xl transform transition-all duration-300 group-hover:h-[250px]"
-          />
-          <div
-            class="absolute z-30 bg-black opacity-0 group-hover:opacity-50 transition-all duration-300 w-[340px] h-[210px] group-hover:w-[380px] group-hover:h-[250px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-          >
-          </div>
-          <div
-            class="absolute inset-0 z-40 flex items-center justify-center comics-glow-hover-link"
-          >
-            <h3
-              class="text-white text-2xl font-primary opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105 group-hover:-rotate-1 comics-glow-hover-link"
-            >
-              RBA
-            </h3>
-          </div>
-        </div>
-        </a>
-        <!-- Projet 5 - 12 Fragments -->
-        <a href="/projets/12-fragments" class="block w-full max-w-[350px]">
-          <div
-            class="w-full max-w-[350px] h-[220px] flex items-center justify-center overflow-visible relative group cursor-pointer"
-            data-theme="forest"
-          >
-            <BackgroundComics theme="forest" />
-          <img
-            src="/mes-projets/mes-projets_12-fragments.webp"
-            alt="12 Fragments Project"
-            class="absolute z-10 h-[210px] object-cover drop-shadow-2xl transform transition-all duration-300 group-hover:h-[250px]"
-          />
-          <div
-            class="absolute z-30 bg-black opacity-0 group-hover:opacity-50 transition-all duration-300 w-[340px] h-[210px] group-hover:w-[380px] group-hover:h-[250px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-          >
-          </div>
-          <div
-            class="absolute inset-0 z-40 flex items-center justify-center comics-glow-hover-link"
-          >
-            <h3
-              class="text-white text-2xl font-primary opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105 group-hover:-rotate-1 comics-glow-hover-link"
-            >
-              12 FRAGMENTS
-            </h3>
-          </div>
-        </div>
-        </a>
-        <!-- Projet 6 - À venir -->
+                <div
+                  class="w-full max-w-[350px] h-[220px] flex items-center justify-center overflow-visible relative group cursor-pointer"
+                  data-theme={projet.theme}
+                >
+                  <BackgroundComics theme={projet.theme} />
+                  <img
+                    src={imageUrl}
+                    alt={projet.title}
+                    class="absolute z-10 h-[220px] object-cover drop-shadow-2xl transform transition-all duration-300 group-hover:h-[250px]"
+                  />
+                  <div class="absolute z-30 bg-black opacity-0 group-hover:opacity-50 transition-all duration-300 w-[340px] h-[210px] group-hover:w-[380px] group-hover:h-[250px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+                  <div class="absolute inset-0 z-40 flex items-center justify-center comics-glow-hover-link">
+                    <h3 class="text-white text-2xl font-primary opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105 group-hover:-rotate-1 comics-glow-hover-link">
+                      {projet.title.toUpperCase()}
+                    </h3>
+                  </div>
+                </div>
+              </a>
+            );
+          })
+        }
+        <!-- Projet À venir -->
         <div
           class="w-full max-w-[350px] h-[220px] bg-black border-2 border-white flex items-center justify-center overflow-hidden"
         >

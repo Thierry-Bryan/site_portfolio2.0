@@ -2,17 +2,10 @@
 import Button from "./Button.astro";
 
 interface Props {
-  theme?:
-    | "cyberpunk"
-    | "ocean"
-    | "sunset"
-    | "forest"
-    | "fire"
-    | "redfire"
-    | "blue";
+  theme?: "RBA" | "les-12-fragments" | "orange" | "ca-va-trailer" | "echo-safe";
 }
 
-const { theme = "redfire" } = Astro.props;
+const { theme = "ca-va-trailer" } = Astro.props;
 ---
 
 <header

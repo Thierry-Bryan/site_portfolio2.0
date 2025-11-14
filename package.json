@@ -12,7 +12,8 @@
   "dependencies": {
     "@tailwindcss/cli": "^4.1.16",
     "@tailwindcss/vite": "^4.1.16",
-    "astro": "^5.15.1"
+    "astro": "^5.15.1",
+    "pocketbase": "^0.26.3"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",

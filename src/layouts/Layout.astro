@@ -7,14 +7,12 @@ import Footer from "../components/Footer.astro";
 interface Props {
   title?: string;
   theme?:
-    | "cyberpunk"
-    | "ocean"
-    | "sunset"
-    | "forest"
-    | "fire"
-    | "redfire"
-    | "blue"
-    | "pink";
+    | "RBA"
+    | "les-12-fragments"
+    | "orange"
+    | "ca-va-trailer"
+    | "echo-safe"
+    | "omnisphere";
 }
 
 // Système de thèmes automatique basé sur la route
@@ -22,7 +20,7 @@ const getThemeFromUrl = (url: string) => {
   if (url.includes("/a-propos")) return "ocean";
   if (url.includes("/contact")) return "cyberpunk";
   if (url.includes("/projets") && !url.includes("/projets/")) return "sunset"; // Liste des projets
-  return "redfire"; // thème par défaut
+  return "ca-va-trailer"; // thème par défaut
 };
 
 const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname) } =

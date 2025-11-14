@@ -14,25 +14,7 @@
 
 /* === THÈMES DAISYUI PERSONNALISÉS === */
 
-[data-theme="cyberpunk"] {
-  --p: #ff0080;
-  --s: #8b00ff;
-  --a: #ff0080;
-  --b1: #faf9f7;
-  --bc: #181818;
-  --accent-glow: rgba(255, 0, 128, 0.3);
-}
-
-[data-theme="ocean"] {
-  --p: #00ffff;
-  --s: #0044aa;
-  --a: #00ffff;
-  --b1: #faf9f7;
-  --bc: #181818;
-  --accent-glow: rgba(0, 255, 255, 0.3);
-}
-
-[data-theme="sunset"] {
+[data-theme="RBA"] {
   --p: #ff4500;
   --s: #ffd700;
   --a: #ff8800;
@@ -41,7 +23,7 @@
   --accent-glow: rgba(255, 69, 0, 0.3);
 }
 
-[data-theme="forest"] {
+[data-theme="les-12-fragments"] {
   --p: #32cd32;
   --s: #006400;
   --a: #32cd32;
@@ -50,7 +32,7 @@
   --accent-glow: rgba(50, 205, 50, 0.3);
 }
 
-[data-theme="fire"] {
+[data-theme="orange"] {
   --p: #fe5c05;
   --s: #ff6f00;
   --a: #ff1744;
@@ -59,7 +41,7 @@
   --accent-glow: rgba(255, 23, 68, 0.3);
 }
 
-[data-theme="redfire"] {
+[data-theme="ca-va-trailer"] {
   --p: #fa0435;
   --s: #ff0000;
   --a: #ff5757;
@@ -68,7 +50,16 @@
   --accent-glow: rgba(255, 23, 68, 0.3);
 }
 
-[data-theme="blue"] {
+[data-theme="basique"] {
+  --p: #fa0435;
+  --s: #ff0000;
+  --a: #ff5757;
+  --b1: #faf9f7;
+  --bc: #181818;
+  --accent-glow: rgba(255, 23, 68, 0.3);
+}
+
+[data-theme="echo-safe"] {
   --p: #0414fa;
   --s: #00eaff;
   --a: #4edcff;
@@ -77,19 +68,10 @@
   --accent-glow: rgba(255, 23, 68, 0.3);
 }
 
-[data-theme="pink"] {
+[data-theme="omnisphere"] {
   --p: #3104fa;
   --s: #e100ff;
   --a: #ff4ef6;
-  --b1: #faf9f7;
-  --bc: #181818;
-  --accent-glow: rgba(255, 23, 68, 0.3);
-}
-
-[data-theme="purple"] {
-  --p: #3104fa;
-  --s: #5100ff;
-  --a: #9e4eff;
   --b1: #faf9f7;
   --bc: #181818;
   --accent-glow: rgba(255, 23, 68, 0.3);

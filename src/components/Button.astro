@@ -7,7 +7,14 @@ interface Props {
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   className?: string;
-  theme?: "cyberpunk" | "ocean" | "sunset" | "forest" | "fire" | "redfire" | "purple" | "pink";
+  theme?:
+    | "RBA"
+    | "les-12-fragments"
+    | "orange"
+    | "ca-va-trailer"
+    | "purple"
+    | "omnisphere"
+    | "echo-safe";
 }
 
 const {
@@ -77,27 +84,19 @@ const btnClass = `
       2px 2px 0 #000,
       4px 4px 0 #333;
     color: white;
-    filter: drop-shadow(0 8px 16px var(--accent-glow, var(--glow, rgba(0, 0, 0, 0.3))));
+    filter: drop-shadow(
+      0 8px 16px var(--accent-glow, var(--glow, rgba(0, 0, 0, 0.3)))
+    );
   }
 </style>
 
 {
   href ? (
-    <a
-      {href}
-      class={btnClass}
-      style={btnStyle}
-      role="button"
-    >
+    <a {href} class={btnClass} style={btnStyle} role="button">
       <slot>{label}</slot>
     </a>
   ) : (
-    <button
-      class={btnClass}
-      style={btnStyle}
-      {type}
-      {disabled}
-    >
+    <button class={btnClass} style={btnStyle} {type} {disabled}>
       <slot>{label}</slot>
     </button>
   )
