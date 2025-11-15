@@ -19,7 +19,7 @@
   --s: #ffd700;
   --a: #ff8800;
   --b1: #faf9f7;
-  --bc: #181818;
+  --bc: #000000;
   --accent-glow: rgba(255, 69, 0, 0.3);
 }
 
@@ -28,7 +28,7 @@
   --s: #006400;
   --a: #32cd32;
   --b1: #faf9f7;
-  --bc: #181818;
+  --bc: #000000;
   --accent-glow: rgba(50, 205, 50, 0.3);
 }
 
@@ -37,7 +37,7 @@
   --s: #ff6f00;
   --a: #ff1744;
   --b1: #faf9f7;
-  --bc: #181818;
+  --bc: #000000;
   --accent-glow: rgba(255, 23, 68, 0.3);
 }
 
@@ -46,7 +46,7 @@
   --s: #ff0000;
   --a: #ff5757;
   --b1: #faf9f7;
-  --bc: #181818;
+  --bc: #000000;
   --accent-glow: rgba(255, 23, 68, 0.3);
 }
 
@@ -55,7 +55,7 @@
   --s: #ff0000;
   --a: #ff5757;
   --b1: #faf9f7;
-  --bc: #181818;
+  --bc: #000000;
   --accent-glow: rgba(255, 23, 68, 0.3);
 }
 
@@ -64,7 +64,7 @@
   --s: #00eaff;
   --a: #4edcff;
   --b1: #faf9f7;
-  --bc: #181818;
+  --bc: #000000;
   --accent-glow: rgba(255, 23, 68, 0.3);
 }
 
@@ -73,12 +73,133 @@
   --s: #e100ff;
   --a: #ff4ef6;
   --b1: #faf9f7;
-  --bc: #181818;
+  --bc: #000000;
   --accent-glow: rgba(255, 23, 68, 0.3);
 }
 
+[data-theme="ocean"] {
+  --p: #0891b2;
+  --s: #06b6d4;
+  --a: #67e8f9;
+  --b1: #faf9f7;
+  --bc: #000000;
+  --accent-glow: rgba(8, 145, 178, 0.3);
+}
+
+[data-theme="cyberpunk"] {
+  --p: #d946ef;
+  --s: #a21caf;
+  --a: #e879f9;
+  --b1: #faf9f7;
+  --bc: #000000;
+  --accent-glow: rgba(217, 70, 239, 0.3);
+}
+
+[data-theme="sunset"] {
+  --p: #f97316;
+  --s: #fb923c;
+  --a: #fdba74;
+  --b1: #faf9f7;
+  --bc: #000000;
+  --accent-glow: rgba(249, 115, 22, 0.3);
+}
+
+/* === THÈMES DARK === */
+
+[data-theme="RBA-dark"] {
+  --p: #ff6a33;
+  --s: #ffd700;
+  --a: #ffaa00;
+  --b1: #000000;
+  --bc: #faf9f7;
+  --accent-glow: rgba(255, 106, 51, 0.4);
+}
+
+[data-theme="les-12-fragments-dark"] {
+  --p: #4ade80;
+  --s: #22c55e;
+  --a: #86efac;
+  --b1: #000000;
+  --bc: #faf9f7;
+  --accent-glow: rgba(74, 222, 128, 0.4);
+}
+
+[data-theme="orange-dark"] {
+  --p: #ff7722;
+  --s: #ff8c00;
+  --a: #ff6b6b;
+  --b1: #000000;
+  --bc: #faf9f7;
+  --accent-glow: rgba(255, 119, 34, 0.4);
+}
+
+[data-theme="ca-va-trailer-dark"] {
+  --p: #ff1744;
+  --s: #ff5252;
+  --a: #ff7b7b;
+  --b1: #000000;
+  --bc: #faf9f7;
+  --accent-glow: rgba(255, 23, 68, 0.4);
+}
+
+[data-theme="basique-dark"] {
+  --p: #ff1744;
+  --s: #ff5252;
+  --a: #ff7b7b;
+  --b1: #000000;
+  --bc: #faf9f7;
+  --accent-glow: rgba(255, 23, 68, 0.4);
+}
+
+[data-theme="echo-safe-dark"] {
+  --p: #3b82f6;
+  --s: #06b6d4;
+  --a: #60a5fa;
+  --b1: #000000;
+  --bc: #faf9f7;
+  --accent-glow: rgba(59, 130, 246, 0.4);
+}
+
+[data-theme="omnisphere-dark"] {
+  --p: #8b5cf6;
+  --s: #d946ef;
+  --a: #c084fc;
+  --b1: #000000;
+  --bc: #faf9f7;
+  --accent-glow: rgba(139, 92, 246, 0.4);
+}
+
+[data-theme="ocean-dark"] {
+  --p: #22d3ee;
+  --s: #06b6d4;
+  --a: #67e8f9;
+  --b1: #000000;
+  --bc: #faf9f7;
+  --accent-glow: rgba(34, 211, 238, 0.4);
+}
+
+[data-theme="cyberpunk-dark"] {
+  --p: #f0abfc;
+  --s: #d946ef;
+  --a: #e879f9;
+  --b1: #000000;
+  --bc: #faf9f7;
+  --accent-glow: rgba(240, 171, 252, 0.4);
+}
+
+[data-theme="sunset-dark"] {
+  --p: #fb923c;
+  --s: #fdba74;
+  --a: #fed7aa;
+  --b1: #000000;
+  --bc: #faf9f7;
+  --accent-glow: rgba(251, 146, 60, 0.4);
+}
+
 body {
-  background: var(--color-white) !important;
+  background: var(--b1) !important;
+  color: var(--bc);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 @layer base {
@@ -273,7 +394,7 @@ body {
 }
 
 .arrow-wrapper-prev::after {
-  background: white;
+  background: var(--b1);
   top: 5px;
   left: 4px;
 }
@@ -296,7 +417,7 @@ body {
 }
 
 .arrow-next {
-  background: white;
+  background: var(--b1);
   transition: all 0.3s ease;
 }
 
@@ -316,7 +437,7 @@ body {
 }
 
 .arrow-prev::before {
-  background: radial-gradient(circle, #ffffff, #f0f0f0);
+  background: radial-gradient(circle, var(--b1), var(--b1));
 }
 
 .arrow-next::before {
@@ -335,7 +456,7 @@ body {
 }
 
 .arrow-wrapper-next:hover::after {
-  background: white;
+  background: var(--b1);
 }
 
 /* Arrow icon color on hover */
@@ -344,7 +465,7 @@ body {
 }
 
 .arrow-next:hover svg {
-  color: white !important;
+  color: var(--b1) !important;
 }
 
 /* === PROJECT PAGE STYLES === */

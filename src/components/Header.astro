@@ -1,8 +1,9 @@
 ---
 import Button from "./Button.astro";
+import ThemeToggle from "./ThemeToggle.astro";
 
 interface Props {
-  theme?: "RBA" | "les-12-fragments" | "orange" | "ca-va-trailer" | "echo-safe";
+  theme?: "RBA" | "les-12-fragments" | "orange" | "ca-va-trailer" | "echo-safe" | "omnisphere" | "ocean" | "cyberpunk" | "sunset";
 }
 
 const { theme = "ca-va-trailer" } = Astro.props;
@@ -51,7 +52,8 @@ const { theme = "ca-va-trailer" } = Astro.props;
     </ul>
   </div>
 
-  <div class="navbar-end">
+  <div class="navbar-end flex items-center gap-4">
+    <ThemeToggle />
     <Button href="#contact" aria-label="Me contacter" theme={theme} className="header-button">
       ME CONTACTER
     </Button>
@@ -89,10 +91,12 @@ const { theme = "ca-va-trailer" } = Astro.props;
       const scrolled = currentScrollY > heroHeight - 100;
       const headerButton = document.querySelector(".header-button");
 
-      // Fond blanc après le hero
+      // Fond avec couleur du thème après le hero
       if (scrolled) {
         header.classList.add("scrolled");
-        header.style.backgroundColor = "rgba(250, 249, 247, 0.95)";
+        const headerComputedStyle = getComputedStyle(header);
+        const bgColor = headerComputedStyle.getPropertyValue('--b1').trim();
+        header.style.backgroundColor = `${bgColor}f5`; // f5 = ~96% opacity (plus opaque)
         header.style.backdropFilter = "blur(10px)";
         header.style.boxShadow = "0 2px 10px rgba(0, 0, 0, 0.1)";
         
@@ -156,7 +160,9 @@ const { theme = "ca-va-trailer" } = Astro.props;
       const scrollThreshold = 50;
 
       header.classList.add("scrolled", "projet-page");
-      header.style.backgroundColor = "rgba(250, 249, 247, 0.95)";
+      const headerComputedStyle = getComputedStyle(header);
+      const bgColor = headerComputedStyle.getPropertyValue('--b1').trim();
+      header.style.backgroundColor = `${bgColor}f5`;
       header.style.backdropFilter = "blur(10px)";
 
       // Animation disparition/apparition basée sur le scroll
@@ -175,7 +181,9 @@ const { theme = "ca-va-trailer" } = Astro.props;
     } else if (isAProposPage) {
       // Comportement pour la page à propos avec changement de thème selon la section
       header.classList.add("scrolled", "apropos-page");
-      header.style.backgroundColor = "rgba(250, 249, 247, 0.95)";
+      const headerComputedStyle = getComputedStyle(header);
+      const bgColor = headerComputedStyle.getPropertyValue('--b1').trim();
+      header.style.backgroundColor = `${bgColor}f5`;
       header.style.backdropFilter = "blur(10px)";
       header.style.transform = "translateY(0)"; // Toujours visible
 
@@ -199,9 +207,11 @@ const { theme = "ca-va-trailer" } = Astro.props;
       // Comportement pour les autres pages
       const scrollThreshold = 50;
 
-      // Toujours fond blanc sur les autres pages
+      // Toujours fond avec couleur du thème sur les autres pages
       header.classList.add("scrolled");
-      header.style.backgroundColor = "rgba(250, 249, 247, 0.95)";
+      const headerComputedStyle = getComputedStyle(header);
+      const bgColor = headerComputedStyle.getPropertyValue('--b1').trim();
+      header.style.backgroundColor = `${bgColor}f5`;
       header.style.backdropFilter = "blur(10px)";
 
       // Animation disparition/apparition basée sur le scroll

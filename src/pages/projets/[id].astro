@@ -47,9 +47,9 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
     class="relative h-[calc(120vh-7rem)] flex items-stretch overflow-hidden"
   >
     <div class="w-full h-full relative">
-      <!-- Zone gauche : Texte sur fond blanc avec angle prononcé -->
+      <!-- Zone gauche : Texte sur fond avec angle prononcé -->
       <div
-        class="absolute left-0 top-0 h-full flex flex-col justify-center pl-12 md:pl-16 lg:pl-20 pr-8 py-12 w-[35%] min-w-[340px] bg-white z-30"
+        class="absolute left-0 top-0 h-full flex flex-col justify-center pl-12 md:pl-16 lg:pl-20 pr-8 py-12 w-[35%] min-w-[340px] z-30"
       >
         <div
           style="box-shadow: 8px 0 24px rgba(0, 0, 0, 0.2); position: absolute; inset: 0; z-index: -1; clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);"
@@ -399,7 +399,7 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
   </script>
 
   <!-- Section Contenu -->
-  <section id="contenu" class="pt-8 pb-35 bg-white" data-theme={projet.theme}>
+  <section id="contenu" class="pt-8 pb-35" style="background: var(--b1); transition: background-color 0.3s ease, color 0.3s ease;" data-theme={projet.theme}>
     <div class="mx-4 md:mx-8 lg:mx-16">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
         <!-- Contenu texte sticky -->
@@ -410,7 +410,8 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
             </h2>
             <div
               id="projet-description"
-              class="text-lg leading-relaxed text-gray-800 mb-8"
+              class="text-lg leading-relaxed mb-8"
+              style="color: var(--bc); transition: color 0.3s ease;"
               set:html={projet.content_description}
             />
           </div>
