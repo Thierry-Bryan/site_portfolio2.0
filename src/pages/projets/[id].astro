@@ -184,19 +184,68 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
     };
 
     // Animation fluide avec changement de thème et contenu sans rechargement
-    document.addEventListener("DOMContentLoaded", () => {
-      // Initialiser le thème au chargement de la page
-      const htmlElement = document.documentElement;
 
-      // Simplement définir le data-theme, le CSS global.css s'occupera du reste
-      htmlElement.setAttribute("data-theme", currentTheme);
+    document.addEventListener("DOMContentLoaded", () => {
+      // Initialiser le thème au chargement de la page en tenant compte du mode sombre
+      const htmlElement = document.documentElement;
+      const isDarkMode = localStorage.getItem("darkMode") === "true";
+      const themeToApply = isDarkMode ? currentTheme + "-dark" : currentTheme;
+      htmlElement.setAttribute("data-theme", themeToApply);
+
+      // Mettre à jour le data-theme du header et footer
+      const header = document.getElementById("header");
+      const footer = document.querySelector("footer");
+      if (header) {
+        header.setAttribute("data-theme", themeToApply);
+        // Forcer la mise à jour immédiate du background du header
+        setTimeout(() => {
+          const headerComputedStyle = getComputedStyle(header);
+          const bgColor = headerComputedStyle.getPropertyValue('--b1').trim();
+          header.style.backgroundColor = `${bgColor}f5`;
+        }, 10);
+      }
+      if (footer) footer.setAttribute("data-theme", themeToApply);
+
+      // Mettre à jour la section contenu
+      const contenuSection = document.getElementById("contenu");
+      if (contenuSection) contenuSection.setAttribute("data-theme", themeToApply);
+
+      // Mettre à jour le bandeau défilant
+      const projetBanner = document.getElementById("projet-banner");
+      if (projetBanner) projetBanner.setAttribute("data-theme", themeToApply);
+
+      // Mettre à jour les flèches (ArrowButton) avec le bon data-theme
       const prevArrowWrapper = document.getElementById("prev-arrow-wrapper");
       const nextArrowWrapper = document.getElementById("next-arrow-wrapper");
+      if (prevArrowWrapper) {
+        const prevButton = prevArrowWrapper.querySelector("button");
+        if (prevButton) prevButton.setAttribute("data-theme", themeToApply);
+      }
+      if (nextArrowWrapper) {
+        const nextButton = nextArrowWrapper.querySelector("button");
+        if (nextButton) nextButton.setAttribute("data-theme", themeToApply);
+      }
+
       const heroDevice = document.getElementById("hero-device");
       const heroTitle = document.querySelector(".hero-title");
       const heroDescription = document.querySelector(".hero-description");
       const triangleRight = document.querySelector(".triangle-right");
       const backgroundComics = document.getElementById("background-comics");
+    // Mettre à jour dynamiquement les flèches lors du changement de mode sombre/clair
+    window.addEventListener("themeChanged", () => {
+      const isDarkMode = localStorage.getItem("darkMode") === "true";
+      const themeToApply = isDarkMode ? currentTheme + "-dark" : currentTheme;
+      const prevArrowWrapper = document.getElementById("prev-arrow-wrapper");
+      const nextArrowWrapper = document.getElementById("next-arrow-wrapper");
+      if (prevArrowWrapper) {
+        const prevButton = prevArrowWrapper.querySelector("button");
+        if (prevButton) prevButton.setAttribute("data-theme", themeToApply);
+      }
+      if (nextArrowWrapper) {
+        const nextButton = nextArrowWrapper.querySelector("button");
+        if (nextButton) nextButton.setAttribute("data-theme", themeToApply);
+      }
+    });
 
       // Récupérer l'ID du projet actuel depuis l'URL
       const getCurrentProjetId = () => {
@@ -225,17 +274,22 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
 
         await new Promise((resolve) => setTimeout(resolve, 500));
 
+
+        // Gérer le mode sombre
+        const isDarkMode = localStorage.getItem("darkMode") === "true";
+        const themeToApply = isDarkMode ? newProjet.theme + "-dark" : newProjet.theme;
+
         // Mise à jour du thème global (header, footer, boutons, titres)
-        htmlElement.setAttribute("data-theme", newProjet.theme);
+        htmlElement.setAttribute("data-theme", themeToApply);
 
         // Mettre à jour le data-theme du header et footer
         const header = document.getElementById("header");
         const footer = document.querySelector("footer");
         if (header) {
-          header.setAttribute("data-theme", newProjet.theme);
+          header.setAttribute("data-theme", themeToApply);
         }
         if (footer) {
-          footer.setAttribute("data-theme", newProjet.theme);
+          footer.setAttribute("data-theme", themeToApply);
         }
 
         // Mise à jour du contenu
@@ -290,7 +344,7 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
         // Mise à jour de la section contenu
         const contenuSection = document.getElementById("contenu");
         if (contenuSection) {
-          contenuSection.setAttribute("data-theme", newProjet.theme);
+          contenuSection.setAttribute("data-theme", themeToApply);
 
           // Mettre à jour la description avec l'ID spécifique
           const descriptionDiv = document.getElementById("projet-description");
@@ -320,7 +374,7 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
               const buttonLink = buttonContainer.querySelector("a");
               if (buttonLink) {
                 buttonLink.href = newProjet.siteUrl;
-                buttonLink.setAttribute("data-theme", newProjet.theme);
+                buttonLink.setAttribute("data-theme", themeToApply);
               }
             } else {
               buttonContainer.style.display = "none";
@@ -342,7 +396,7 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
         }
         if (projetBanner) {
           projetBanner.style.borderColor = newColors.primary;
-          projetBanner.setAttribute("data-theme", newProjet.theme);
+          projetBanner.setAttribute("data-theme", themeToApply);
         }
 
         // Mise à jour de l'URL sans rechargement

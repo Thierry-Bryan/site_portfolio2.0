@@ -113,10 +113,13 @@ const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname) } =
             document.body.offsetHeight;
             document.body.style.display = '';
             
-            // Mettre à jour les sections avec data-theme
+            // Mettre à jour les sections avec data-theme (chaque section garde son propre thème)
             const sections = document.querySelectorAll("section[data-theme]");
             sections.forEach(section => {
-              section.setAttribute("data-theme", newTheme);
+              const sectionTheme = section.getAttribute("data-theme");
+              const sectionBaseTheme = sectionTheme.replace("-dark", "");
+              const newSectionTheme = newTheme.includes("-dark") ? sectionBaseTheme + "-dark" : sectionBaseTheme;
+              section.setAttribute("data-theme", newSectionTheme);
             });
           }
           
@@ -170,6 +173,9 @@ const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname) } =
             moonIcon?.classList.add("hidden");
           }
           
+          // Déclencher un événement custom pour notifier les composants
+          window.dispatchEvent(new CustomEvent("themeChanged", { detail: { theme: newTheme } }));
+          
           return newTheme;
         };
         
@@ -178,6 +184,7 @@ const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname) } =
           const isHome = window.location.pathname === "/" || window.location.pathname === "/index.html";
           const header = document.getElementById("header");
           const footer = document.getElementById("footer");
+          const isDarkMode = localStorage.getItem("darkMode") === "true";
           
           let themeForHeaderFooter;
           if (isHome) {
@@ -187,6 +194,15 @@ const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname) } =
             themeForHeaderFooter = userDarkMode ? baseTheme + "-dark" : baseTheme;
           } else {
             themeForHeaderFooter = document.documentElement.getAttribute("data-theme");
+            
+            // Sur les autres pages, mettre à jour chaque section avec son propre thème
+            const sections = document.querySelectorAll("section[data-theme]");
+            sections.forEach(section => {
+              const sectionTheme = section.getAttribute("data-theme");
+              const sectionBaseTheme = sectionTheme.replace("-dark", "");
+              const newSectionTheme = isDarkMode ? sectionBaseTheme + "-dark" : sectionBaseTheme;
+              section.setAttribute("data-theme", newSectionTheme);
+            });
           }
           
           if (header) {

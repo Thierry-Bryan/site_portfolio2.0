@@ -7,7 +7,7 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
 
 <Layout theme={theme} title="À propos - Bryan Thierry" class="">
   <section
-    class="mx-4 md:mx-8 lg:mx-16 py-10 pt-25 bg-[var(--color-white)]"
+    class="mx-4 md:mx-8 lg:mx-16 py-10 pt-25 bg-[var(--b1)]"
     data-theme="echo-safe"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -46,7 +46,7 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
   </section>
   <!-- Section Parcours avec frise chronologique -->
   <section
-    class="mx-4 md:mx-8 lg:mx-16 py-10 bg-[var(--color-white)]"
+    class="mx-4 md:mx-8 lg:mx-16 py-10 bg-[var(--b1)]"
     data-theme="omnisphere"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -56,26 +56,29 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
         <div class="relative">
           <!-- Ligne verticale de la frise -->
           <div
-            class="absolute left-6 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-600 to-purple-900 shadow-lg"
+            class="absolute left-6 top-0 bottom-0 w-1 shadow-lg"
+            style="background: linear-gradient(to bottom, var(--p), var(--s));"
           >
           </div>
 
           <!-- Élément de timeline -->
           <div class="relative flex items-start mb-10">
             <div
-              class="flex-shrink-0 w-14 h-14 bg-purple-600 border-4 border-white shadow-xl flex items-center justify-center z-10 transform rotate-45"
+              class="flex-shrink-0 w-14 h-14 shadow-xl flex items-center justify-center z-10 transform rotate-45 transition-colors duration-300"
+              style="background: var(--p); border: 4px solid var(--b1);"
             >
-              <span class="text-white font-primary text-xs transform -rotate-45"
-                >BAC</span
-              >
+              <span class="font-primary text-xs transform -rotate-45" style="color: var(--b1);">
+                BAC
+              </span>
             </div>
             <div
-              class="ml-8 bg-white p-6 rounded-none border-4 border-purple-600 shadow-lg transform -rotate-1 hover:rotate-0 transition-transform duration-300"
+              class="ml-8 p-6 rounded-none shadow-lg transform -rotate-1 hover:rotate-0 transition-all duration-300"
+              style="background: var(--b1); border: 4px solid var(--p); color: var(--bc);"
             >
-              <h3 class="font-primary text-xl text-purple-700 mb-2">
+              <h3 class="font-primary text-xl mb-2" style="color: var(--p);">
                 APRÈS LE BAC
               </h3>
-              <p class="text-gray-800 font-medium">
+              <p class="font-medium">
                 J'ai choisi le BUT Métiers du Multimédia et de l'Internet (MMI)
                 pour maîtriser l'ensemble de la conception web.
               </p>
@@ -85,19 +88,21 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
           <!-- Formation MMI -->
           <div class="relative flex items-start mb-10">
             <div
-              class="flex-shrink-0 w-14 h-14 bg-purple-700 border-4 border-white shadow-xl flex items-center justify-center z-10 transform rotate-12"
+              class="flex-shrink-0 w-14 h-14 shadow-xl flex items-center justify-center z-10 transform rotate-12 transition-colors duration-300"
+              style="background: var(--s); border: 4px solid var(--b1);"
             >
-              <span class="text-white font-primary text-xs transform -rotate-12"
-                >MMI</span
-              >
+              <span class="font-primary text-xs transform -rotate-12" style="color: var(--b1);">
+                MMI
+              </span>
             </div>
             <div
-              class="ml-8 bg-white p-6 rounded-none border-4 border-purple-700 shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-300"
+              class="ml-8 p-6 rounded-none shadow-lg transform rotate-1 hover:rotate-0 transition-all duration-300"
+              style="background: var(--b1); border: 4px solid var(--s); color: var(--bc);"
             >
-              <h3 class="font-primary text-xl text-purple-800 mb-2">
+              <h3 class="font-primary text-xl mb-2" style="color: var(--s);">
                 FORMATION BUT MMI
               </h3>
-              <p class="text-gray-800 font-medium">
+              <p class="font-medium">
                 Cours complet couvrant la gestion de projet, la communication,
                 le design UI/UX et la maîtrise du code (HTML, CSS, JavaScript).
               </p>
@@ -107,19 +112,21 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
           <!-- Projets pratiques -->
           <div class="relative flex items-start mb-10">
             <div
-              class="flex-shrink-0 w-14 h-14 bg-purple-800 border-4 border-white shadow-xl flex items-center justify-center z-10 transform -rotate-12"
+              class="flex-shrink-0 w-14 h-14 shadow-xl flex items-center justify-center z-10 transform -rotate-12 transition-colors duration-300"
+              style="background: var(--a); border: 4px solid var(--b1);"
             >
-              <span class="text-white font-primary text-xs transform rotate-12"
-                >PRO</span
-              >
+              <span class="font-primary text-xs transform rotate-12" style="color: var(--b1);">
+                PRO
+              </span>
             </div>
             <div
-              class="ml-8 bg-white p-6 rounded-none border-4 border-purple-800 shadow-lg transform -rotate-1 hover:rotate-0 transition-transform duration-300"
+              class="ml-8 p-6 rounded-none shadow-lg transform -rotate-1 hover:rotate-0 transition-all duration-300"
+              style="background: var(--b1); border: 4px solid var(--a); color: var(--bc);"
             >
-              <h3 class="font-primary text-xl text-purple-900 mb-3">
+              <h3 class="font-primary text-xl mb-3" style="color: var(--a);">
                 MISE EN PRATIQUE
               </h3>
-              <p class="text-gray-800 font-medium mb-4">
+              <p class="font-medium mb-4">
                 J'ai mis ces bases en pratique à travers une série de projets
                 concrets et variés, prouvant ma capacité à traduire une vision
                 créative en un produit technique solide et performant.
@@ -128,57 +135,62 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
               <!-- Liste des projets - Descriptions détaillées -->
               <div class="grid grid-cols-2 gap-2">
                 <div
-                  class="bg-purple-100 p-3 border-2 border-purple-600 shadow-sm transform rotate-1 hover:rotate-0 transition-transform duration-300 h-32 flex flex-col justify-center text-center"
+                  class="p-3 shadow-sm transform rotate-1 hover:rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center"
+                  style="background: var(--b1); border: 2px solid var(--p); color: var(--bc);"
                 >
-                  <h4 class="font-primary text-purple-700 text-sm mb-1">
+                  <h4 class="font-primary text-sm mb-1" style="color: var(--p);">
                     ECHO SAFE
                   </h4>
-                  <p class="text-xs text-gray-600">
+                  <p class="text-xs" style="color: var(--bc); opacity: 0.8;">
                     Application solidaire contre le harcèlement avec messagerie
                     sécurisée
                   </p>
                 </div>
 
                 <div
-                  class="bg-purple-100 p-3 border-2 border-purple-600 shadow-sm transform -rotate-1 hover:rotate-0 transition-transform duration-300 h-32 flex flex-col justify-center text-center"
+                  class="p-3 shadow-sm transform -rotate-1 hover:rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center"
+                  style="background: var(--b1); border: 2px solid var(--p); color: var(--bc);"
                 >
-                  <h4 class="font-primary text-purple-700 text-sm mb-1">
+                  <h4 class="font-primary text-sm mb-1" style="color: var(--p);">
                     ÇA VA TRAILER
                   </h4>
-                  <p class="text-xs text-gray-600">
+                  <p class="text-xs" style="color: var(--bc); opacity: 0.8;">
                     Vitrine immersive pour un festival de cinéma avec identité
                     visuelle forte
                   </p>
                 </div>
 
                 <div
-                  class="bg-purple-100 p-3 border-2 border-purple-600 shadow-sm transform rotate-1 hover:rotate-0 transition-transform duration-300 h-32 flex flex-col justify-center text-center"
+                  class="p-3 shadow-sm transform rotate-1 hover:rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center"
+                  style="background: var(--b1); border: 2px solid var(--p); color: var(--bc);"
                 >
-                  <h4 class="font-primary text-purple-700 text-sm mb-1">RBA</h4>
-                  <p class="text-xs text-gray-600">
+                  <h4 class="font-primary text-sm mb-1" style="color: var(--p);">RBA</h4>
+                  <p class="text-xs" style="color: var(--bc); opacity: 0.8;">
                     Refonte complète de l'identité visuelle pour l'association
                     biodiversité
                   </p>
                 </div>
 
                 <div
-                  class="bg-purple-100 p-3 border-2 border-purple-600 shadow-sm transform -rotate-1 hover:rotate-0 transition-transform duration-300 h-32 flex flex-col justify-center text-center"
+                  class="p-3 shadow-sm transform -rotate-1 hover:rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center"
+                  style="background: var(--b1); border: 2px solid var(--p); color: var(--bc);"
                 >
-                  <h4 class="font-primary text-purple-700 text-sm mb-1">
+                  <h4 class="font-primary text-sm mb-1" style="color: var(--p);">
                     12 FRAGMENTS
                   </h4>
-                  <p class="text-xs text-gray-600">
+                  <p class="text-xs" style="color: var(--bc); opacity: 0.8;">
                     Site créatif et narratif autour de 12 avatars en pixel art
                   </p>
                 </div>
 
                 <div
-                  class="bg-purple-100 p-3 border-2 border-purple-600 shadow-sm transform rotate-1 hover:rotate-0 transition-transform duration-300 h-32 flex flex-col justify-center text-center col-span-2"
+                  class="p-3 shadow-sm transform rotate-1 hover:rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center col-span-2"
+                  style="background: var(--b1); border: 2px solid var(--p); color: var(--bc);"
                 >
-                  <h4 class="font-primary text-purple-700 text-sm mb-1">
+                  <h4 class="font-primary text-sm mb-1" style="color: var(--p);">
                     OMNISPHERE
                   </h4>
-                  <p class="text-xs text-gray-600">
+                  <p class="text-xs" style="color: var(--bc); opacity: 0.8;">
                     Site immersif questionnant l'avenir des relations humaines
                     avec design futuriste
                   </p>
@@ -190,19 +202,21 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
           <!-- Objectif -->
           <div class="relative flex items-start">
             <div
-              class="flex-shrink-0 w-14 h-14 bg-purple-900 border-4 border-white shadow-xl flex items-center justify-center z-10 transform rotate-45"
+              class="flex-shrink-0 w-14 h-14 shadow-xl flex items-center justify-center z-10 transform rotate-45 transition-colors duration-300"
+              style="background: var(--p); border: 4px solid var(--b1);"
             >
-              <span class="text-white font-primary text-xs transform -rotate-45"
-                >GO!</span
-              >
+              <span class="font-primary text-xs transform -rotate-45" style="color: var(--b1);">
+                GO!
+              </span>
             </div>
             <div
-              class="ml-8 bg-white p-6 rounded-none border-4 border-purple-900 shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-300"
+              class="ml-8 p-6 rounded-none shadow-lg transform rotate-1 hover:rotate-0 transition-all duration-300"
+              style="background: var(--b1); border: 4px solid var(--p); color: var(--bc);"
             >
-              <h3 class="font-primary text-xl text-purple-900 mb-3">
+              <h3 class="font-primary text-xl mb-3" style="color: var(--p);">
                 MON OBJECTIF
               </h3>
-              <p class="text-gray-800 font-medium mb-6">
+              <p class="font-medium mb-6">
                 Livrer des solutions numériques qui sont à la fois performantes
                 et pleines de sens.
               </p>
@@ -235,7 +249,7 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
   </section>
   <!-- Section Mes Compétences -->
   <section
-    class="mx-4 md:mx-8 lg:mx-16 py-10 bg-[var(--color-white)]"
+    class="mx-4 md:mx-8 lg:mx-16 py-10 bg-[var(--b1)]"
     data-theme="orange"
   >
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
@@ -425,7 +439,7 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
   </section>
   <!-- Section Mon Prochain Chapitre -->
   <section
-    class="mx-4 md:mx-8 lg:mx-16 py-10 bg-[var(--color-white)]"
+    class="mx-4 md:mx-8 lg:mx-16 py-10 bg-[var(--b1)]"
     data-theme="les-12-fragments"
   >
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -434,7 +448,7 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
         <!-- Titre principal -->
         <h2
           class="font-primary text-4xl mb-8 transform -rotate-1"
-          style="color: #16a34a;"
+          style="color: var(--p);"
         >
           MON PROCHAIN CHAPITRE
         </h2>
@@ -443,12 +457,13 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
         <div class="space-y-8">
           <!-- Partenaire Web Fiable -->
           <div
-            class="bg-white p-6 border-4 border-green-600 shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-300"
+            class="p-6 shadow-lg transform rotate-1 hover:rotate-0 transition-all duration-300"
+            style="background: var(--b1); border: 4px solid var(--p); color: var(--bc);"
           >
-            <h3 class="font-primary text-2xl mb-4 text-green-700">
+            <h3 class="font-primary text-2xl mb-4" style="color: var(--p);">
               PARTENAIRE WEB FIABLE
             </h3>
-            <p class="text-gray-800 font-medium leading-relaxed">
+            <p class="font-medium leading-relaxed">
               Ma priorité ? Devenir un partenaire fiable et polyvalent. Je
               souhaite créer des solutions web qui allient performance technique
               et identité visuelle marquante.
@@ -457,12 +472,13 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
 
           <!-- Créateur de Contenu -->
           <div
-            class="bg-white p-6 border-4 border-green-700 shadow-lg transform -rotate-1 hover:rotate-0 transition-transform duration-300"
+            class="p-6 shadow-lg transform -rotate-1 hover:rotate-0 transition-all duration-300"
+            style="background: var(--b1); border: 4px solid var(--s); color: var(--bc);"
           >
-            <h3 class="font-primary text-2xl mb-4 text-green-800">
+            <h3 class="font-primary text-2xl mb-4" style="color: var(--s);">
               CRÉATEUR DE CONTENU ET STORYTELLING
             </h3>
-            <p class="text-gray-800 font-medium leading-relaxed">
+            <p class="font-medium leading-relaxed">
               Mon ambition principale est d'étendre mon domaine de création : je
               souhaite devenir un créateur de contenu polyvalent avec ma future
               chaîne YouTube et mon blog.
@@ -471,12 +487,13 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
 
           <!-- Projets et Innovation -->
           <div
-            class="bg-white p-6 border-4 border-green-800 shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-300"
+            class="p-6 shadow-lg transform rotate-1 hover:rotate-0 transition-all duration-300"
+            style="background: var(--b1); border: 4px solid var(--a); color: var(--bc);"
           >
-            <h3 class="font-primary text-2xl mb-4 text-green-900">
+            <h3 class="font-primary text-2xl mb-4" style="color: var(--a);">
               PROJETS ET INNOVATION FUTURE
             </h3>
-            <p class="text-gray-800 font-medium leading-relaxed">
+            <p class="font-medium leading-relaxed">
               Ma curiosité m'incite à repousser les limites techniques. Je
               prévois de maîtriser la 3D avec Blender et Unreal Engine pour
               créer des expériences immersives.

@@ -181,27 +181,33 @@ const { theme = "ca-va-trailer" } = Astro.props;
     } else if (isAProposPage) {
       // Comportement pour la page à propos avec changement de thème selon la section
       header.classList.add("scrolled", "apropos-page");
-      const headerComputedStyle = getComputedStyle(header);
-      const bgColor = headerComputedStyle.getPropertyValue('--b1').trim();
-      header.style.backgroundColor = `${bgColor}f5`;
       header.style.backdropFilter = "blur(10px)";
       header.style.transform = "translateY(0)"; // Toujours visible
 
-      // Détecter la section visible
+      // Détecter la section visible et extraire le thème de base (sans -dark)
       const sections = document.querySelectorAll("section[data-theme]");
-      let currentTheme = null;
+      let currentBaseTheme = null;
 
       sections.forEach((section) => {
         const rect = section.getBoundingClientRect();
-        // Si la section est visible dans le viewport (en prenant en compte le header)
         if (rect.top <= 100 && rect.bottom >= 100) {
-          currentTheme = section.getAttribute("data-theme");
+          const sectionTheme = section.getAttribute("data-theme") || "";
+          currentBaseTheme = sectionTheme.replace("-dark", "");
         }
       });
 
-      // Mettre à jour le thème du header
-      if (currentTheme) {
-        header.setAttribute("data-theme", currentTheme);
+      // Mettre à jour le thème du header avec le mode sombre si activé
+      if (currentBaseTheme) {
+        const isDarkMode = localStorage.getItem("darkMode") === "true";
+        const headerTheme = isDarkMode ? currentBaseTheme + "-dark" : currentBaseTheme;
+        header.setAttribute("data-theme", headerTheme);
+
+        // Mettre à jour le background avec le nouveau thème
+        setTimeout(() => {
+          const headerComputedStyle = getComputedStyle(header);
+          const bgColor = headerComputedStyle.getPropertyValue('--b1').trim();
+          header.style.backgroundColor = `${bgColor}f5`;
+        }, 10);
       }
     } else {
       // Comportement pour les autres pages
@@ -245,6 +251,20 @@ const { theme = "ca-va-trailer" } = Astro.props;
   }
 
   window.addEventListener("scroll", onScroll);
+  
+  // Écouter les changements de thème pour la page à-propos
+  if (isAProposPage) {
+    window.addEventListener("storage", (e) => {
+      if (e.key === "darkMode") {
+        updateHeaderStyle();
+      }
+    });
+    
+    // Écouter les changements via l'événement custom (pour le même onglet)
+    window.addEventListener("themeChanged", () => {
+      updateHeaderStyle();
+    });
+  }
   
   // Initialisation au chargement
   if (isHomePage) {
