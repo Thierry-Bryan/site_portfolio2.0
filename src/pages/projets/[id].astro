@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import Button from "../../components/Button.astro";
 import BackgroundComics from "../../components/BackgroundComics.astro";
 import ArrowButton from "../../components/ArrowButton.astro";
+import ProjetBanner from "../../components/ProjetBanner.astro";
 import {
   getProjets,
   getProjetBySlug,
@@ -136,39 +137,7 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
   </section>
 
   <!-- Bandeau de défilement du nom du projet -->
-  <section class="bg-black py-4 overflow-hidden border-t-4 border-b-4" style="border-color: var(--p);" id="projet-banner">
-    <div class="flex whitespace-nowrap animate-scroll">
-      <div class="flex items-center gap-8 pr-8" id="banner-content">
-        {Array.from({ length: 20 }).map(() => (
-          <>
-            <span class="text-white font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title">
-              {projet.title.toUpperCase()}
-            </span>
-            <span class="text-4xl" style="color: var(--p);">★</span>
-          </>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <style>
-    @keyframes scroll {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(-50%);
-      }
-    }
-
-    .animate-scroll {
-      animation: scroll 30s linear infinite;
-    }
-
-    .animate-scroll:hover {
-      animation-play-state: paused;
-    }
-  </style>
+  <ProjetBanner title={projet.title} theme={projet.theme as any} />
 
   <script
     define:vars={{
@@ -364,15 +333,16 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
         const projetBanner = document.getElementById("projet-banner");
         if (bannerContent) {
           const newBannerHTML = Array.from({ length: 20 }).map(() => `
-            <span class="text-white font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title">
+            <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title" style="color: var(--bc);">
               ${newProjet.title}
             </span>
-            <span class="text-4xl" style="color: ${newColors.primary};">★</span>
+            <span class="text-4xl" style="color: var(--p);">★</span>
           `).join('');
           bannerContent.innerHTML = newBannerHTML;
         }
         if (projetBanner) {
           projetBanner.style.borderColor = newColors.primary;
+          projetBanner.setAttribute("data-theme", newProjet.theme);
         }
 
         // Mise à jour de l'URL sans rechargement
