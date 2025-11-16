@@ -1,0 +1,183 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Card from "../../components/Card.astro";
+import Button from "../../components/Button.astro";
+
+const theme = "basique";
+
+const services = [
+  {
+    imgSrc: "/public/card/icon_sur-mesure.webp",
+    imgAlt: "Site web sur-mesure",
+    title: "Sites web sur mesure",
+    description: "Je conçois des sites web uniques, pensés pour vous et votre activité."
+  },
+  {
+    imgSrc: "/public/card/icon_refonte.webp",
+    imgAlt: "Refontes de sites",
+    title: "Refontes de sites",
+    description: "Je redonne vie à votre site pour qu'il soit moderne, rapide et agréable à utiliser."
+  },
+  {
+    imgSrc: "/public/card/icon_wordpress.webp",
+    imgAlt: "WordPress",
+    title: "WordPress",
+    description: "Je crée et personnalise votre site WordPress pour qu'il soit performant et facile à gérer."
+  }
+];
+---
+
+<Layout theme={theme} title="Mes Services - Portfolio Bryan Thierry">
+  <section class="pt-32 pb-20">
+    <div class="flex items-center justify-center mb-12">
+      <h1 class="text-5xl md:text-6xl font-primary text-black uppercase tracking-tight">
+        MES SERVICES
+      </h1>
+    </div>
+    
+    <div class="mx-4 md:mx-25 mb-16">
+      <div class="max-w-3xl mx-auto text-center mb-12">
+        <p class="text-lg md:text-xl font-secondary text-black opacity-80 leading-relaxed">
+          Je vous accompagne dans la création et l'amélioration de votre présence en ligne avec des solutions adaptées à vos besoins.
+        </p>
+      </div>
+      
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 gap-2 place-items-center mx-auto"
+      >
+        {
+          services.map((service) => (
+            <Card
+              imgSrc={service.imgSrc}
+              imgAlt={service.imgAlt}
+              theme={theme}
+            >
+              <h3 class="mb-2 text-center flex justify-center">
+                {service.title}
+              </h3>
+              <p class="">
+                {service.description}
+              </p>
+            </Card>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="flex justify-center mt-12">
+      <Button
+        label="Me Contacter"
+        onClick="window.openContactModal()"
+        className="text-black"
+        theme={theme}
+      />
+    </div>
+  </section>
+
+  <!-- Section détails des services -->
+  <section class="bg-black pt-20 pb-20">
+    <div class="mx-4 md:mx-25">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-4xl font-primary text-white mb-12 text-center uppercase">
+          Ce que je peux faire pour vous
+        </h2>
+        
+        <div class="space-y-12">
+          <!-- Sites web sur mesure -->
+          <div class="border-4 border-white p-8 bg-black">
+            <h3 class="text-2xl font-primary text-white mb-4 uppercase">
+              Sites web sur mesure
+            </h3>
+            <ul class="space-y-3 font-secondary text-white opacity-90">
+              <li class="flex items-start">
+                <span class="text-2xl mr-3">→</span>
+                <span>Création de sites vitrines, portfolios, landing pages</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-2xl mr-3">→</span>
+                <span>Design moderne et responsive (adapté à tous les écrans)</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-2xl mr-3">→</span>
+                <span>Optimisation SEO pour un meilleur référencement</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-2xl mr-3">→</span>
+                <span>Performance et rapidité optimales</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Refontes -->
+          <div class="border-4 border-white p-8 bg-black">
+            <h3 class="text-2xl font-primary text-white mb-4 uppercase">
+              Refontes de sites
+            </h3>
+            <ul class="space-y-3 font-secondary text-white opacity-90">
+              <li class="flex items-start">
+                <span class="text-2xl mr-3">→</span>
+                <span>Modernisation du design et de l'interface</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-2xl mr-3">→</span>
+                <span>Amélioration de l'expérience utilisateur (UX)</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-2xl mr-3">→</span>
+                <span>Migration vers des technologies modernes</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-2xl mr-3">→</span>
+                <span>Correction des problèmes de performance</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- WordPress -->
+          <div class="border-4 border-white p-8 bg-black">
+            <h3 class="text-2xl font-primary text-white mb-4 uppercase">
+              WordPress
+            </h3>
+            <ul class="space-y-3 font-secondary text-white opacity-90">
+              <li class="flex items-start">
+                <span class="text-2xl mr-3">→</span>
+                <span>Installation et configuration personnalisée</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-2xl mr-3">→</span>
+                <span>Création de thèmes sur mesure</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-2xl mr-3">→</span>
+                <span>Formation pour gérer votre site en autonomie</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-2xl mr-3">→</span>
+                <span>Maintenance et mises à jour</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section CTA -->
+  <section class="pt-20 pb-20">
+    <div class="max-w-3xl mx-auto text-center px-4">
+      <h2 class="text-4xl md:text-5xl font-primary text-black mb-6 uppercase">
+        Prêt à démarrer ?
+      </h2>
+      <p class="text-lg md:text-xl font-secondary text-black opacity-80 mb-8 leading-relaxed">
+        Que vous ayez un projet complet ou juste besoin d'un coup de main, 
+        contactez-moi et discutons de vos besoins.
+      </p>
+      <Button
+        label="Parlons de votre projet"
+        onClick="window.openContactModal()"
+        className="text-black"
+        theme={theme}
+      />
+    </div>
+  </section>
+</Layout>

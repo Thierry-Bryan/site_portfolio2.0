@@ -39,7 +39,7 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
           {
             filterOptions.map((filterName) => (
               <button
-                class="filter-btn px-6 py-2 border-2 border-(--bc) bg-(--b1) text-(--bc) font-secondary font-bold transition-all duration-300 hover:bg-(--p) hover:text-(--b1) hover:border-(--p)"
+                class="filter-btn px-6 py-2 border-2 border-(--bc) bg-(--b1) text-(--bc) font-primary cursor-pointer transition-all duration-300 hover:bg-(--p) hover:text-(--b1) hover:border-(--p)"
                 data-type={filterName}
               >
                 {filterName}
