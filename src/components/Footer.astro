@@ -56,23 +56,23 @@ const svgByName: Record<string, string> = {
   class="relative w-full min-h-[120px] bg-(--b1) border-t-4 border-(--p) overflow-hidden"
 >
   <BackgroundComics />
-  <div class="grid grid-cols-[1fr_2fr] z-10 relative">
-    <div class="relative w-full h-[460px] flex items-center justify-center">
+  <div class="grid grid-cols-1 md:grid-cols-[1fr_2fr] z-10 relative">
+    <div class="relative w-full h-[460px] hidden md:flex items-center justify-center">
       <img
         src="/avatar/footer.webp"
         alt="Photo de Bryan Thierry"
         class="absolute left-1/2 top-1/2 -translate-x-[40%] -translate-y-1/2 object-contain max-h-[500px] max-w-[400px] brightness-90 contrast-110"
       />
     </div>
-    <div class="relative container mx-auto px-6 py-12">
+    <div class="relative container mx-auto px-6 py-4 md:py-8">
       <!-- Section email -->
-      <div class="w-full mb-5 flex">
+      <div class="w-full mb-6 md:mb-8 flex">
         <a
           href="mailto:bryan.thierry.pro@gmail.com"
           class="email-box w-full comics-glow-hover-link"
         >
           <p
-            class="font-primary text-xl md:text-2xl tracking-tight text-(--bc) uppercase text-center w-full"
+            class="font-primary text-lg md:text-xl tracking-tight text-(--bc) uppercase text-center w-full"
           >
             bryan.thierry.pro@gmail.com
           </p>
@@ -80,26 +80,26 @@ const svgByName: Record<string, string> = {
       </div>
 
       <!-- Grille réseaux sociaux -->
-      <div class="social-grid mb-5">
+      <div class="social-grid mb-3 md:mb-5">
         {
           socialLinks.map((social) => (
             <a
               href={social.url}
               target="_blank"
               rel="noopener noreferrer"
-              class="comics-card social-card p-7 gap-3 min-h-[180px] w-full"
+              class="comics-card social-card p-3 md:p-7 gap-1 md:gap-3 min-h-[120px] md:min-h-[180px] w-full"
               aria-label={social.name}
             >
               <span
-                class="w-14 h-14 transition-all duration-300 shrink-0 social-svg"
+                class="w-10 h-10 md:w-14 md:h-14 transition-all duration-300 shrink-0 social-svg"
                 set:html={svgByName[social.name]
                   ?.replace(/fill=\"#000\"/g, 'fill="currentColor"')
                   .replace(/fill=\"#000000\"/g, 'fill="currentColor"')}
               />
-              <h3 class="font-primary text-2xl uppercase text-(--bc) tracking-tight comics-glow-hover-link comics-transform-hover">
+              <h3 class="font-primary text-lg md:text-2xl uppercase text-(--bc) tracking-tight comics-glow-hover-link comics-transform-hover">
                 {social.name}
               </h3>
-              <p class="font-secondary text-sm text-(--bc) text-center opacity-70 leading-6">
+              <p class="font-secondary text-xs md:text-sm text-(--bc) text-center opacity-70 leading-5 md:leading-6">
                 {social.label}
               </p>
               <div class="arrow-circle">
@@ -125,7 +125,7 @@ const svgByName: Record<string, string> = {
   </div>
 
   <!-- Section mentions légales -->
-  <div class="w-full border-t-2 border-(--bc) py-4 z-10 relative bg-(--b1)">
+  <div class="w-full border-t-2 border-(--bc) py-3 z-10 relative bg-(--b1)">
     <div class="container mx-auto px-6">
       <div
         class="flex flex-col md:flex-row justify-between items-center gap-2 text-center md:text-left"
