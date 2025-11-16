@@ -78,14 +78,14 @@
 [data-theme="basique"] {
   --p: #EE0221; /* rose fuchsia vif */
   --s: #fa0435; /* rose/rouge vif */
-  --a: #ffb3c6; /* rose clair */
+  --a: #f72c55; /* rose clair */
   --b1: #faf9f7;
   --bc: #000000;
 }
 [data-theme="basique-dark"] {
   --p: #ff005c; /* rose saturé */
   --s: #fa0435; /* rose clair */
-  --a: #fff0f6; /* rose pâle */
+  --a: #f72c55; /* rose pâle */
   --b1: #000000;
   --bc: #faf9f7;
 }
@@ -200,6 +200,19 @@ body {
   color: var(--bc);
 }
 
+/* === STYLES SPÉCIFIQUES PAGES LÉGALES === */
+
+/* Header sur pages légales - texte en var(--bc) (noir en clair, blanc en sombre) */
+.legal-page .logo-link,
+.legal-page .nav-link {
+  color: var(--bc);
+}
+
+.legal-page .logo-link:hover,
+.legal-page .nav-link:hover {
+  color: var(--bc);
+}
+
 /* === STYLES SPÉCIFIQUES PAGE À PROPOS === */
 
 /* Header sur page à propos - texte en couleur primaire par défaut */
@@ -291,6 +304,8 @@ body {
 
 .arrow-circle svg {
   transition: transform 0.3s;
+  color: var(--bc);
+  stroke: var(--bc);
 }
 
 .comics-card:hover .arrow-circle svg {
@@ -418,4 +433,105 @@ body {
   50% {
     transform: translateY(-8px);
   }
+}
+
+/* === SOCIAL ICONS FILTER === */
+
+/* Filtre pour changer la couleur des SVG noirs en couleur du thème */
+.social-icon-img {
+  filter: brightness(0) saturate(100%) invert(var(--icon-invert, 0%));
+  transition: all 0.3s ease;
+}
+
+/* En mode clair: noir (--bc = #000) */
+[data-theme*="-dark"] .social-icon-img {
+  filter: brightness(0) saturate(100%) invert(100%);
+}
+
+/* Effet hover via la card parente */
+.comics-card:hover .social-icon-img {
+  transform: scale(1.1);
+  filter: brightness(0) saturate(100%) invert(var(--icon-invert, 0%));
+}
+
+[data-theme*="-dark"] .comics-card:hover .social-icon-img {
+  filter: brightness(0) saturate(100%) invert(100%);
+}
+
+/* === SOCIAL ICONS (INLINE SVG) === */
+.social-svg {
+  width: 56px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.social-svg svg {
+  width: 56px;
+  height: 56px;
+  display: block;
+  color: var(--bc);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.comics-card:hover .social-svg svg {
+  transform: scale(1.1);
+}
+
+/* === HEADER BUTTON STYLES === */
+
+/* Animation identique aux vrais boutons pour le header button */
+.header-button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, #ffffff, #f0f0f0);
+  transform: translate(-50%, -50%);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.header-button:hover::before {
+  width: 120%;
+  height: 300%;
+}
+
+.header-button:hover {
+  box-shadow: -5px 5px 0 0 var(--p);
+}
+
+.header-button .btn-text {
+  transition: color 0.3s ease;
+}
+
+.header-button:hover .btn-text {
+  color: #181818 !important;
+}
+
+/* Variante Hero pour la page d'accueil */
+.header-button.hero-button {
+  background: radial-gradient(circle, #ffffff, #f0f0f0) !important;
+  box-shadow: -5px 5px 0 0 var(--p) !important;
+}
+
+.header-button.hero-button::before {
+  background: radial-gradient(circle, var(--p), var(--s));
+}
+
+.header-button.hero-button:hover {
+  box-shadow: -5px 5px 0 0 #fff !important;
+}
+
+.header-button.hero-button .btn-text {
+  color: #181818 !important;
+}
+
+.header-button.hero-button:hover .btn-text {
+  color: white !important;
 }

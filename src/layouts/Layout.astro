@@ -3,6 +3,7 @@ import "../styles/global.css";
 import Hero from "../components/Hero.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import ContactModal from "../components/ContactModal.astro";
 
 interface Props {
   title?: string;
@@ -12,7 +13,8 @@ interface Props {
     | "orange"
     | "ca-va-trailer"
     | "echo-safe"
-    | "omnisphere";
+    | "omnisphere"
+    | "basique";
 }
 
 // Système de thèmes automatique basé sur la route
@@ -278,5 +280,6 @@ const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname) } =
     <Header theme={theme} />
     <slot />
     <Footer theme={theme} />
+    <ContactModal />
   </body>
 </html>

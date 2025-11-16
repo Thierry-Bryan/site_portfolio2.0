@@ -1,0 +1,464 @@
+---
+// Import SVGs pour les réseaux sociaux
+import InstagramSVG from "../../public/icons/Instagram-icons.svg?raw";
+import LinkedinSVG from "../../public/icons/Linkedin-icons.svg?raw";
+import BehanceSVG from "../../public/icons/Behance-icons.svg?raw";
+
+const socialLinks = [
+  {
+    name: "Instagram",
+    url: "https://www.instagram.com/bryan.thierry.75/?hl=fr-ca",
+    svg: InstagramSVG,
+  },
+  {
+    name: "LinkedIn",
+    url: "https://www.linkedin.com/in/bryan-thierry/",
+    svg: LinkedinSVG,
+  },
+  {
+    name: "Behance",
+    url: "https://www.behance.net/bryanthierry1",
+    svg: BehanceSVG,
+  },
+];
+---
+
+<div
+  id="contact-modal"
+  class="modal-overlay fixed inset-0 z-[100] hidden items-center justify-center p-4 overflow-y-auto"
+  style="background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);"
+>
+  <div
+    id="modal-container"
+    class="modal-container relative w-full max-w-xl my-auto"
+  >
+    <!-- Modal Card -->
+    <div
+      id="modal-card"
+      class="modal-card relative bg-(--b1) border-4 border-(--bc) p-6 md:p-12"
+      style="box-shadow: 15px 15px 0 0 var(--p);"
+    >
+      <!-- Bouton fermer -->
+      <button
+        type="button"
+        id="close-modal"
+        class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center border-2 border-(--bc) bg-(--b1) hover:bg-(--p) hover:border-(--p) transition-all duration-300 group z-50"
+        aria-label="Fermer"
+      >
+        <svg
+          class="w-5 h-5 text-(--bc) group-hover:text-(--b1) transition-colors pointer-events-none"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          stroke-width="3"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+
+      <!-- Ligne décorative -->
+      <div class="absolute top-0 left-0 w-full h-2 bg-(--p)"></div>
+
+      <!-- Titre -->
+      <h2
+        class="text-3xl md:text-5xl font-primary text-(--p) mb-3 uppercase tracking-tight"
+      >
+        Parlons Projet
+      </h2>
+      <p
+        class="text-xs md:text-sm font-secondary text-(--bc) mb-8 opacity-70 leading-relaxed"
+      >
+        Une idée en tête ? Remplissez le formulaire et je vous réponds sous 24h.
+      </p>
+
+      <!-- Formulaire -->
+      <form id="contact-form" class="space-y-5">
+        <!-- Grille Nom + Email -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <!-- Nom -->
+          <div>
+            <label
+              for="name"
+              class="block font-secondary text-xs font-bold text-(--bc) mb-2 uppercase tracking-wide"
+            >
+              Nom *
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              class="w-full px-4 py-3 border-2 border-(--bc) bg-(--b1) text-(--bc) font-secondary text-sm focus:outline-none focus:border-(--p) focus:shadow-[3px_3px_0_0_var(--p)] transition-all duration-200"
+              placeholder="Votre nom"
+            />
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label
+              for="email"
+              class="block font-secondary text-xs font-bold text-(--bc) mb-2 uppercase tracking-wide"
+            >
+              Email *
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              class="w-full px-4 py-3 border-2 border-(--bc) bg-(--b1) text-(--bc) font-secondary text-sm focus:outline-none focus:border-(--p) focus:shadow-[3px_3px_0_0_var(--p)] transition-all duration-200"
+              placeholder="votre@email.com"
+            />
+          </div>
+        </div>
+
+        <!-- Message -->
+        <div>
+          <label
+            for="message"
+            class="block font-secondary text-xs font-bold text-(--bc) mb-2 uppercase tracking-wide"
+          >
+            Message *
+          </label>
+          <textarea
+            id="message"
+            name="message"
+            required
+            rows="5"
+            class="w-full px-4 py-3 border-2 border-(--bc) bg-(--b1) text-(--bc) font-secondary text-sm focus:outline-none focus:border-(--p) focus:shadow-[3px_3px_0_0_var(--p)] transition-all duration-200 resize-none"
+            placeholder="Décrivez votre projet en quelques lignes..."
+          ></textarea>
+        </div>
+
+        <!-- Message de succès/erreur -->
+        <div id="form-message" class="hidden p-4 border-2 border-(--bc)">
+          <p class="font-secondary text-sm"></p>
+        </div>
+
+        <!-- Bouton submit -->
+        <button
+          type="submit"
+          id="submit-btn"
+          class="w-full h-14 font-primary text-xl uppercase relative overflow-hidden transition-all duration-200 cursor-pointer"
+          style="background: radial-gradient(circle, var(--p), var(--s)); box-shadow: -5px 5px 0 0 #000;"
+        >
+          <span class="btn-text relative z-10" style="color: white;"
+            >Envoyer le message</span
+          >
+        </button>
+      </form>
+
+      <!-- Séparateur -->
+      <div class="flex items-center gap-4 my-6">
+        <div class="flex-1 h-[2px] bg-(--bc) opacity-20"></div>
+        <span
+          class="font-secondary text-xs uppercase tracking-widest text-(--bc) opacity-50"
+          >ou</span
+        >
+        <div class="flex-1 h-[2px] bg-(--bc) opacity-20"></div>
+      </div>
+
+      <!-- Réseaux sociaux -->
+      <div class="flex justify-center items-center gap-4">
+        {
+          socialLinks.map((social) => (
+            <a
+              href={social.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="modal-social-link group relative w-12 h-12 flex items-center justify-center border-2 border-(--bc) bg-(--b1) hover:bg-(--p) hover:border-(--p) transition-all duration-300"
+              aria-label={social.name}
+              title={social.name}
+            >
+              <span
+                class="w-6 h-6 modal-social-svg"
+                set:html={social.svg
+                  ?.replace(/fill=\"#000\"/g, 'fill="currentColor"')
+                  .replace(/fill=\"#000000\"/g, 'fill="currentColor"')}
+              />
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .modal-overlay {
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .modal-overlay.show {
+    display: flex !important;
+    animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(30px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .modal-container {
+    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Animation bouton identique aux vrais boutons */
+  #submit-btn::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, #ffffff, #f0f0f0);
+    transform: translate(-50%, -50%);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border-radius: 50%;
+    z-index: 0;
+  }
+
+  #submit-btn:hover::before {
+    width: 120%;
+    height: 300%;
+  }
+
+  #submit-btn:hover {
+    box-shadow: -5px 5px 0 0 var(--p);
+  }
+
+  #submit-btn .btn-text {
+    transition: color 0.3s ease;
+  }
+
+  #submit-btn:hover .btn-text {
+    color: #181818 !important;
+  }
+
+  /* Disabled state pour le bouton */
+  #submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  #submit-btn:disabled::before {
+    display: none;
+  }
+
+  /* Smooth transitions pour inputs */
+  input,
+  textarea {
+    transition: all 0.2s ease;
+  }
+
+  /* Cursor pointer pour close button */
+  #close-modal {
+    cursor: pointer;
+  }
+
+  /* Styles pour les réseaux sociaux dans la modal */
+  .modal-social-link {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .modal-social-link::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: var(--p);
+    transform: translate(-50%, -50%);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border-radius: 50%;
+    z-index: 0;
+  }
+
+  .modal-social-link:hover::before {
+    width: 120%;
+    height: 120%;
+  }
+
+  .modal-social-svg {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-social-svg svg {
+    width: 24px;
+    height: 24px;
+    color: var(--bc);
+    transition:
+      color 0.3s ease,
+      transform 0.2s ease;
+  }
+
+  .modal-social-link:hover .modal-social-svg svg {
+    color: var(--b1);
+    transform: scale(1.05);
+  }
+</style>
+
+<script>
+  const modal = document.getElementById("contact-modal");
+  const modalCard = document.getElementById("modal-card");
+  const closeBtn = document.getElementById("close-modal");
+  const contactForm = document.getElementById(
+    "contact-form"
+  ) as HTMLFormElement;
+  const submitBtn = document.getElementById("submit-btn");
+  const formMessage = document.getElementById("form-message");
+
+  // Ouvrir la modale
+  function openModal() {
+    if (modal) {
+      modal.classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+  }
+
+  // Fermer la modale
+  function closeModal() {
+    if (modal) {
+      modal.classList.remove("show");
+      document.body.style.overflow = "";
+      // Reset form
+      if (contactForm) contactForm.reset();
+      if (formMessage) formMessage.classList.add("hidden");
+    }
+  }
+
+  // Event listeners
+  if (closeBtn) {
+    closeBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closeModal();
+    });
+  }
+
+  if (modal) {
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) closeModal();
+    });
+  }
+
+  // Pas d'effet 3D - design épuré et pro
+
+  // Charger EmailJS depuis le CDN
+  const loadEmailJS = () => {
+    return new Promise((resolve, reject) => {
+      if ((window as any).emailjs) {
+        resolve((window as any).emailjs);
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src =
+        "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js";
+      script.onload = () => resolve((window as any).emailjs);
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  };
+
+  // Gestion du formulaire avec envoi EmailJS
+  if (contactForm) {
+    contactForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (!submitBtn || !formMessage) return;
+
+      // Désactiver le bouton
+      submitBtn.setAttribute("disabled", "true");
+      submitBtn.querySelector(".btn-text")!.textContent = "Envoi en cours...";
+
+      // Récupérer les données
+      const formData = new FormData(contactForm);
+      const data = {
+        from_name: formData.get("name") as string,
+        from_email: formData.get("email") as string,
+        message: formData.get("message") as string,
+      };
+
+      try {
+        // Charger EmailJS
+        const emailjs = await loadEmailJS();
+
+        // Initialiser EmailJS avec ta clé publique
+        emailjs.init("GsG27-bkg0ygtBOHf");
+
+        // Envoyer l'email
+        await emailjs.send("service_umix94v", "template_6c9qm4d", {
+          from_name: data.from_name,
+          email: data.from_email,
+          message: data.message,
+        });
+
+        // Succès
+        formMessage.classList.remove("hidden");
+        formMessage.style.background = "var(--b1)";
+        formMessage.querySelector("p")!.textContent =
+          "✅ Message envoyé avec succès ! Je vous réponds sous 24h.";
+        formMessage.querySelector("p")!.className =
+          "font-secondary text-xs md:text-sm";
+
+        // Reset form après 5 secondes
+        setTimeout(() => {
+          contactForm.reset();
+          formMessage.classList.add("hidden");
+          submitBtn.querySelector(".btn-text")!.textContent =
+            "Envoyer le message";
+          submitBtn.removeAttribute("disabled");
+        }, 5000);
+      } catch (error) {
+        console.error("Erreur EmailJS:", error);
+
+        // Erreur
+        formMessage.classList.remove("hidden");
+        formMessage.style.background = "var(--b1)";
+        formMessage.querySelector("p")!.textContent =
+          "❌ Une erreur est survenue. Contactez-moi directement à bryan.thierry.pro@gmail.com";
+        formMessage.querySelector("p")!.className =
+          "font-secondary text-xs md:text-sm";
+
+        submitBtn.querySelector(".btn-text")!.textContent =
+          "Envoyer le message";
+        submitBtn.removeAttribute("disabled");
+      }
+    });
+  }
+
+  // Escape key pour fermer
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal?.classList.contains("show")) {
+      closeModal();
+    }
+  });
+
+  // Exposer la fonction globalement pour les boutons
+  (window as any).openContactModal = openModal;
+</script>

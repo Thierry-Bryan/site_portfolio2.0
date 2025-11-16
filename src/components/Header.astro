@@ -3,12 +3,14 @@ import Button from "./Button.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 
 interface Props {
-  theme?: "RBA" | "les-12-fragments" | "orange" | "ca-va-trailer" | "echo-safe" | "omnisphere" | "ocean" | "cyberpunk" | "sunset";
+  theme?: "RBA" | "les-12-fragments" | "orange" | "ca-va-trailer" | "echo-safe" | "omnisphere" | "ocean" | "cyberpunk" | "sunset" | "basique";
 }
 
 const { theme = "ca-va-trailer" } = Astro.props;
 const isProjetsPageSSR = Astro.url.pathname === "/projets" || Astro.url.pathname.startsWith("/projets/");
-const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all duration-500 bg-transparent ${isProjetsPageSSR ? "projet-page" : ""}`.trim();
+const isLegalPageSSR = Astro.url.pathname.includes("/mentions-legales") || Astro.url.pathname.includes("/politique-confidentialite");
+const pageClass = isProjetsPageSSR ? "projet-page" : (isLegalPageSSR ? "legal-page" : "");
+const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all duration-500 bg-transparent ${pageClass}`.trim();
 ---
 
 <header
@@ -28,7 +30,7 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
     <ul class="menu menu-horizontal gap-10 px-1">
       <li>
         <a
-          href="#services"
+          href="/services"
           class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link hover:bg-transparent"
         >
           MES SERVICES
@@ -36,7 +38,7 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
       </li>
       <li>
         <a
-          href="#projects"
+          href="/projets"
           class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link hover:bg-transparent"
         >
           MES PROJETS
@@ -44,7 +46,7 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
       </li>
       <li>
         <a
-          href="#about"
+          href="/a-propos"
           class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link hover:bg-transparent"
         >
           A PROPOS
@@ -55,9 +57,14 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
 
   <div class="navbar-end flex items-center gap-4">
     <ThemeToggle />
-    <Button href="#contact" aria-label="Me contacter" theme={theme} className="header-button">
-      ME CONTACTER
-    </Button>
+    <button 
+      onclick="window.openContactModal()" 
+      aria-label="Me contacter" 
+      class="header-button font-primary relative inline-flex h-11 px-8 items-center justify-center overflow-hidden cursor-pointer transition-all duration-200"
+      style="background: radial-gradient(circle, var(--p), var(--s)); box-shadow: -5px 5px 0 0 #000;"
+    >
+      <span class="btn-text relative z-10" style="color: white;">ME CONTACTER</span>
+    </button>
   </div>
 </header>
 
