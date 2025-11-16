@@ -63,14 +63,14 @@
 [data-theme="ca-va-trailer"] {
   --p: #EE0221; /* rose fuchsia vif */
   --s: #fa0435; /* rose/rouge vif */
-  --a: #ffb3c6; /* rose clair */
+  --a: #f72c55; /* rose clair */
   --b1: #faf9f7;
   --bc: #000000;
 }
 [data-theme="ca-va-trailer-dark"] {
   --p: #ff005c; /* rose saturé */
   --s: #fa0435; /* rose clair */
-  --a: #fff0f6; /* rose pâle */
+  --a: #f72c55; /* rose pâle */
   --b1: #000000;
   --bc: #faf9f7;
 }
@@ -188,10 +188,10 @@ body {
 
 /* === STYLES SPÉCIFIQUES PAGE PROJET === */
 
-/* Header sur pages de projets - texte en couleur primaire par défaut */
+/* Header sur pages de projets - texte utilise la couleur de contraste (noir en clair, blanc en sombre) */
 .projet-page .logo-link,
 .projet-page .nav-link {
-  color: var(--p);
+  color: var(--bc);
 }
 
 /* Au hover, texte noir avec ombres colorées (effet comics existant) */

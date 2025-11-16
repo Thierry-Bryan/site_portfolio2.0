@@ -7,12 +7,13 @@ interface Props {
 }
 
 const { theme = "ca-va-trailer" } = Astro.props;
+const isProjetsPageSSR = Astro.url.pathname === "/projets" || Astro.url.pathname.startsWith("/projets/");
+const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all duration-500 bg-transparent ${isProjetsPageSSR ? "projet-page" : ""}`.trim();
 ---
 
 <header
   id="header"
-  data-theme={theme}
-  class="navbar w-full px-6 py-4 fixed top-0 z-50 transition-all duration-500 bg-transparent"
+  class={headerClass}
 >
   <div class="navbar-start">
     <a
@@ -69,7 +70,7 @@ const { theme = "ca-va-trailer" } = Astro.props;
   const isHomePage =
     window.location.pathname === "/" ||
     window.location.pathname === "/index.html";
-  const isProjetPage = window.location.pathname.includes("/projets/");
+  const isProjetPage = window.location.pathname === "/projets" || window.location.pathname.startsWith("/projets/");
   const isAProposPage = window.location.pathname.includes("/a-propos");
 
   function updateHeaderStyle() {

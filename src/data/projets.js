@@ -4,6 +4,9 @@ export const projets = [
     title: "ECHO SAFE",
     subtitle: "Application solidaire contre le harcèlement",
     theme: "echo-safe",
+    type: "Mobile",
+    year: 2024,
+    tags: ["React Native", "UI/UX", "Social"],
     hero: {
       backgroundImage: "/mes-projets/mes-projets_echosafe.webp",
       title: "ECHO SAFE",
@@ -34,6 +37,9 @@ export const projets = [
     title: "LES 12 FRAGMENTS",
     subtitle: "Site créatif autour de 12 avatars pixel art",
     theme: "les-12-fragments",
+    type: "Web",
+    year: 2023,
+    tags: ["Pixel Art", "Animation", "Storytelling"],
     hero: {
       backgroundImage: "/mes-projets/mes-projets_12-fragments.webp",
       title: "LES 12 FRAGMENTS",
@@ -62,6 +68,9 @@ export const projets = [
     title: "OMNISPHERE",
     subtitle: "Site immersif questionnant l'avenir des relations humaines",
     theme: "omnisphere",
+    type: "Web",
+    year: 2024,
+    tags: ["Design", "UX/UI", "Immersif"],
     hero: {
       backgroundImage: "/mes-projets/mes-projets_omnisphere.webp",
       title: "OMNISPHERE",
@@ -87,6 +96,9 @@ export const projets = [
     title: "ÇA VA TRAILER",
     subtitle: "Vitrine immersive pour un festival de cinéma",
     theme: "ca-va-trailer",
+    type: "Web",
+    year: 2024,
+    tags: ["Cinéma", "Design", "Vitrine"],
     hero: {
       backgroundImage: "/mes-projets/mes-projets_cavatrailer.webp",
       title: "ÇA VA TRAILER",
@@ -112,6 +124,9 @@ export const projets = [
     title: "RBA",
     subtitle: "Refonte identité visuelle association biodiversité",
     theme: "RBA",
+    type: "Design",
+    year: 2023,
+    tags: ["Branding", "Identité visuelle", "Environnement"],
     hero: {
       backgroundImage: "/mes-projets/mes-projets_rba.webp",
       title: "RBA",
