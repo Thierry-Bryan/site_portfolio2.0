@@ -10,6 +10,7 @@
     "build:css": "npx @tailwindcss/cli -i app.css -o public/output.css"
   },
   "dependencies": {
+    "@astrojs/node": "^9.5.0",
     "@tailwindcss/cli": "^4.1.16",
     "@tailwindcss/vite": "^4.1.16",
     "astro": "^5.15.1",
