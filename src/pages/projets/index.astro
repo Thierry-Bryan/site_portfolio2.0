@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import BackgroundComics from "../../components/BackgroundComics.astro";
-import { pb, getFileUrl } from "../../lib/pocketbase.js";
+import { pb, getFileUrl } from "../../utils/pb.ts";
 
 // Récupérer les tags depuis PocketBase
 const tags = await pb.collection("tags").getFullList({

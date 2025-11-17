@@ -1,7 +1,15 @@
 import PocketBase from "pocketbase";
 
-// URL de ton instance PocketBase (à adapter selon ton setup)
-const PB_URL = import.meta.env.PUBLIC_POCKETBASE_URL || "http://127.0.0.1:8090";
+// URL de ton instance PocketBase selon l'environnement
+let PB_URL: string;
+
+if (import.meta.env.MODE === 'development') {
+  // Environnement local
+  PB_URL = import.meta.env.PUBLIC_POCKETBASE_URL || "http://127.0.0.1:8090";
+} else {
+  // Production - URL de ton site déployé
+  PB_URL = "https://portfolio.bryan-thierry.fr:443";
+}
 
 // Créer l'instance PocketBase
 export const pb = new PocketBase(PB_URL);
@@ -32,7 +40,7 @@ export async function getProjets() {
  * @param {string} slug
  * @returns {Promise<Object|null>}
  */
-export async function getProjetBySlug(slug) {
+export async function getProjetBySlug(slug: string) {
   try {
     const record = await pb
       .collection("projets")
@@ -53,7 +61,7 @@ export async function getProjetBySlug(slug) {
  * @param {string} thumb - Taille du thumbnail (optional)
  * @returns {string}
  */
-export function getFileUrl(record, filename, thumb = "") {
+export function getFileUrl(record: any, filename: string, thumb: string = "") {
   return pb.files.getURL(record, filename, { thumb });
 }
 
@@ -63,11 +71,11 @@ export function getFileUrl(record, filename, thumb = "") {
  * @param {string} fieldName - Nom du champ (ex: 'images')
  * @returns {Array<string>}
  */
-export function getMultipleFileUrls(record, fieldName) {
+export function getMultipleFileUrls(record: any, fieldName: string) {
   if (!record[fieldName] || !Array.isArray(record[fieldName])) {
     return [];
   }
-  return record[fieldName].map((filename) => getFileUrl(record, filename));
+  return record[fieldName].map((filename: string) => getFileUrl(record, filename));
 }
 
 /**
@@ -75,7 +83,7 @@ export function getMultipleFileUrls(record, fieldName) {
  * @param {string} currentSlug
  * @returns {Promise<Object|null>}
  */
-export async function getNextProjet(currentSlug) {
+export async function getNextProjet(currentSlug: string) {
   try {
     const projets = await getProjets();
     const currentIndex = projets.findIndex((p) => p.slug === currentSlug);
@@ -95,7 +103,7 @@ export async function getNextProjet(currentSlug) {
  * @param {string} currentSlug
  * @returns {Promise<Object|null>}
  */
-export async function getPreviousProjet(currentSlug) {
+export async function getPreviousProjet(currentSlug: string) {
   try {
     const projets = await getProjets();
     const currentIndex = projets.findIndex((p) => p.slug === currentSlug);
