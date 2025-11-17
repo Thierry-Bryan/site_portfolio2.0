@@ -26,6 +26,8 @@ jobs:
       run: |
         npm run build
         cp package.json dist/server/
+        cp package-lock.json dist/server/
+        cp -R dist/client/* dist/
 
     - name: Deploy to VPS via SCP
       uses: appleboy/scp-action@v0.1.3
