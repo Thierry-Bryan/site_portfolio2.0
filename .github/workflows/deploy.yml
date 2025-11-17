@@ -19,40 +19,37 @@ jobs:
         node-version: '18'
         cache: 'npm'
 
-    - [cite_start]name: Install dependencies [cite: 8]
+    - name: Install dependencies
       run: npm ci
-      
-    - [cite_start]name: Build project [cite: 9]
+
+    - name: Build project
       run: |
         npm run build
-        # Copie package.json pour que PM2 puisse installer les dépendances sur le VPS
         cp package.json dist/server/
-        
-    - [cite_start]name: Deploy to VPS via SCP [cite: 9]
+
+    - name: Deploy to VPS via SCP
       uses: appleboy/scp-action@v0.1.3
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: 22044 # <-- VOTRE PORT SSH
+        port: 22044 # VOTRE PORT SSH
         source: "dist/*"
-        target: "/var/www/portfolio/" # <-- Dossier de réception sur le VPS
+        target: "/var/www/portfolio/" # Dossier de réception
         strip_components: 1
         rm: false
         overwrite: true
         debug: true
-        
-    - [cite_start]name: Install production dependencies and restart PM2 on VPS [cite: 10]
+
+    - name: Install production dependencies and restart PM2 on VPS
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: 22044 
+        port: 22044 # VOTRE PORT SSH
         script: |
-          cd /var/www/portfolio/server # <-- Va dans le dossier de l'application
+          cd /var/www/portfolio/server # Dossier cible
           npm ci
           npm install astro send server-destroy
-          # Redémarre ou démarre le processus PM2 sur le port 8082
-          PORT=8082 pm2 restart portfolio-app || \
-          PORT=8082 pm2 start entry.mjs --name portfolio-app [cite: 12]
+          PORT=8082 pm2 restart portfolio-app || PORT=8082 pm2 start entry.mjs --name portfolio-app
