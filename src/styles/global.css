@@ -4,19 +4,16 @@
 @import "./utilities.css";
 @plugin "daisyui";
 
-/* === ANTI-FOUC (Flash Of Unstyled Content) === */
-/* Masquer brièvement le contenu jusqu'à ce que le thème soit appliqué */
-html:not([data-theme]) {
-  visibility: hidden;
-}
-
-html[data-theme] {
-  visibility: visible;
-}
-
-/* Transition douce pour éviter les flashs brusques */
+/* === FOND NOIR PAR DÉFAUT POUR ÉVITER LE FLASH BLANC === */
 html {
-  transition: background-color 0.2s ease, color 0.2s ease;
+  background-color: #000;
+  color: #faf9f7;
+}
+
+/* Sera écrasé par le script si mode clair */
+html[data-theme]:not([data-theme*="-dark"]) {
+  background-color: #faf9f7;
+  color: #000;
 }
 
 /* === VARIABLES GLOBALES === */
@@ -169,7 +166,8 @@ html {
 body {
   background: var(--b1) !important;
   color: var(--bc);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  margin: 0;
+  padding: 0;
 }
 
 @layer base {

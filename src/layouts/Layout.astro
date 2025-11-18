@@ -30,7 +30,7 @@ const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname) } =
 ---
 
 <!doctype html>
-<html lang="fr" data-theme={theme}>
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -38,106 +38,33 @@ const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname) } =
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     
-    <!-- Preload fonts critiques pour éviter le FOIT (Flash Of Invisible Text) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    
-    <!-- Script critique AVANT tout le reste pour éviter le FOUC -->
-    <script is:inline define:vars={{ defaultTheme: theme }} data-theme-critical>
-      // Appliquer le thème IMMÉDIATEMENT (bloquant, avant le rendu)
-      (function() {
-        const isHomePage = window.location.pathname === "/" || window.location.pathname === "/index.html";
-        const savedTheme = localStorage.getItem("theme");
-        const savedDarkMode = localStorage.getItem("darkMode");
-        
-        let finalTheme;
-        
-        if (savedTheme) {
-          const useDark = savedDarkMode === "true";
-          finalTheme = useDark ? defaultTheme + "-dark" : defaultTheme;
-        } else {
-          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-          finalTheme = prefersDark ? defaultTheme + "-dark" : defaultTheme;
-          localStorage.setItem("darkMode", prefersDark ? "true" : "false");
-        }
-        
-        if (isHomePage) {
-          const baseTheme = finalTheme.replace("-dark", "");
-          document.documentElement.setAttribute("data-theme", baseTheme);
-          document.documentElement.setAttribute("data-user-dark-mode", finalTheme.includes("-dark") ? "true" : "false");
-        } else {
-          document.documentElement.setAttribute("data-theme", finalTheme);
-        }
-        
-        // Stocker pour usage ultérieur
-        document.documentElement.dataset.defaultTheme = defaultTheme;
-        document.documentElement.dataset.currentTheme = finalTheme;
-        localStorage.setItem("theme", finalTheme);
-      })();
-    </script>
-    
-    <script>
-      import { initializeTheme, syncThemeOnLoad } from "../scripts/theme-manager";
-      
-      const defaultTheme = document.documentElement.dataset.defaultTheme || "ca-va-trailer";
-      
-      // Initialiser le thème au chargement
-      initializeTheme(defaultTheme);
-      
-      // Synchroniser header/footer au chargement du DOM
-      window.addEventListener("DOMContentLoaded", syncThemeOnLoad);
-    </script>
-    <script is:inline data-theme-legacy>
-      // SCRIPT LEGACY - Compatible avec ancien code
+    <!-- Script CRITIQUE EN PREMIER pour éviter tout flash -->
+    <script is:inline define:vars={{ pageTheme: theme }}>
+      // EXÉCUTÉ AVANT TOUT LE RESTE DU HTML
       (function () {
-        const isHomePage =
-          window.location.pathname === "/" ||
-          window.location.pathname === "/index.html";
-
-        // Déterminer le thème à utiliser
+        const isHomePage = window.location.pathname === "/" || window.location.pathname === "/index.html";
+        
+        // Détecter le mode sombre IMMÉDIATEMENT
+        let isDark = localStorage.getItem("darkMode") === "true";
+        if (localStorage.getItem("darkMode") === null) {
+          isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          localStorage.setItem("darkMode", isDark ? "true" : "false");
+        }
+        
+        // Appliquer le thème AVANT que le HTML soit rendu
         let finalTheme;
-        const savedTheme = localStorage.getItem("theme");
-        const savedDarkMode = localStorage.getItem("darkMode"); // "true" ou "false"
-
-        if (savedTheme) {
-          // Utiliser le thème sauvegardé
-          // Extraire le thème de base (sans -dark)
-          const baseTheme = savedTheme.replace("-dark", "");
-
-          // Sur la page d'accueil, utiliser le thème de la page (defaultTheme) avec la préférence dark/light
-          if (isHomePage) {
-            const useDark = savedDarkMode === "true";
-            finalTheme = useDark ? defaultTheme + "-dark" : defaultTheme;
-          } else {
-            // Sur les autres pages, garder le thème et le mode
-            const useDark = savedDarkMode === "true";
-            finalTheme = useDark ? defaultTheme + "-dark" : defaultTheme;
-          }
-        } else {
-          // Première visite : détecter la préférence système
-          const prefersDark = window.matchMedia(
-            "(prefers-color-scheme: dark)"
-          ).matches;
-          finalTheme = prefersDark ? defaultTheme + "-dark" : defaultTheme;
-          localStorage.setItem("darkMode", prefersDark ? "true" : "false");
-        }
-
-        // Sur la page d'accueil, forcer le mode clair pour le contenu (mais pas header/footer)
         if (isHomePage) {
-          const baseTheme = finalTheme.replace("-dark", "");
-          document.documentElement.setAttribute("data-theme", baseTheme);
-          // Garder en mémoire si l'utilisateur est en mode sombre
-          document.documentElement.setAttribute(
-            "data-user-dark-mode",
-            finalTheme.includes("-dark") ? "true" : "false"
-          );
+          finalTheme = pageTheme;
+          document.documentElement.setAttribute("data-user-dark-mode", isDark ? "true" : "false");
         } else {
-          // Autres pages : appliquer le thème complet
-          document.documentElement.setAttribute("data-theme", finalTheme);
+          finalTheme = isDark ? pageTheme + "-dark" : pageTheme;
         }
-
-        // Toujours sauvegarder le thème actuel
+        
+        document.documentElement.setAttribute("data-theme", finalTheme);
         localStorage.setItem("theme", finalTheme);
+        
+        // Stocker l'état isDark pour le toggle
+        window.__isDarkMode = isDark;
 
         // Fonction globale pour changer le thème
         window.changeTheme = function () {

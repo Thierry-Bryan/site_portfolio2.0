@@ -157,22 +157,6 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
       listenThemeChanges(currentTheme);
     });
   </script>
-  <!-- Script critique pour appliquer le thème immédiatement -->
-  <script
-    is:inline
-    define:vars={{ projectTheme: projet.theme }}
-    data-theme-instant
-  >
-    // Appliquer le thème du projet INSTANTANÉMENT
-    (function() {
-      const savedDarkMode = localStorage.getItem("darkMode") === "true";
-      const finalTheme = savedDarkMode ? projectTheme + "-dark" : projectTheme;
-      document.documentElement.setAttribute("data-theme", finalTheme);
-      document.documentElement.dataset.currentTheme = projectTheme;
-      localStorage.setItem("theme", finalTheme);
-    })();
-  </script>
-  
   <script
     is:inline
     define:vars={{

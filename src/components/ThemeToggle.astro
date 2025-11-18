@@ -64,44 +64,72 @@
   }
 </style>
 
+<script is:inline>
+  // Initialiser IMMÉDIATEMENT l'état du toggle (avant DOMContentLoaded)
+  (function() {
+    const isDark = window.__isDarkMode || localStorage.getItem("darkMode") === "true";
+    
+    // Appliquer l'état dès que les éléments existent
+    function initToggle() {
+      const indicator = document.getElementById("toggle-indicator");
+      const sunIcon = document.querySelector(".sun-icon");
+      const moonIcon = document.querySelector(".moon-icon");
+      
+      if (indicator && sunIcon && moonIcon) {
+        if (isDark) {
+          indicator.style.transform = "translateX(32px)";
+          sunIcon.classList.add("hidden");
+          moonIcon.classList.remove("hidden");
+        } else {
+          indicator.style.transform = "translateX(0px)";
+          sunIcon.classList.remove("hidden");
+          moonIcon.classList.add("hidden");
+        }
+        return true;
+      }
+      return false;
+    }
+    
+    // Essayer immédiatement
+    if (!initToggle()) {
+      // Si pas encore prêt, réessayer au DOMContentLoaded
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initToggle);
+      } else {
+        initToggle();
+      }
+    }
+  })();
+</script>
+
 <script>
   const toggleButton = document.getElementById("theme-toggle");
   const indicator = document.getElementById("toggle-indicator");
 
   toggleButton?.addEventListener("click", () => {
-    // Appelle window.changeTheme() qui gère tout
     if (typeof window.changeTheme === "function") {
-      const newTheme = window.changeTheme();
-      
-      // Force la mise à jour immédiate de la position
-      setTimeout(() => {
-        updateIndicatorPosition();
-      }, 10);
+      window.changeTheme();
+      updateIndicatorPosition();
     }
   });
   
-  // Synchronise la position de l'indicateur avec le thème actuel
   function updateIndicatorPosition() {
-    const currentTheme = document.documentElement.getAttribute("data-theme");
     const savedDarkMode = localStorage.getItem("darkMode") === "true";
+    const sunIcon = document.querySelector(".sun-icon");
+    const moonIcon = document.querySelector(".moon-icon");
     
-    // Utilise savedDarkMode au lieu de currentTheme car sur la page d'accueil le thème ne contient pas -dark
     if (indicator) {
       if (savedDarkMode) {
         indicator.style.transform = "translateX(32px)";
+        sunIcon?.classList.add("hidden");
+        moonIcon?.classList.remove("hidden");
       } else {
         indicator.style.transform = "translateX(0px)";
+        sunIcon?.classList.remove("hidden");
+        moonIcon?.classList.add("hidden");
       }
     }
   }
   
-  // Au chargement initial
-  document.addEventListener("DOMContentLoaded", () => {
-    updateIndicatorPosition();
-  });
-  
-  // À chaque changement de thème
-  window.addEventListener("themeChanged", () => {
-    updateIndicatorPosition();
-  });
+  window.addEventListener("themeChanged", updateIndicatorPosition);
 </script>
