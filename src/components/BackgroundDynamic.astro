@@ -440,7 +440,6 @@
     }
     
     function handleMouseLeave() {
-      console.log('Mouse left - stopping smooth flow!');
       if (!mouseBlob) return;
       
       isMouseInside = false;
@@ -453,8 +452,6 @@
     function handleMouseMove(e) {
       updateMousePosition(e);
     }
-    
-    console.log('Setting up ultra-smooth mouse tracking...');
     
     // Événements sur le conteneur de fond
     backgroundContainer.addEventListener('mouseenter', handleMouseEnter);

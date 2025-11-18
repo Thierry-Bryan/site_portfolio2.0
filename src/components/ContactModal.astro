@@ -1,26 +1,16 @@
 ---
+import { siteConfig } from "../config";
 // Import SVGs pour les réseaux sociaux
 import InstagramSVG from "../../public/icons/Instagram-icons.svg?raw";
 import LinkedinSVG from "../../public/icons/Linkedin-icons.svg?raw";
 import BehanceSVG from "../../public/icons/Behance-icons.svg?raw";
 
-const socialLinks = [
-  {
-    name: "Instagram",
-    url: "https://www.instagram.com/bryan.thierry.75/?hl=fr-ca",
-    svg: InstagramSVG,
-  },
-  {
-    name: "LinkedIn",
-    url: "https://www.linkedin.com/in/bryan-thierry/",
-    svg: LinkedinSVG,
-  },
-  {
-    name: "Behance",
-    url: "https://www.behance.net/bryanthierry1",
-    svg: BehanceSVG,
-  },
-];
+// Map SVG par nom pour accès simple
+const svgMap: Record<string, string> = {
+  Instagram: InstagramSVG,
+  LinkedIn: LinkedinSVG,
+  Behance: BehanceSVG,
+};
 ---
 
 <div
@@ -164,7 +154,7 @@ const socialLinks = [
       <!-- Réseaux sociaux -->
       <div class="flex justify-center items-center gap-4">
         {
-          socialLinks.map((social) => (
+          siteConfig.social.map((social) => (
             <a
               href={social.url}
               target="_blank"
@@ -175,7 +165,7 @@ const socialLinks = [
             >
               <span
                 class="w-6 h-6 modal-social-svg"
-                set:html={social.svg
+                set:html={svgMap[social.name]
                   ?.replace(/fill=\"#000\"/g, 'fill="currentColor"')
                   .replace(/fill=\"#000000\"/g, 'fill="currentColor"')}
               />
@@ -408,7 +398,7 @@ const socialLinks = [
         // Charger EmailJS
         const emailjs = await loadEmailJS();
 
-        // Initialiser EmailJS avec ta clé publique
+        // Initialiser EmailJS
         emailjs.init("GsG27-bkg0ygtBOHf");
 
         // Envoyer l'email
@@ -435,8 +425,6 @@ const socialLinks = [
           submitBtn.removeAttribute("disabled");
         }, 5000);
       } catch (error) {
-        console.error("Erreur EmailJS:", error);
-
         // Erreur
         formMessage.classList.remove("hidden");
         formMessage.style.background = "var(--b1)";

@@ -1,5 +1,6 @@
 ---
 import BackgroundComics from "./BackgroundComics.astro";
+import { siteConfig } from "../config";
 // Import SVGs as raw strings to inline them (ensures display + theming)
 import InstagramSVG from "../../public/icons/Instagram-icons.svg?raw";
 import LinkedinSVG from "../../public/icons/Linkedin-icons.svg?raw";
@@ -21,26 +22,7 @@ interface Props {
 
 const { theme = "ca-va-trailer" } = Astro.props;
 
-const socialLinks = [
-  {
-    name: "Instagram",
-    url: "https://www.instagram.com/bryan.thierry.75/?hl=fr-ca",
-    icon: "Instagram-icons.svg",
-    label: "Inspiration & visuels",
-  },
-  {
-    name: "LinkedIn",
-    url: "https://www.linkedin.com/in/bryan-thierry/",
-    icon: "Linkedin-icons.svg",
-    label: "Réseau pro",
-  },
-  {
-    name: "Behance",
-    url: "https://www.behance.net/bryanthierry1",
-    icon: "Behance-icons.svg",
-    label: "Portfolio créatif",
-  },
-];
+const socialLinks = siteConfig.social;
 
 // Map des SVG par nom pour un accès simple
 const svgByName: Record<string, string> = {
@@ -68,13 +50,13 @@ const svgByName: Record<string, string> = {
       <!-- Section email -->
       <div class="w-full mb-6 md:mb-8 flex">
         <a
-          href="mailto:bryan.thierry.pro@gmail.com"
+          href={`mailto:${siteConfig.author.email}`}
           class="email-box w-full comics-glow-hover-link"
         >
           <p
             class="font-primary text-lg md:text-xl tracking-tight text-(--bc) uppercase text-center w-full"
           >
-            bryan.thierry.pro@gmail.com
+            {siteConfig.author.email}
           </p>
         </a>
       </div>

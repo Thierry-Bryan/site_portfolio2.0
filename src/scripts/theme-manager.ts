@@ -1,0 +1,265 @@
+/**
+ * Gestionnaire de thèmes pour le portfolio
+ * Gère la logique de changement de thème light/dark et la synchronisation
+ * entre les différents composants (header, footer, sections)
+ */
+
+interface ThemeManager {
+  changeTheme: () => string;
+  initializeTheme: (defaultTheme: string) => void;
+}
+
+declare global {
+  interface Window {
+    changeTheme: () => string;
+  }
+}
+
+/**
+ * Initialise le système de thèmes au chargement de la page
+ */
+export function initializeTheme(defaultTheme: string): void {
+  const isHomePage =
+    window.location.pathname === "/" ||
+    window.location.pathname === "/index.html";
+
+  // Déterminer le thème à utiliser
+  let finalTheme: string;
+  const savedTheme = localStorage.getItem("theme");
+  const savedDarkMode = localStorage.getItem("darkMode"); // "true" ou "false"
+
+  if (savedTheme) {
+    // Utiliser le thème sauvegardé
+    const baseTheme = savedTheme.replace("-dark", "");
+
+    // Sur la page d'accueil, utiliser le thème de la page (defaultTheme) avec la préférence dark/light
+    if (isHomePage) {
+      const useDark = savedDarkMode === "true";
+      finalTheme = useDark ? defaultTheme + "-dark" : defaultTheme;
+    } else {
+      // Sur les autres pages, garder le thème et le mode
+      const useDark = savedDarkMode === "true";
+      finalTheme = useDark ? defaultTheme + "-dark" : defaultTheme;
+    }
+  } else {
+    // Première visite : détecter la préférence système
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    finalTheme = prefersDark ? defaultTheme + "-dark" : defaultTheme;
+    localStorage.setItem("darkMode", prefersDark ? "true" : "false");
+  }
+
+  // Sur la page d'accueil, forcer le mode clair pour le contenu (mais pas header/footer)
+  if (isHomePage) {
+    const baseTheme = finalTheme.replace("-dark", "");
+    document.documentElement.setAttribute("data-theme", baseTheme);
+    // Garder en mémoire si l'utilisateur est en mode sombre
+    document.documentElement.setAttribute(
+      "data-user-dark-mode",
+      finalTheme.includes("-dark") ? "true" : "false"
+    );
+  } else {
+    // Autres pages : appliquer le thème complet
+    document.documentElement.setAttribute("data-theme", finalTheme);
+  }
+
+  // Toujours sauvegarder le thème actuel
+  localStorage.setItem("theme", finalTheme);
+}
+
+/**
+ * Change le thème entre light et dark
+ * @returns Le nouveau thème appliqué
+ */
+export function changeTheme(): string {
+  const isHome =
+    window.location.pathname === "/" ||
+    window.location.pathname === "/index.html";
+  let currentTheme: string;
+
+  if (isHome) {
+    // Sur la page d'accueil, lire la préférence utilisateur
+    const userDarkMode =
+      document.documentElement.getAttribute("data-user-dark-mode") === "true";
+    const baseTheme = document.documentElement.getAttribute("data-theme") || "";
+    currentTheme = userDarkMode ? baseTheme + "-dark" : baseTheme;
+  } else {
+    currentTheme = document.documentElement.getAttribute("data-theme") || "";
+  }
+
+  const isDark = currentTheme.includes("-dark");
+  const newTheme = isDark
+    ? currentTheme.replace("-dark", "")
+    : currentTheme + "-dark";
+
+  // Sauvegarder la préférence dark/light (pas le thème spécifique)
+  localStorage.setItem("darkMode", newTheme.includes("-dark") ? "true" : "false");
+  localStorage.setItem("theme", newTheme);
+
+  if (isHome) {
+    // Page d'accueil : garder le thème clair pour le contenu, mais mettre à jour la préférence
+    document.documentElement.setAttribute(
+      "data-user-dark-mode",
+      newTheme.includes("-dark") ? "true" : "false"
+    );
+  } else {
+    // Autres pages : appliquer le thème complet
+    document.documentElement.setAttribute("data-theme", newTheme);
+
+    // Forcer le recalcul des variables CSS
+    document.body.style.display = "none";
+    document.body.offsetHeight;
+    document.body.style.display = "";
+
+    // Mettre à jour les sections avec data-theme (chaque section garde son propre thème)
+    const sections = document.querySelectorAll("section[data-theme]");
+    sections.forEach((section) => {
+      const sectionTheme = section.getAttribute("data-theme") || "";
+      const sectionBaseTheme = sectionTheme.replace("-dark", "");
+      const newSectionTheme = newTheme.includes("-dark")
+        ? sectionBaseTheme + "-dark"
+        : sectionBaseTheme;
+      section.setAttribute("data-theme", newSectionTheme);
+    });
+  }
+
+  // Mettre à jour header et footer (sur TOUTES les pages)
+  updateHeaderFooter(newTheme, isHome);
+
+  // Mettre à jour les icônes du toggle
+  updateToggleIcons(isDark);
+
+  // Déclencher un événement custom pour notifier les composants
+  window.dispatchEvent(
+    new CustomEvent("themeChanged", { detail: { theme: newTheme } })
+  );
+
+  return newTheme;
+}
+
+/**
+ * Met à jour le header et le footer avec le nouveau thème
+ */
+function updateHeaderFooter(newTheme: string, isHome: boolean): void {
+  const header = document.getElementById("header");
+  const footer = document.getElementById("footer");
+
+  if (header) {
+    header.setAttribute("data-theme", newTheme);
+
+    // Forcer la mise à jour immédiate du background du header
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const headerComputedStyle = getComputedStyle(header);
+        const bgColor = headerComputedStyle.getPropertyValue("--b1").trim();
+        if (header.classList.contains("scrolled") || !isHome) {
+          header.style.backgroundColor = `${bgColor}f5`;
+        }
+
+        // Sur la page d'accueil, forcer la mise à jour des couleurs du texte
+        if (isHome) {
+          const isDarkMode = newTheme.includes("-dark");
+          const logoLink = header.querySelector(".logo-link") as HTMLElement;
+          const navLinks = header.querySelectorAll(".nav-link");
+
+          if (isDarkMode) {
+            if (logoLink) logoLink.style.color = "white";
+            navLinks.forEach((link) => ((link as HTMLElement).style.color = "white"));
+          } else {
+            if (logoLink) logoLink.style.color = "";
+            navLinks.forEach((link) => ((link as HTMLElement).style.color = ""));
+          }
+        }
+      });
+    });
+  }
+
+  if (footer) {
+    footer.setAttribute("data-theme", newTheme);
+  }
+}
+
+/**
+ * Met à jour les icônes du toggle light/dark
+ */
+function updateToggleIcons(wasDark: boolean): void {
+  const sunIcon = document.querySelector(".sun-icon");
+  const moonIcon = document.querySelector(".moon-icon");
+
+  if (!wasDark) {
+    sunIcon?.classList.add("hidden");
+    moonIcon?.classList.remove("hidden");
+  } else {
+    sunIcon?.classList.remove("hidden");
+    moonIcon?.classList.add("hidden");
+  }
+}
+
+/**
+ * Synchronise le header et footer au chargement avec le bon thème
+ */
+export function syncThemeOnLoad(): void {
+  const isHome =
+    window.location.pathname === "/" ||
+    window.location.pathname === "/index.html";
+  const header = document.getElementById("header");
+  const footer = document.getElementById("footer");
+  const isDarkMode = localStorage.getItem("darkMode") === "true";
+
+  let themeForHeaderFooter: string;
+  if (isHome) {
+    // Sur la page d'accueil, utiliser la préférence utilisateur pour header/footer
+    const userDarkMode =
+      document.documentElement.getAttribute("data-user-dark-mode") === "true";
+    const baseTheme = document.documentElement.getAttribute("data-theme") || "";
+    themeForHeaderFooter = userDarkMode ? baseTheme + "-dark" : baseTheme;
+  } else {
+    themeForHeaderFooter =
+      document.documentElement.getAttribute("data-theme") || "";
+
+    // Sur les autres pages, mettre à jour chaque section avec son propre thème
+    const sections = document.querySelectorAll("section[data-theme]");
+    sections.forEach((section) => {
+      const sectionTheme = section.getAttribute("data-theme") || "";
+      const sectionBaseTheme = sectionTheme.replace("-dark", "");
+      const newSectionTheme = isDarkMode
+        ? sectionBaseTheme + "-dark"
+        : sectionBaseTheme;
+      section.setAttribute("data-theme", newSectionTheme);
+    });
+  }
+
+  if (header) {
+    header.setAttribute("data-theme", themeForHeaderFooter);
+
+    // Sur la page d'accueil en mode sombre, mettre le texte en blanc
+    if (isHome && themeForHeaderFooter.includes("-dark")) {
+      const logoLink = header.querySelector(".logo-link") as HTMLElement;
+      const navLinks = header.querySelectorAll(".nav-link");
+
+      if (logoLink) logoLink.style.color = "white";
+      navLinks.forEach((link) => ((link as HTMLElement).style.color = "white"));
+    }
+  }
+
+  if (footer) footer.setAttribute("data-theme", themeForHeaderFooter);
+
+  // Initialiser les icônes
+  const isDark = themeForHeaderFooter.includes("-dark");
+  const sunIcon = document.querySelector(".sun-icon");
+  const moonIcon = document.querySelector(".moon-icon");
+
+  if (isDark) {
+    sunIcon?.classList.add("hidden");
+    moonIcon?.classList.remove("hidden");
+  } else {
+    sunIcon?.classList.remove("hidden");
+    moonIcon?.classList.add("hidden");
+  }
+}
+
+// Exposer la fonction globalement
+if (typeof window !== "undefined") {
+  window.changeTheme = changeTheme;
+}

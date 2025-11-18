@@ -2,6 +2,7 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import node from "@astrojs/node"; // <-- NOUVEAU : Import de l'adaptateur Node
+import compression from "vite-plugin-compression";
 
 import tailwindcss from "@tailwindcss/vite";
 
@@ -15,7 +16,38 @@ export default defineConfig({
     mode: "standalone", // Nécessaire pour générer entry.mjs, utilisé par PM2
   }),
 
+  // Optimisation des images avec Sharp
+  image: {
+    service: {
+      entrypoint: "astro/assets/services/sharp",
+    },
+    remotePatterns: [
+      {
+        protocol: "http",
+      },
+      {
+        protocol: "https",
+      },
+    ],
+  },
+
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [
+      tailwindcss(),
+      // Compression Brotli
+      compression({
+        algorithm: "brotliCompress",
+        ext: ".br",
+        threshold: 1024, // Compresser les fichiers > 1KB
+        deleteOriginFile: false,
+      }),
+      // Compression Gzip (fallback)
+      compression({
+        algorithm: "gzip",
+        ext: ".gz",
+        threshold: 1024,
+        deleteOriginFile: false,
+      }),
+    ],
   },
 });

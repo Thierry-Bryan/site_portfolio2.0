@@ -35,14 +35,11 @@ export async function getProjets() {
             sort: "order",
             expand: "tags,technologies",
         });
-        return records;
-    } catch (error) {
-        console.error("Erreur lors de la récupération des projets:", error);
-        return [];
-    }
-}
-
-/**
+    return records;
+  } catch (error) {
+    return [];
+  }
+}/**
  * Récupérer un projet par son slug avec ses relations
  * @param {string} slug
  * @returns {Promise<Object|null>}
@@ -54,14 +51,11 @@ export async function getProjetBySlug(slug: string) {
             .getFirstListItem(`slug="${slug}"`, {
                 expand: "tags,technologies",
             });
-        return record;
-    } catch (error) {
-        console.error(`Erreur lors de la récupération du projet ${slug}:`, error);
-        return null;
-    }
-}
-
-/**
+    return record;
+  } catch (error) {
+    return null;
+  }
+}/**
  * Obtenir l'URL complète d'un fichier uploadé
  * @param {Object} record - L'enregistrement PocketBase
  * @param {string} filename - Le nom du fichier
@@ -98,14 +92,11 @@ export async function getNextProjet(currentSlug: string) {
         if (currentIndex === -1) return null;
 
         const nextIndex = (currentIndex + 1) % projets.length;
-        return projets[nextIndex];
-    } catch (error) {
-        console.error("Erreur lors de la récupération du projet suivant:", error);
-        return null;
-    }
-}
-
-/**
+    return projets[nextIndex];
+  } catch (error) {
+    return null;
+  }
+}/**
  * Récupérer le projet précédent
  * @param {string} currentSlug
  * @returns {Promise<Object|null>}

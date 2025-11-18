@@ -37,8 +37,23 @@ const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname) } =
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    <script is:inline define:vars={{ defaultTheme: theme }}>
-      // SCRIPT PRINCIPAL - Gère tout le thème
+    <script>
+      import { initializeTheme, syncThemeOnLoad } from "../scripts/theme-manager";
+      
+      const defaultTheme = document.documentElement.dataset.defaultTheme || "ca-va-trailer";
+      
+      // Initialiser le thème au chargement
+      initializeTheme(defaultTheme);
+      
+      // Synchroniser header/footer au chargement du DOM
+      window.addEventListener("DOMContentLoaded", syncThemeOnLoad);
+    </script>
+    <script is:inline define:vars={{ defaultTheme: theme }} data-theme-init>
+      // Stocker le thème par défaut pour le script
+      document.documentElement.dataset.defaultTheme = defaultTheme;
+    </script>
+    <script is:inline data-theme-legacy>
+      // SCRIPT LEGACY - Compatible avec ancien code
       (function () {
         const isHomePage =
           window.location.pathname === "/" ||
