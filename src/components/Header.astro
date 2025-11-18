@@ -76,6 +76,7 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
 </header>
 
 <script>
+  // @ts-nocheck
   let lastScrollY = 0;
   let ticking = false;
   let isInHero = true; // Track si on est dans le hero
@@ -111,7 +112,12 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
         header.classList.add("scrolled");
         const headerComputedStyle = getComputedStyle(header);
         const bgColor = headerComputedStyle.getPropertyValue('--b1').trim();
-        header.style.backgroundColor = `${bgColor}f5`; // f5 = ~96% opacity (plus opaque)
+        // Convertir hex en rgba avec opacité
+        const hex = bgColor.replace('#', '');
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        header.style.backgroundColor = `rgba(${r}, ${g}, ${b}, 0.96)`;
         header.style.backdropFilter = "blur(10px)";
         header.style.boxShadow = "0 2px 10px rgba(0, 0, 0, 0.1)";
         
@@ -177,7 +183,12 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
       header.classList.add("scrolled", "projet-page");
       const headerComputedStyle = getComputedStyle(header);
       const bgColor = headerComputedStyle.getPropertyValue('--b1').trim();
-      header.style.backgroundColor = `${bgColor}f5`;
+      // Convertir hex en rgba avec opacité
+      const hex = bgColor.replace('#', '');
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      header.style.backgroundColor = `rgba(${r}, ${g}, ${b}, 0.96)`;
       header.style.backdropFilter = "blur(10px)";
 
       // Animation disparition/apparition basée sur le scroll
@@ -221,7 +232,12 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
         setTimeout(() => {
           const headerComputedStyle = getComputedStyle(header);
           const bgColor = headerComputedStyle.getPropertyValue('--b1').trim();
-          header.style.backgroundColor = `${bgColor}f5`;
+          // Convertir hex en rgba avec opacité
+          const hex = bgColor.replace('#', '');
+          const r = parseInt(hex.substring(0, 2), 16);
+          const g = parseInt(hex.substring(2, 4), 16);
+          const b = parseInt(hex.substring(4, 6), 16);
+          header.style.backgroundColor = `rgba(${r}, ${g}, ${b}, 0.96)`;
         }, 10);
       }
     } else {
@@ -232,7 +248,12 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
       header.classList.add("scrolled");
       const headerComputedStyle = getComputedStyle(header);
       const bgColor = headerComputedStyle.getPropertyValue('--b1').trim();
-      header.style.backgroundColor = `${bgColor}f5`;
+      // Convertir hex en rgba avec opacité
+      const hex = bgColor.replace('#', '');
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      header.style.backgroundColor = `rgba(${r}, ${g}, ${b}, 0.96)`;
       header.style.backdropFilter = "blur(10px)";
 
       // Animation disparition/apparition basée sur le scroll

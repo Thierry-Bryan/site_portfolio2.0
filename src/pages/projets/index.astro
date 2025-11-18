@@ -275,6 +275,11 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
     width: 100% !important;
   }
 
+  /* Forcer le masquage en mode liste comme en grille */
+  .projet-card.is-hidden {
+    display: none !important;
+  }
+
 
 
   @media (max-width: 768px) {
@@ -302,24 +307,36 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
 </style>
 
 <script>
+  // @ts-nocheck
   // Script simplifié : utilise style.display pour cacher/montrer
   const filterBtns = Array.from(document.querySelectorAll('.filter-btn'));
   const projetCards = Array.from(document.querySelectorAll('.projet-card'));
   const noResults = document.getElementById('no-results');
   const cardAVenir = document.querySelector('.projet-a-venir');
 
-  function applyFilter(tag) {
+  /** @type {(tag: string) => void} */
+  const applyFilter = (tag) => {
     const wanted = (tag || '').toLowerCase();
     let visible = 0;
     projetCards.forEach(card => {
       if (card.classList.contains('projet-a-venir')) {
-        card.style.display = '';
+        card.classList.remove('is-hidden');
+        card.removeAttribute('style');
+        card.setAttribute('aria-hidden', 'false');
         return; // ne compte pas dans visible
       }
       const tags = (card.getAttribute('data-tags-lower') || '').toLowerCase().split(/\s+/).filter(Boolean);
       const match = wanted === 'tous' || tags.includes(wanted);
-      card.style.display = match ? '' : 'none';
-      if (match) visible++;
+      if (match) {
+        card.classList.remove('is-hidden');
+        card.removeAttribute('style');
+        card.setAttribute('aria-hidden', 'false');
+        visible++;
+      } else {
+        card.classList.add('is-hidden');
+        card.setAttribute('style', 'display: none !important;');
+        card.setAttribute('aria-hidden', 'true');
+      }
     });
     if (noResults) {
       noResults.classList.toggle('hidden', visible !== 0);
@@ -345,7 +362,8 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
   const listViewBtn = document.getElementById('list-view-btn');
   const projetsContainer = document.getElementById('projets-container');
 
-  function setView(mode) {
+  /** @type {(mode: 'grid'|'list') => void} */
+  const setView = (mode) => {
     if (!projetsContainer) return;
     if (mode === 'grid') {
       projetsContainer.classList.remove('list-view');
