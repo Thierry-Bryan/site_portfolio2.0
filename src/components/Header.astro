@@ -263,19 +263,17 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
 
   window.addEventListener("scroll", onScroll);
   
-  // Écouter les changements de thème pour la page à-propos
-  if (isAProposPage) {
-    window.addEventListener("storage", (e) => {
-      if (e.key === "darkMode") {
-        updateHeaderStyle();
-      }
-    });
-    
-    // Écouter les changements via l'événement custom (pour le même onglet)
-    window.addEventListener("themeChanged", () => {
+  // Écouter les changements de thème pour TOUTES les pages
+  window.addEventListener("storage", (e) => {
+    if (e.key === "darkMode") {
       updateHeaderStyle();
-    });
-  }
+    }
+  });
+  
+  // Écouter les changements via l'événement custom (pour le même onglet)
+  window.addEventListener("themeChanged", () => {
+    updateHeaderStyle();
+  });
   
   // Initialisation au chargement
   if (isHomePage) {
