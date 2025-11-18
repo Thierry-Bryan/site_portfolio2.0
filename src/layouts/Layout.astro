@@ -30,13 +30,52 @@ const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname) } =
 ---
 
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-theme={theme}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    
+    <!-- Preload fonts critiques pour éviter le FOIT (Flash Of Invisible Text) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Script critique AVANT tout le reste pour éviter le FOUC -->
+    <script is:inline define:vars={{ defaultTheme: theme }} data-theme-critical>
+      // Appliquer le thème IMMÉDIATEMENT (bloquant, avant le rendu)
+      (function() {
+        const isHomePage = window.location.pathname === "/" || window.location.pathname === "/index.html";
+        const savedTheme = localStorage.getItem("theme");
+        const savedDarkMode = localStorage.getItem("darkMode");
+        
+        let finalTheme;
+        
+        if (savedTheme) {
+          const useDark = savedDarkMode === "true";
+          finalTheme = useDark ? defaultTheme + "-dark" : defaultTheme;
+        } else {
+          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          finalTheme = prefersDark ? defaultTheme + "-dark" : defaultTheme;
+          localStorage.setItem("darkMode", prefersDark ? "true" : "false");
+        }
+        
+        if (isHomePage) {
+          const baseTheme = finalTheme.replace("-dark", "");
+          document.documentElement.setAttribute("data-theme", baseTheme);
+          document.documentElement.setAttribute("data-user-dark-mode", finalTheme.includes("-dark") ? "true" : "false");
+        } else {
+          document.documentElement.setAttribute("data-theme", finalTheme);
+        }
+        
+        // Stocker pour usage ultérieur
+        document.documentElement.dataset.defaultTheme = defaultTheme;
+        document.documentElement.dataset.currentTheme = finalTheme;
+        localStorage.setItem("theme", finalTheme);
+      })();
+    </script>
+    
     <script>
       import { initializeTheme, syncThemeOnLoad } from "../scripts/theme-manager";
       
@@ -47,10 +86,6 @@ const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname) } =
       
       // Synchroniser header/footer au chargement du DOM
       window.addEventListener("DOMContentLoaded", syncThemeOnLoad);
-    </script>
-    <script is:inline define:vars={{ defaultTheme: theme }} data-theme-init>
-      // Stocker le thème par défaut pour le script
-      document.documentElement.dataset.defaultTheme = defaultTheme;
     </script>
     <script is:inline data-theme-legacy>
       // SCRIPT LEGACY - Compatible avec ancien code

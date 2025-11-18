@@ -1,0 +1,296 @@
+/**
+ * Utility classes pour réduire les inline styles
+ * Classes réutilisables pour améliorer les performances GreenIT
+ */
+
+/* === BUTTON STYLES === */
+.btn-gradient-primary {
+  background: radial-gradient(circle, var(--p), var(--s));
+}
+
+.btn-text-white {
+  color: white;
+}
+
+/* === MODAL STYLES === */
+.modal-overlay-bg {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+}
+
+.modal-shadow-primary {
+  box-shadow: 15px 15px 0 0 var(--p);
+}
+
+/* === CARD STYLES === */
+.card-border-bc {
+  border: 4px solid var(--bc);
+}
+
+.card-border-p {
+  border: 4px solid var(--p);
+}
+
+.card-border-s {
+  border: 4px solid var(--s);
+}
+
+.card-border-a {
+  border: 4px solid var(--a);
+}
+
+.card-border-b1 {
+  border: 4px solid var(--b1);
+}
+
+.card-border-p-sm {
+  border: 2px solid var(--p);
+}
+
+.card-bg-b1 {
+  background: var(--b1);
+}
+
+.card-bg-p {
+  background: var(--p);
+}
+
+.card-bg-s {
+  background: var(--s);
+}
+
+.card-bg-a {
+  background: var(--a);
+}
+
+/* === TEXT COLORS === */
+.text-color-bc {
+  color: var(--bc);
+}
+
+.text-color-p {
+  color: var(--p);
+}
+
+.text-color-s {
+  color: var(--s);
+}
+
+.text-color-a {
+  color: var(--a);
+}
+
+.text-color-b1 {
+  color: var(--b1);
+}
+
+/* === GRADIENT BACKGROUNDS === */
+.gradient-primary-vertical {
+  background: linear-gradient(to bottom, var(--p), var(--s));
+}
+
+/* === SHADOW UTILITIES === */
+.shadow-left {
+  box-shadow: 8px 0 24px rgba(0, 0, 0, 0.2);
+}
+
+.shadow-right {
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.2);
+}
+
+.drop-shadow-hero {
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4));
+}
+
+/* === CLIP PATHS === */
+.clip-hero-left {
+  clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+}
+
+.clip-hero-center {
+  clip-path: polygon(30% 0, 100% 0, 94% 100%, 0 100%);
+}
+
+.clip-hero-right {
+  clip-path: polygon(60% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.clip-triangle-right {
+  clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* === ROTATION TRANSFORMS === */
+.transform-rotate-title {
+  font-style: italic;
+  text-transform: uppercase;
+  transform: rotate(-2deg);
+}
+
+/* === TRANSITIONS === */
+.transition-bg-color {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.transition-color {
+  transition: color 0.3s ease;
+}
+
+/* === BANNER STYLES === */
+.banner-bg {
+  background: var(--b1);
+  border-color: var(--p);
+}
+
+/* === BACKGROUND PATTERNS === */
+.bg-halftone {
+  background: url("/images/halftone-dots.svg") center/cover no-repeat;
+}
+
+.bg-halftone-color-dodge {
+  background: url("/images/halftone-dots.svg") center/cover no-repeat;
+  mix-blend-mode: color-dodge;
+  opacity: 1;
+  z-index: 2;
+}
+
+.bg-halftone-color-burn {
+  background: url("/images/halftone-dots.svg") center/cover no-repeat;
+  mix-blend-mode: color-burn;
+  opacity: 0.7;
+  z-index: 1;
+}
+
+.bg-retro-comics {
+  background: url("/images/retro_comics_halftone_background1.webp") center/cover
+    no-repeat;
+  opacity: 1;
+  z-index: 3;
+  mix-blend-mode: multiply;
+}
+
+/* === OPACITY === */
+.opacity-80 {
+  opacity: 0.8;
+}
+
+/* === TIMELINE STYLES (À PROPOS PAGE) === */
+.timeline-line {
+  background: linear-gradient(to bottom, var(--p), var(--s));
+}
+
+.timeline-badge {
+  background: var(--p);
+  border: 4px solid var(--b1);
+}
+
+.timeline-badge-secondary {
+  background: var(--s);
+  border: 4px solid var(--b1);
+}
+
+.timeline-badge-accent {
+  background: var(--a);
+  border: 4px solid var(--b1);
+}
+
+.timeline-badge-text {
+  color: var(--b1);
+}
+
+.timeline-card-primary {
+  background: var(--b1);
+  border: 4px solid var(--p);
+  color: var(--bc);
+}
+
+.timeline-card-secondary {
+  background: var(--b1);
+  border: 4px solid var(--s);
+  color: var(--bc);
+}
+
+.timeline-card-accent {
+  background: var(--b1);
+  border: 4px solid var(--a);
+  color: var(--bc);
+}
+
+.timeline-card-title-primary {
+  color: var(--p);
+}
+
+.timeline-card-title-secondary {
+  color: var(--s);
+}
+
+.timeline-card-title-accent {
+  color: var(--a);
+}
+
+.timeline-project-card {
+  background: var(--b1);
+  border: 2px solid var(--p);
+  color: var(--bc);
+}
+
+.timeline-project-title {
+  color: var(--p);
+}
+
+.timeline-project-text {
+  color: var(--bc);
+  opacity: 0.8;
+}
+
+/* === SKILLS CARD STYLES === */
+.skill-card-primary {
+  background: var(--b1);
+  border: 4px solid var(--p);
+  color: var(--bc);
+}
+
+.skill-card-secondary {
+  background: var(--b1);
+  border: 4px solid var(--s);
+  color: var(--bc);
+}
+
+.skill-card-accent {
+  background: var(--b1);
+  border: 4px solid var(--a);
+  color: var(--bc);
+}
+
+.skill-badge {
+  background: var(--p);
+  color: var(--b1);
+}
+
+/* === TRANSFORM UTILITIES === */
+.transform-rotate-1 {
+  transform: rotate(1deg);
+}
+
+.transform-rotate-neg-1 {
+  transform: rotate(-1deg);
+}
+
+.transform-rotate-12 {
+  transform: rotate(12deg);
+}
+
+.transform-rotate-neg-12 {
+  transform: rotate(-12deg);
+}
+
+.transform-rotate-45 {
+  transform: rotate(45deg);
+}
+
+.transform-rotate-neg-45 {
+  transform: rotate(-45deg);
+}
+
+.hover-rotate-0:hover {
+  transform: rotate(0deg);
+}

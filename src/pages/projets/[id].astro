@@ -52,19 +52,14 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
       <div
         class="absolute left-0 top-0 h-full flex flex-col justify-center pl-12 md:pl-16 lg:pl-20 pr-8 py-12 w-[35%] min-w-[340px] z-30"
       >
-        <div
-          style="box-shadow: 8px 0 24px rgba(0, 0, 0, 0.2); position: absolute; inset: 0; z-index: -1; clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);"
-        >
-        </div>
+        <div class="absolute inset-0 -z-10 shadow-left clip-hero-left"></div>
         <h1
-          class="hero-title text-4xl md:text-5xl lg:text-7xl mb-5 md:mb-6 leading-[0.95] transition-colors duration-700"
-          style="color: var(--p); font-style: italic; text-transform: uppercase; transform: rotate(-2deg);"
+          class="hero-title text-4xl md:text-5xl lg:text-7xl mb-5 md:mb-6 leading-[0.95] transition-colors duration-700 text-color-p transform-rotate-title"
         >
           {projet.title}
         </h1>
         <p
-          class="hero-description text-sm md:text-base lg:text-lg font-medium max-w-md leading-relaxed transition-colors duration-700"
-          style="color: var(--bc);"
+          class="hero-description text-sm md:text-base lg:text-lg font-medium max-w-md leading-relaxed transition-colors duration-700 text-color-bc"
         >
           {projet.hero_description}
         </p>
@@ -72,8 +67,7 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
 
       <!-- Zone centrale : comics + device -->
       <div
-        class="absolute left-[38%] top-0 h-full flex items-center justify-center w-[60%] z-20"
-        style="clip-path: polygon(30% 0, 100% 0, 94% 100%, 0 100%);"
+        class="absolute left-[38%] top-0 h-full flex items-center justify-center w-[60%] z-20 clip-hero-center"
         id="hero-center"
       >
         <div></div>
@@ -93,20 +87,16 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
         <img
           src={heroImageUrl}
           alt={projet.title}
-          class="max-h-[180px] md:max-h-[280px] lg:max-h-[360px] w-auto transition-opacity duration-500"
-          style="filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4));"
+          class="max-h-[180px] md:max-h-[280px] lg:max-h-[360px] w-auto transition-opacity duration-500 drop-shadow-hero"
           id="hero-device"
         />
       </div>
 
       <!-- Zone droite : triangle avec angle prononcé -->
       <div
-        class="triangle-right absolute right-0 top-0 h-full w-[25%] min-w-[160px] z-25 pointer-events-none transition-all duration-700"
-        style="background: var(--p); clip-path: polygon(60% 0, 100% 0, 100% 100%, 0 100%);"
+        class="triangle-right absolute right-0 top-0 h-full w-[25%] min-w-[160px] z-25 pointer-events-none transition-all duration-700 card-bg-p clip-hero-right"
       >
-        <div
-          style="box-shadow: -8px 0 24px rgba(0, 0, 0, 0.2); position: absolute; inset: 0; z-index: -1; clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);"
-        >
+        <div class="absolute inset-0 -z-10 shadow-right clip-triangle-right">
         </div>
       </div>
 
@@ -147,7 +137,8 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
       listenThemeChanges,
     } from "../../scripts/projet-navigation";
 
-    const currentTheme = document.documentElement.dataset.currentTheme || "ca-va-trailer";
+    const currentTheme =
+      document.documentElement.dataset.currentTheme || "ca-va-trailer";
     const allProjetsData = JSON.parse(
       document.documentElement.dataset.allProjets || "[]"
     );
@@ -166,19 +157,39 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
       listenThemeChanges(currentTheme);
     });
   </script>
-  <script is:inline define:vars={{
-    currentTheme: projet.theme,
-    allProjets: (await getProjets()).map((p) => ({
-      slug: p.slug,
-      theme: p.theme,
-      backgroundImage: getFileUrl(p, p.hero_image),
-      title: p.title.toUpperCase(),
-      description: p.hero_description,
-      contentDescription: p.content_description,
-      images: getMultipleFileUrls(p, "images"),
-      siteUrl: p.site_url,
-    })),
-  }} data-projet-init>
+  <!-- Script critique pour appliquer le thème immédiatement -->
+  <script
+    is:inline
+    define:vars={{ projectTheme: projet.theme }}
+    data-theme-instant
+  >
+    // Appliquer le thème du projet INSTANTANÉMENT
+    (function() {
+      const savedDarkMode = localStorage.getItem("darkMode") === "true";
+      const finalTheme = savedDarkMode ? projectTheme + "-dark" : projectTheme;
+      document.documentElement.setAttribute("data-theme", finalTheme);
+      document.documentElement.dataset.currentTheme = projectTheme;
+      localStorage.setItem("theme", finalTheme);
+    })();
+  </script>
+  
+  <script
+    is:inline
+    define:vars={{
+      currentTheme: projet.theme,
+      allProjets: (await getProjets()).map((p) => ({
+        slug: p.slug,
+        theme: p.theme,
+        backgroundImage: getFileUrl(p, p.hero_image),
+        title: p.title.toUpperCase(),
+        description: p.hero_description,
+        contentDescription: p.content_description,
+        images: getMultipleFileUrls(p, "images"),
+        siteUrl: p.site_url,
+      })),
+    }}
+    data-projet-init
+  >
     // Stocker les données pour le script
     document.documentElement.dataset.currentTheme = currentTheme;
     document.documentElement.dataset.allProjets = JSON.stringify(allProjets);
@@ -187,8 +198,7 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
   <!-- Section Contenu -->
   <section
     id="contenu"
-    class="pt-8 pb-35"
-    style="background: var(--b1); transition: background-color 0.3s ease, color 0.3s ease;"
+    class="pt-8 pb-35 card-bg-b1 transition-bg-color"
     data-theme={projet.theme}
   >
     <div class="mx-4 md:mx-8 lg:mx-16">
@@ -201,8 +211,7 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
             </h2>
             <div
               id="projet-description"
-              class="text-lg leading-relaxed mb-8"
-              style="color: var(--bc); transition: color 0.3s ease;"
+              class="text-lg leading-relaxed mb-8 text-color-bc transition-color"
               set:html={projet.content_description}
             />
           </div>

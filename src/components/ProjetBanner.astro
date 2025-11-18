@@ -8,8 +8,7 @@ const { title, theme = "ca-va-trailer" } = Astro.props;
 ---
 
 <section
-  class="py-4 overflow-hidden border-t-4 border-b-4 transition-colors duration-300"
-  style="background: var(--b1); border-color: var(--p);"
+  class="py-4 overflow-hidden border-t-4 border-b-4 transition-colors duration-300 banner-bg"
   id="projet-banner"
   data-theme={theme}
 >
@@ -18,15 +17,10 @@ const { title, theme = "ca-va-trailer" } = Astro.props;
       {
         Array.from({ length: 20 }).map(() => (
           <>
-            <span
-              class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300"
-              style="color: var(--bc);"
-            >
+            <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc">
               {title.toUpperCase()}
             </span>
-            <span class="text-4xl" style="color: var(--p);">
-              ★
-            </span>
+            <span class="text-4xl text-color-p">★</span>
           </>
         ))
       }

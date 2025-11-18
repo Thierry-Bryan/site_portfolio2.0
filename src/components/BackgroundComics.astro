@@ -1,37 +1,17 @@
-  <!-- Dégradé comics dynamique -->
-  <div
-    class="absolute inset-0 w-full h-full pointer-events-none"
-    style="
-  background: linear-gradient(90deg, var(--s) 0%, var(--p) 100%);
-    opacity: 1;
-    z-index: 0;
-  "
-  >
-  </div>
+<!-- Dégradé comics dynamique -->
+<div
+  class="absolute inset-0 w-full h-full pointer-events-none gradient-primary-vertical opacity-100 z-0"
+>
+</div>
 
-  <!-- Images comics en overlay -->
-  <div
-    class="absolute inset-0 w-full h-full pointer-events-none"
-    style="background: url('/images/halftone-dots.svg') center/cover no-repeat;
-        mix-blend-mode: color-dodge;
-        opacity: 1;
-        z-index: 2;"
-  >
-  </div>
-  <div
-    class="absolute inset-0 w-full h-full pointer-events-none"
-    style="background: url('/images/halftone-dots.svg') center/cover no-repeat;
-        mix-blend-mode: color-burn;
-        opacity: 0.7;
-        z-index: 1;"
-  >
-  </div>
-  <div
-    class="absolute inset-0 w-full h-full pointer-events-none"
-    style="background: url('/images/retro_comics_halftone_background1.webp') center/cover no-repeat;
-        opacity: 1;
-        z-index: 3;
-        mix-blend-mode: multiply;"
-  >
-  </div>
+<!-- Images comics en overlay -->
+<div
+  class="absolute inset-0 w-full h-full pointer-events-none bg-halftone-color-dodge"
+>
+</div>
+<div
+  class="absolute inset-0 w-full h-full pointer-events-none bg-halftone-color-burn"
+>
+</div>
+<div class="absolute inset-0 w-full h-full pointer-events-none bg-retro-comics">
 </div>

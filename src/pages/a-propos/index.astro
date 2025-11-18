@@ -16,6 +16,9 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
           src="/avatar/a-propos_1.webp"
           alt="Photo de Bryan Thierry"
           class="w-full max-w-[300px] h-auto object-cover"
+          width="300"
+          height="300"
+          loading="eager"
         />
       </div>
       <div class="md:col-span-2 flex flex-col justify-center">
@@ -56,26 +59,25 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
         <div class="relative">
           <!-- Ligne verticale de la frise -->
           <div
-            class="absolute left-6 top-0 bottom-0 w-1 shadow-lg"
-            style="background: linear-gradient(to bottom, var(--p), var(--s));"
+            class="absolute left-6 top-0 bottom-0 w-1 shadow-lg timeline-line"
           >
           </div>
 
           <!-- Élément de timeline -->
           <div class="relative flex items-start mb-10">
             <div
-              class="flex-shrink-0 w-14 h-14 shadow-xl flex items-center justify-center z-10 transform rotate-45 transition-colors duration-300"
-              style="background: var(--p); border: 4px solid var(--b1);"
+              class="flex-shrink-0 w-14 h-14 shadow-xl flex items-center justify-center z-10 transform-rotate-45 transition-colors duration-300"
             >
-              <span class="font-primary text-xs transform -rotate-45" style="color: var(--b1);">
+              <span
+                class="font-primary text-xs transform-rotate-neg-45 timeline-badge-text"
+              >
                 BAC
               </span>
             </div>
             <div
-              class="ml-8 p-6 rounded-none shadow-lg transform -rotate-1 hover:rotate-0 transition-all duration-300"
-              style="background: var(--b1); border: 4px solid var(--p); color: var(--bc);"
+              class="ml-8 p-6 rounded-none shadow-lg transform-rotate-neg-1 hover-rotate-0 transition-all duration-300 timeline-card-primary"
             >
-              <h3 class="font-primary text-xl mb-2" style="color: var(--p);">
+              <h3 class="font-primary text-xl mb-2 timeline-card-title-primary">
                 APRÈS LE BAC
               </h3>
               <p class="font-medium">
@@ -88,18 +90,20 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
           <!-- Formation MMI -->
           <div class="relative flex items-start mb-10">
             <div
-              class="flex-shrink-0 w-14 h-14 shadow-xl flex items-center justify-center z-10 transform rotate-12 transition-colors duration-300"
-              style="background: var(--s); border: 4px solid var(--b1);"
+              class="flex-shrink-0 w-14 h-14 shadow-xl flex items-center justify-center z-10 transform-rotate-12 transition-colors duration-300 timeline-badge-secondary"
             >
-              <span class="font-primary text-xs transform -rotate-12" style="color: var(--b1);">
+              <span
+                class="font-primary text-xs transform-rotate-neg-12 timeline-badge-text"
+              >
                 MMI
               </span>
             </div>
             <div
-              class="ml-8 p-6 rounded-none shadow-lg transform rotate-1 hover:rotate-0 transition-all duration-300"
-              style="background: var(--b1); border: 4px solid var(--s); color: var(--bc);"
+              class="ml-8 p-6 rounded-none shadow-lg transform-rotate-1 hover-rotate-0 transition-all duration-300 timeline-card-secondary"
             >
-              <h3 class="font-primary text-xl mb-2" style="color: var(--s);">
+              <h3
+                class="font-primary text-xl mb-2 timeline-card-title-secondary"
+              >
                 FORMATION BUT MMI
               </h3>
               <p class="font-medium">
@@ -112,18 +116,18 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
           <!-- Projets pratiques -->
           <div class="relative flex items-start mb-10">
             <div
-              class="flex-shrink-0 w-14 h-14 shadow-xl flex items-center justify-center z-10 transform -rotate-12 transition-colors duration-300"
-              style="background: var(--a); border: 4px solid var(--b1);"
+              class="shrink-0 w-14 h-14 shadow-xl flex items-center justify-center z-10 transform-rotate-neg-12 transition-colors duration-300 timeline-badge-accent"
             >
-              <span class="font-primary text-xs transform rotate-12" style="color: var(--b1);">
+              <span
+                class="font-primary text-xs transform-rotate-12 timeline-badge-text"
+              >
                 PRO
               </span>
             </div>
             <div
-              class="ml-8 p-6 rounded-none shadow-lg transform -rotate-1 hover:rotate-0 transition-all duration-300"
-              style="background: var(--b1); border: 4px solid var(--a); color: var(--bc);"
+              class="ml-8 p-6 rounded-none shadow-lg transform-rotate-neg-1 hover-rotate-0 transition-all duration-300 timeline-card-accent"
             >
-              <h3 class="font-primary text-xl mb-3" style="color: var(--a);">
+              <h3 class="font-primary text-xl mb-3 timeline-card-title-accent">
                 MISE EN PRATIQUE
               </h3>
               <p class="font-medium mb-4">
@@ -135,62 +139,59 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
               <!-- Liste des projets - Descriptions détaillées -->
               <div class="grid grid-cols-2 gap-2">
                 <div
-                  class="p-3 shadow-sm transform rotate-1 hover:rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center"
-                  style="background: var(--b1); border: 2px solid var(--p); color: var(--bc);"
+                  class="p-3 shadow-sm transform-rotate-1 hover-rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center timeline-project-card"
                 >
-                  <h4 class="font-primary text-sm mb-1" style="color: var(--p);">
+                  <h4 class="font-primary text-sm mb-1 timeline-project-title">
                     ECHO SAFE
                   </h4>
-                  <p class="text-xs" style="color: var(--bc); opacity: 0.8;">
+                  <p class="text-xs timeline-project-text">
                     Application solidaire contre le harcèlement avec messagerie
                     sécurisée
                   </p>
                 </div>
 
                 <div
-                  class="p-3 shadow-sm transform -rotate-1 hover:rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center"
-                  style="background: var(--b1); border: 2px solid var(--p); color: var(--bc);"
+                  class="p-3 shadow-sm transform-rotate-neg-1 hover-rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center timeline-project-card"
                 >
-                  <h4 class="font-primary text-sm mb-1" style="color: var(--p);">
+                  <h4 class="font-primary text-sm mb-1 timeline-project-title">
                     ÇA VA TRAILER
                   </h4>
-                  <p class="text-xs" style="color: var(--bc); opacity: 0.8;">
+                  <p class="text-xs timeline-project-text">
                     Vitrine immersive pour un festival de cinéma avec identité
                     visuelle forte
                   </p>
                 </div>
 
                 <div
-                  class="p-3 shadow-sm transform rotate-1 hover:rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center"
-                  style="background: var(--b1); border: 2px solid var(--p); color: var(--bc);"
+                  class="p-3 shadow-sm transform-rotate-1 hover-rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center timeline-project-card"
                 >
-                  <h4 class="font-primary text-sm mb-1" style="color: var(--p);">RBA</h4>
-                  <p class="text-xs" style="color: var(--bc); opacity: 0.8;">
+                  <h4 class="font-primary text-sm mb-1 timeline-project-title">
+                    RBA
+                  </h4>
+                  <p class="text-xs timeline-project-text">
                     Refonte complète de l'identité visuelle pour l'association
                     biodiversité
                   </p>
                 </div>
 
                 <div
-                  class="p-3 shadow-sm transform -rotate-1 hover:rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center"
-                  style="background: var(--b1); border: 2px solid var(--p); color: var(--bc);"
+                  class="p-3 shadow-sm transform-rotate-neg-1 hover-rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center timeline-project-card"
                 >
-                  <h4 class="font-primary text-sm mb-1" style="color: var(--p);">
+                  <h4 class="font-primary text-sm mb-1 timeline-project-title">
                     12 FRAGMENTS
                   </h4>
-                  <p class="text-xs" style="color: var(--bc); opacity: 0.8;">
+                  <p class="text-xs timeline-project-text">
                     Site créatif et narratif autour de 12 avatars en pixel art
                   </p>
                 </div>
 
                 <div
-                  class="p-3 shadow-sm transform rotate-1 hover:rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center col-span-2"
-                  style="background: var(--b1); border: 2px solid var(--p); color: var(--bc);"
+                  class="p-3 shadow-sm transform-rotate-1 hover-rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center col-span-2 timeline-project-card"
                 >
-                  <h4 class="font-primary text-sm mb-1" style="color: var(--p);">
+                  <h4 class="font-primary text-sm mb-1 timeline-project-title">
                     OMNISPHERE
                   </h4>
-                  <p class="text-xs" style="color: var(--bc); opacity: 0.8;">
+                  <p class="text-xs timeline-project-text">
                     Site immersif questionnant l'avenir des relations humaines
                     avec design futuriste
                   </p>
@@ -202,18 +203,18 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
           <!-- Objectif -->
           <div class="relative flex items-start">
             <div
-              class="flex-shrink-0 w-14 h-14 shadow-xl flex items-center justify-center z-10 transform rotate-45 transition-colors duration-300"
-              style="background: var(--p); border: 4px solid var(--b1);"
+              class="shrink-0 w-14 h-14 shadow-xl flex items-center justify-center z-10 transform-rotate-45 transition-colors duration-300 timeline-badge"
             >
-              <span class="font-primary text-xs transform -rotate-45" style="color: var(--b1);">
+              <span
+                class="font-primary text-xs transform-rotate-neg-45 timeline-badge-text"
+              >
                 GO!
               </span>
             </div>
             <div
-              class="ml-8 p-6 rounded-none shadow-lg transform rotate-1 hover:rotate-0 transition-all duration-300"
-              style="background: var(--b1); border: 4px solid var(--p); color: var(--bc);"
+              class="ml-8 p-6 rounded-none shadow-lg transform-rotate-1 hover-rotate-0 transition-all duration-300 timeline-card-primary"
             >
-              <h3 class="font-primary text-xl mb-3" style="color: var(--p);">
+              <h3 class="font-primary text-xl mb-3 timeline-card-title-primary">
                 MON OBJECTIF
               </h3>
               <p class="font-medium mb-6">
@@ -447,8 +448,7 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
       <div class="lg:col-span-2 order-2 lg:order-1">
         <!-- Titre principal -->
         <h2
-          class="font-primary text-4xl mb-8 transform -rotate-1"
-          style="color: var(--p);"
+          class="font-primary text-4xl mb-8 transform-rotate-neg-1 text-color-p"
         >
           MON PROCHAIN CHAPITRE
         </h2>
@@ -457,10 +457,9 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
         <div class="space-y-8">
           <!-- Partenaire Web Fiable -->
           <div
-            class="p-6 shadow-lg transform rotate-1 hover:rotate-0 transition-all duration-300"
-            style="background: var(--b1); border: 4px solid var(--p); color: var(--bc);"
+            class="p-6 shadow-lg transform-rotate-1 hover-rotate-0 transition-all duration-300 timeline-card-primary"
           >
-            <h3 class="font-primary text-2xl mb-4" style="color: var(--p);">
+            <h3 class="font-primary text-2xl mb-4 timeline-card-title-primary">
               PARTENAIRE WEB FIABLE
             </h3>
             <p class="font-medium leading-relaxed">
@@ -472,10 +471,11 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
 
           <!-- Créateur de Contenu -->
           <div
-            class="p-6 shadow-lg transform -rotate-1 hover:rotate-0 transition-all duration-300"
-            style="background: var(--b1); border: 4px solid var(--s); color: var(--bc);"
+            class="p-6 shadow-lg transform-rotate-neg-1 hover-rotate-0 transition-all duration-300 timeline-card-secondary"
           >
-            <h3 class="font-primary text-2xl mb-4" style="color: var(--s);">
+            <h3
+              class="font-primary text-2xl mb-4 timeline-card-title-secondary"
+            >
               CRÉATEUR DE CONTENU ET STORYTELLING
             </h3>
             <p class="font-medium leading-relaxed">
@@ -487,10 +487,9 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
 
           <!-- Projets et Innovation -->
           <div
-            class="p-6 shadow-lg transform rotate-1 hover:rotate-0 transition-all duration-300"
-            style="background: var(--b1); border: 4px solid var(--a); color: var(--bc);"
+            class="p-6 shadow-lg transform-rotate-1 hover-rotate-0 transition-all duration-300 timeline-card-accent"
           >
-            <h3 class="font-primary text-2xl mb-4" style="color: var(--a);">
+            <h3 class="font-primary text-2xl mb-4 timeline-card-title-accent">
               PROJETS ET INNOVATION FUTURE
             </h3>
             <p class="font-medium leading-relaxed">

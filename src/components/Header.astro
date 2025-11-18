@@ -4,27 +4,39 @@ import ThemeToggle from "./ThemeToggle.astro";
 import { navigationConfig } from "../config";
 
 interface Props {
-  theme?: "RBA" | "les-12-fragments" | "orange" | "ca-va-trailer" | "echo-safe" | "omnisphere" | "ocean" | "cyberpunk" | "sunset" | "basique";
+  theme?:
+    | "RBA"
+    | "les-12-fragments"
+    | "orange"
+    | "ca-va-trailer"
+    | "echo-safe"
+    | "omnisphere"
+    | "ocean"
+    | "cyberpunk"
+    | "sunset"
+    | "basique";
 }
 
 const { theme = "ca-va-trailer" } = Astro.props;
-const isProjetsPageSSR = Astro.url.pathname === "/projets" || Astro.url.pathname.startsWith("/projets/");
-const isLegalPageSSR = Astro.url.pathname.includes("/mentions-legales") || Astro.url.pathname.includes("/politique-confidentialite");
+const isProjetsPageSSR =
+  Astro.url.pathname === "/projets" ||
+  Astro.url.pathname.startsWith("/projets/");
+const isLegalPageSSR =
+  Astro.url.pathname.includes("/mentions-legales") ||
+  Astro.url.pathname.includes("/politique-confidentialite");
 const isServicesPageSSR = Astro.url.pathname.includes("/services");
 const pageClass = isProjetsPageSSR
   ? "projet-page"
   : isLegalPageSSR
-  ? "legal-page"
-  : isServicesPageSSR
-  ? "services-page"
-  : "";
-const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all duration-500 bg-transparent ${pageClass}`.trim();
+    ? "legal-page"
+    : isServicesPageSSR
+      ? "services-page"
+      : "";
+const headerClass =
+  `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all duration-500 bg-transparent ${pageClass}`.trim();
 ---
 
-<header
-  id="header"
-  class={headerClass}
->
+<header id="header" class={headerClass}>
   <div class="navbar-start">
     <a
       href="/"
@@ -65,13 +77,12 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
 
   <div class="navbar-end flex items-center gap-4">
     <ThemeToggle />
-    <button 
-      onclick="window.openContactModal()" 
-      aria-label="Me contacter" 
-      class="header-button font-primary relative inline-flex h-11 px-8 items-center justify-center overflow-hidden cursor-pointer transition-all duration-200"
-      style="background: radial-gradient(circle, var(--p), var(--s)); box-shadow: -5px 5px 0 0 #000;"
+    <button
+      onclick="window.openContactModal()"
+      aria-label="Me contacter"
+      class="header-button font-primary relative inline-flex h-11 px-8 items-center justify-center overflow-hidden cursor-pointer transition-all duration-200 btn-gradient-primary btn-shadow"
     >
-      <span class="btn-text relative z-10" style="color: white;">ME CONTACTER</span>
+      <span class="btn-text relative z-10 btn-text-white">ME CONTACTER</span>
     </button>
   </div>
 </header>
@@ -86,7 +97,9 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
   const isHomePage =
     window.location.pathname === "/" ||
     window.location.pathname === "/index.html";
-  const isProjetPage = window.location.pathname === "/projets" || window.location.pathname.startsWith("/projets/");
+  const isProjetPage =
+    window.location.pathname === "/projets" ||
+    window.location.pathname.startsWith("/projets/");
   const isAProposPage = window.location.pathname.includes("/a-propos");
 
   function updateHeaderStyle() {
@@ -96,7 +109,7 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
     const currentScrollY = window.scrollY;
     const scrollingDown = currentScrollY > lastScrollY;
     const scrollingUp = currentScrollY < lastScrollY;
-    
+
     // Vérifier si on est près du bas de page
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;
@@ -112,15 +125,16 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
       if (scrolled) {
         header.classList.add("scrolled");
         // Utiliser directement la variable CSS dans rgba
-        header.style.backgroundColor = "rgba(var(--b1-rgb, 250, 249, 247), 0.96)";
+        header.style.backgroundColor =
+          "rgba(var(--b1-rgb, 250, 249, 247), 0.96)";
         header.style.backdropFilter = "blur(10px)";
         header.style.boxShadow = "0 2px 10px rgba(0, 0, 0, 0.1)";
-        
+
         // Seulement si on change d'état (hero -> après hero)
         if (isInHero && headerButton) {
           isInHero = false;
           headerButton.classList.remove("hero-button");
-          
+
           // Forcer la réinitialisation complète des styles
           const textEl = headerButton.querySelector(".btn-text");
           if (textEl) {
@@ -129,7 +143,9 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
             // Supprimer les événements hover en cours
             textEl.style.removeProperty("transition");
             setTimeout(() => {
-              if (textEl) textEl.style.transition = "color 0.3s ease, text-shadow 0.3s ease";
+              if (textEl)
+                textEl.style.transition =
+                  "color 0.3s ease, text-shadow 0.3s ease";
             }, 10);
           }
         }
@@ -138,12 +154,12 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
         header.style.backgroundColor = "transparent";
         header.style.backdropFilter = "none";
         header.style.boxShadow = "none";
-        
+
         // Seulement si on change d'état (après hero -> hero)
         if (!isInHero && headerButton) {
           isInHero = true;
           headerButton.classList.add("hero-button");
-          
+
           // Forcer la réinitialisation complète des styles
           const textEl = headerButton.querySelector(".btn-text");
           if (textEl) {
@@ -152,7 +168,9 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
             // Supprimer les événements hover en cours
             textEl.style.removeProperty("transition");
             setTimeout(() => {
-              if (textEl) textEl.style.transition = "color 0.3s ease, text-shadow 0.3s ease";
+              if (textEl)
+                textEl.style.transition =
+                  "color 0.3s ease, text-shadow 0.3s ease";
             }, 10);
           }
         }
@@ -214,12 +232,15 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
       // Mettre à jour le thème du header avec le mode sombre si activé
       if (currentBaseTheme) {
         const isDarkMode = localStorage.getItem("darkMode") === "true";
-        const headerTheme = isDarkMode ? currentBaseTheme + "-dark" : currentBaseTheme;
+        const headerTheme = isDarkMode
+          ? currentBaseTheme + "-dark"
+          : currentBaseTheme;
         header.setAttribute("data-theme", headerTheme);
 
         // Mettre à jour le background avec le nouveau thème
         setTimeout(() => {
-          header.style.backgroundColor = "rgba(var(--b1-rgb, 250, 249, 247), 0.96)";
+          header.style.backgroundColor =
+            "rgba(var(--b1-rgb, 250, 249, 247), 0.96)";
         }, 10);
       }
     } else {
@@ -263,19 +284,19 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
   }
 
   window.addEventListener("scroll", onScroll);
-  
+
   // Écouter les changements de thème pour TOUTES les pages
   window.addEventListener("storage", (e) => {
     if (e.key === "darkMode") {
       updateHeaderStyle();
     }
   });
-  
+
   // Écouter les changements via l'événement custom (pour le même onglet)
   window.addEventListener("themeChanged", () => {
     updateHeaderStyle();
   });
-  
+
   // Initialisation au chargement
   if (isHomePage) {
     const headerButton = document.querySelector(".header-button");
@@ -288,6 +309,6 @@ const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all dur
       }
     }
   }
-  
+
   updateHeaderStyle();
 </script>

@@ -49,5 +49,28 @@ export default defineConfig({
         deleteOriginFile: false,
       }),
     ],
+    build: {
+      // Minification optimale
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: true, // Supprimer les console.log en production
+          drop_debugger: true,
+          pure_funcs: ['console.log', 'console.info', 'console.debug'],
+        },
+      },
+      // Optimisation du bundling
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            // Bundler les dépendances communes
+            'emailjs': ['@emailjs/browser'],
+          },
+        },
+      },
+      // Optimisation des assets
+      assetsInlineLimit: 4096, // Inline les assets < 4KB (réduire les requêtes HTTP)
+      cssCodeSplit: false, // Un seul fichier CSS global (moins de requêtes)
+    },
   },
 });

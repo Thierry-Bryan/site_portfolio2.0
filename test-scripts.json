@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "dev": "astro dev",
+    "start": "node dist/server/entry.mjs",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "test:compression": "node test-compression.mjs"
+  }
+}

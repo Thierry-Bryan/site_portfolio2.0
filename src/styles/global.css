@@ -1,7 +1,23 @@
 /* === GLOBAL.CSS === */
-@import url("https://fonts.googleapis.com/css2?family=Bangers&family=Cabin:ital,wght@0,400..700;1,400..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bangers&family=Cabin:wght@400;700&display=swap");
 @import "tailwindcss";
+@import "./utilities.css";
 @plugin "daisyui";
+
+/* === ANTI-FOUC (Flash Of Unstyled Content) === */
+/* Masquer brièvement le contenu jusqu'à ce que le thème soit appliqué */
+html:not([data-theme]) {
+  visibility: hidden;
+}
+
+html[data-theme] {
+  visibility: visible;
+}
+
+/* Transition douce pour éviter les flashs brusques */
+html {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
 
 /* === VARIABLES GLOBALES === */
 @theme {
@@ -14,9 +30,8 @@
 
 /* === THÈMES DAISYUI PERSONNALISÉS === */
 
-
 [data-theme="RBA"] {
-  --p: #EE7101; /* orange vif */
+  --p: #ee7101; /* orange vif */
   --s: #ffc019; /* orange punchy */
   --a: #faa123; /* jaune pâle pour contraste */
   --b1: #faf9f7;
@@ -67,7 +82,7 @@
 }
 
 [data-theme="ca-va-trailer"] {
-  --p: #EE0221; /* rose fuchsia vif */
+  --p: #ee0221; /* rose fuchsia vif */
   --s: #fa0435; /* rose/rouge vif */
   --a: #f72c55; /* rose clair */
   --b1: #faf9f7;
@@ -84,7 +99,7 @@
 }
 
 [data-theme="basique"] {
-  --p: #EE0221; /* rose fuchsia vif */
+  --p: #ee0221; /* rose fuchsia vif */
   --s: #fa0435; /* rose/rouge vif */
   --a: #f72c55; /* rose clair */
   --b1: #faf9f7;
@@ -120,15 +135,15 @@
 [data-theme="omnisphere"] {
   --p: #7c3aed; /* violet vif */
   --s: #e100ff; /* magenta */
-  --a: #00FFF6; /* rose/violet clair */
+  --a: #00fff6; /* rose/violet clair */
   --b1: #faf9f7;
   --b1-rgb: 250, 249, 247;
   --bc: #000000;
 }
 [data-theme="omnisphere-dark"] {
-  --p: #FD6EFF; /* violet saturé */
+  --p: #fd6eff; /* violet saturé */
   --s: #7c3aed; /* magenta */
-  --a: #00FFF6; /* rose/violet clair */
+  --a: #00fff6; /* rose/violet clair */
   --b1: #000000;
   --b1-rgb: 0, 0, 0;
   --bc: #faf9f7;
@@ -187,7 +202,6 @@ body {
 .logo-link,
 .nav-link {
   color: var(--text-color);
-  
 }
 
 /* === EFFETS COMICS COMMUNS === */

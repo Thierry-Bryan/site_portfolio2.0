@@ -10,54 +10,56 @@ const services = [
     imgSrc: "/card/icon_sur-mesure.webp",
     imgAlt: "Site web sur-mesure",
     title: "Sites web sur mesure",
-    description: "Je conçois des sites web uniques, pensés pour vous et votre activité."
+    description:
+      "Je conçois des sites web uniques, pensés pour vous et votre activité.",
   },
   {
     imgSrc: "/card/icon_refonte.webp",
     imgAlt: "Refontes de sites",
     title: "Refontes de sites",
-    description: "Je redonne vie à votre site pour qu'il soit moderne, rapide et agréable à utiliser."
+    description:
+      "Je redonne vie à votre site pour qu'il soit moderne, rapide et agréable à utiliser.",
   },
   {
     imgSrc: "/card/icon_wordpress.webp",
     imgAlt: "WordPress",
     title: "WordPress",
-    description: "Je crée et personnalise votre site WordPress pour qu'il soit performant et facile à gérer."
-  }
+    description:
+      "Je crée et personnalise votre site WordPress pour qu'il soit performant et facile à gérer.",
+  },
 ];
 ---
 
 <Layout theme={theme} title="Mes Services - Portfolio Bryan Thierry">
-  <section class=" bg-(--b1) pt-32 pb-20" data-theme="basique">
+  <section class="bg-(--b1) pt-32 pb-20" data-theme="basique">
     <div class="flex items-center justify-center mb-12">
-      <h1 class="text-5xl md:text-6xl font-primary text-(--bc) uppercase tracking-tight">
+      <h1
+        class="text-5xl md:text-6xl font-primary text-(--bc) uppercase tracking-tight"
+      >
         MES SERVICES
       </h1>
     </div>
-    
+
     <div class="mx-4 md:mx-25 mb-16">
       <div class="max-w-3xl mx-auto text-center mb-12">
-        <p class="text-lg md:text-xl font-secondary text-(--bc) opacity-80 leading-relaxed">
-          Je vous accompagne dans la création et l'amélioration de votre présence en ligne avec des solutions adaptées à vos besoins.
+        <p
+          class="text-lg md:text-xl font-secondary text-(--bc) opacity-80 leading-relaxed"
+        >
+          Je vous accompagne dans la création et l'amélioration de votre
+          présence en ligne avec des solutions adaptées à vos besoins.
         </p>
       </div>
-      
+
       <div
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 gap-2 place-items-center mx-auto"
       >
         {
           services.map((service) => (
-            <Card
-              imgSrc={service.imgSrc}
-              imgAlt={service.imgAlt}
-              theme={theme}
-            >
+            <Card imgSrc={service.imgSrc} imgAlt={service.imgAlt} theme={theme}>
               <h3 class="mb-2 text-center flex justify-center">
                 {service.title}
               </h3>
-              <p class="">
-                {service.description}
-              </p>
+              <p class="">{service.description}</p>
             </Card>
           ))
         }
@@ -78,18 +80,24 @@ const services = [
   <section class="bg-(--b1) pb-20" data-theme="basique">
     <div class="mx-4 md:mx-25">
       <div class="max-w-4xl mx-auto">
-        <h2 class="text-4xl font-primary text-(--bc) mb-12 text-center uppercase">
+        <h2
+          class="text-4xl font-primary text-(--bc) mb-12 text-center uppercase"
+        >
           Ce que je peux faire pour vous
         </h2>
 
         <!-- Cartes en grille responsive (1/2/3 colonnes) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mx-auto">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mx-auto"
+        >
           <!-- Card 1: Sur mesure -->
-          <div class="comics-card p-8" style="border: 4px solid var(--bc);">
-            <h3 class="text-2xl font-primary mb-4 uppercase" style="color: var(--bc);">
+          <div class="comics-card p-8 card-border-bc">
+            <h3 class="text-2xl font-primary mb-4 uppercase text-color-bc">
               Sites web sur mesure
             </h3>
-            <ul class="list-disc pl-6 space-y-3 font-secondary text-(--bc) opacity-90">
+            <ul
+              class="list-disc pl-6 space-y-3 font-secondary text-(--bc) opacity-90"
+            >
               <li>Création de sites vitrines, portfolios, landing pages</li>
               <li>Design moderne et responsive (adapté à tous les écrans)</li>
               <li>Optimisation SEO technique et sémantique</li>
@@ -98,11 +106,13 @@ const services = [
           </div>
 
           <!-- Card 2: Refonte -->
-          <div class="comics-card p-8" style="border: 4px solid var(--bc);">
-            <h3 class="text-2xl font-primary mb-4 uppercase" style="color: var(--bc);">
+          <div class="comics-card p-8 card-border-bc">
+            <h3 class="text-2xl font-primary mb-4 uppercase text-color-bc">
               Refontes de sites
             </h3>
-            <ul class="list-disc pl-6 space-y-3 font-secondary text-(--bc) opacity-90">
+            <ul
+              class="list-disc pl-6 space-y-3 font-secondary text-(--bc) opacity-90"
+            >
               <li>Modernisation du design et de l'interface</li>
               <li>Amélioration de l'expérience utilisateur (UX)</li>
               <li>Migration vers des technologies modernes</li>
@@ -111,11 +121,13 @@ const services = [
           </div>
 
           <!-- Card 3: WordPress -->
-          <div class="comics-card p-8" style="border: 4px solid var(--bc);">
-            <h3 class="text-2xl font-primary mb-4 uppercase" style="color: var(--bc);">
+          <div class="comics-card p-8 card-border-bc">
+            <h3 class="text-2xl font-primary mb-4 uppercase text-color-bc">
               WordPress
             </h3>
-            <ul class="list-disc pl-6 space-y-3 font-secondary text-(--bc) opacity-90">
+            <ul
+              class="list-disc pl-6 space-y-3 font-secondary text-(--bc) opacity-90"
+            >
               <li>Installation et configuration personnalisée</li>
               <li>Création de thèmes sur mesure</li>
               <li>Formation pour gérer votre site en autonomie</li>
@@ -133,8 +145,10 @@ const services = [
       <h2 class="text-4xl md:text-5xl font-primary text-(--bc) mb-6 uppercase">
         Prêt à démarrer ?
       </h2>
-      <p class="text-lg md:text-xl font-secondary text-(--bc) opacity-80 mb-8 leading-relaxed">
-        Que vous ayez un projet complet ou juste besoin d'un coup de main, 
+      <p
+        class="text-lg md:text-xl font-secondary text-(--bc) opacity-80 mb-8 leading-relaxed"
+      >
+        Que vous ayez un projet complet ou juste besoin d'un coup de main,
         contactez-moi et discutons de vos besoins.
       </p>
       <Button
@@ -159,10 +173,14 @@ const services = [
   function updateTheme() {
     const isDarkMode = localStorage.getItem("darkMode") === "true";
     const sections = document.querySelectorAll("section[data-theme]");
-    
+
     sections.forEach((section) => {
-      const baseTheme = section.getAttribute("data-theme")?.replace("-dark", "") || "basique";
-      section.setAttribute("data-theme", isDarkMode ? `${baseTheme}-dark` : baseTheme);
+      const baseTheme =
+        section.getAttribute("data-theme")?.replace("-dark", "") || "basique";
+      section.setAttribute(
+        "data-theme",
+        isDarkMode ? `${baseTheme}-dark` : baseTheme
+      );
     });
   }
 
