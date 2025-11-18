@@ -41,12 +41,11 @@ const wrapperClass = `arrow-wrapper arrow-wrapper-${direction} relative inline-b
     data-theme={theme}
   >
     <svg
-      class={`w-10 h-6 md:w-12 md:h-7 relative z-10 ${isPrev ? "text-white" : ""}`}
+      class={`w-10 h-6 md:w-12 md:h-7 relative z-10 ${isPrev ? "text-white" : "text-[var(--p)]"}`}
       fill="none"
       stroke="currentColor"
       viewBox="0 0 28 24"
       stroke-width="2.5"
-      style={!isPrev ? "color: var(--p);" : ""}
     >
       <path
         stroke-linecap="round"

@@ -25,16 +25,7 @@ interface Props {
     | "basique";
 }
 
-// Système de thèmes automatique basé sur la route
-const getThemeFromUrl = (url: string) => {
-  if (url.includes("/a-propos")) return "ocean";
-  if (url.includes("/contact")) return "cyberpunk";
-  if (url.includes("/projets") && !url.includes("/projets/")) return "sunset"; // Liste des projets
-  return "ca-va-trailer"; // thème par défaut
-};
-
-const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname), firstSectionTheme } =
-  Astro.props;
+const { title = "Portfolio", theme = "ca-va-trailer", firstSectionTheme } = Astro.props;
 ---
 
 <!doctype html>

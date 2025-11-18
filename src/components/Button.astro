@@ -34,16 +34,13 @@ const {
   theme = "cyberpunk",
 } = Astro.props;
 
-const btnStyle = {
-  display: "inline-flex",
-  height: "45px",
-  padding: "0 32px",
-  justifyContent: "center",
-  alignItems: "center",
-  color: "white",
-};
-
 const btnClass = `
+  inline-flex
+  h-[45px]
+  px-8
+  justify-center
+  items-center
+  text-white
   font-primary 
   relative 
   transition-all 
@@ -125,11 +122,11 @@ const btnClass = `
 
 {
   href ? (
-    <a {href} class={btnClass} style={btnStyle} role="button" onclick={onClick}>
+    <a {href} class={btnClass} role="button" onclick={onClick}>
       <span class="btn-text"><slot>{label}</slot></span>
     </a>
   ) : (
-    <button class={btnClass} style={btnStyle} {type} {disabled} onclick={onClick}>
+    <button class={btnClass} {type} {disabled} onclick={onClick}>
       <span class="btn-text"><slot>{label}</slot></span>
     </button>
   )
