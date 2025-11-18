@@ -3,9 +3,10 @@ import Layout from "../../layouts/Layout.astro";
 import Button from "../../components/Button.astro";
 
 const theme = "les-12-fragments"; // Thème pour la page à propos
+const firstSectionTheme = "echo-safe"; // Thème de la première section pour le header
 ---
 
-<Layout theme={theme} title="À propos - Bryan Thierry" class="">
+<Layout theme={theme} firstSectionTheme={firstSectionTheme} title="À propos - Bryan Thierry">
   <section
     class="mx-4 md:mx-8 lg:mx-16 py-10 pt-25 bg-[var(--b1)]"
     data-theme="echo-safe"

@@ -15,6 +15,14 @@ interface Props {
     | "echo-safe"
     | "omnisphere"
     | "basique";
+  firstSectionTheme?:
+    | "RBA"
+    | "les-12-fragments"
+    | "orange"
+    | "ca-va-trailer"
+    | "echo-safe"
+    | "omnisphere"
+    | "basique";
 }
 
 // Système de thèmes automatique basé sur la route
@@ -25,7 +33,7 @@ const getThemeFromUrl = (url: string) => {
   return "ca-va-trailer"; // thème par défaut
 };
 
-const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname) } =
+const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname), firstSectionTheme } =
   Astro.props;
 ---
 
@@ -39,7 +47,7 @@ const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname) } =
     <title>{title}</title>
     
     <!-- Script CRITIQUE EN PREMIER pour éviter tout flash -->
-    <script is:inline define:vars={{ pageTheme: theme }}>
+    <script is:inline define:vars={{ pageTheme: theme, initialHeaderTheme: firstSectionTheme }}>
       // EXÉCUTÉ AVANT TOUT LE RESTE DU HTML
       (function () {
         const isHomePage = window.location.pathname === "/" || window.location.pathname === "/index.html";
@@ -131,6 +139,7 @@ const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname) } =
           const footer = document.getElementById("footer");
 
           if (header) {
+            // Le header prend le newTheme (qui peut être celui de la section ou de la page)
             header.setAttribute("data-theme", newTheme);
 
             // Forcer la mise à jour immédiate du background du header
@@ -163,7 +172,10 @@ const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname) } =
           }
 
           if (footer) {
-            footer.setAttribute("data-theme", newTheme);
+            // Le footer prend toujours le thème de la page (pageTheme), pas celui du header
+            const isDarkForFooter = newTheme.includes("-dark");
+            const footerTheme = isDarkForFooter ? pageTheme + "-dark" : pageTheme;
+            footer.setAttribute("data-theme", footerTheme);
           }
 
           // Mettre à jour les icônes du toggle
@@ -207,8 +219,13 @@ const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname) } =
               ? baseTheme + "-dark"
               : baseTheme;
           } else {
-            themeForHeaderFooter =
-              document.documentElement.getAttribute("data-theme");
+            // Si un thème initial pour le header est spécifié (comme sur la page à propos)
+            if (typeof initialHeaderTheme !== 'undefined' && initialHeaderTheme) {
+              themeForHeaderFooter = isDarkMode ? initialHeaderTheme + "-dark" : initialHeaderTheme;
+            } else {
+              themeForHeaderFooter =
+                document.documentElement.getAttribute("data-theme");
+            }
 
             // Sur les autres pages, mettre à jour chaque section avec son propre thème
             const sections = document.querySelectorAll("section[data-theme]");
@@ -235,7 +252,9 @@ const { title = "Portfolio", theme = getThemeFromUrl(Astro.url.pathname) } =
             }
           }
 
-          if (footer) footer.setAttribute("data-theme", themeForHeaderFooter);
+          // Le footer prend toujours le thème de la page, pas celui du header
+          const themeForFooter = isDarkMode ? pageTheme + "-dark" : pageTheme;
+          if (footer) footer.setAttribute("data-theme", themeForFooter);
 
           // Initialiser les icônes
           const isDark = themeForHeaderFooter.includes("-dark");
