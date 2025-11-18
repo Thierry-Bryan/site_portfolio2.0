@@ -3,7 +3,7 @@ interface Props {
   imgSrc: string;
   imgAlt?: string;
   children?: any;
-  theme?: "RBA" | "les-12-fragments" | "orange";
+  theme?: "RBA" | "les-12-fragments" | "orange" | "basique";
 }
 
 const { imgSrc, imgAlt = "Image", children, theme } = Astro.props;
@@ -11,7 +11,7 @@ const { imgSrc, imgAlt = "Image", children, theme } = Astro.props;
 
 <div
   data-theme={theme}
-  class="grid grid-rows-[auto_1fr] w-full max-w-[250px] h-[350px] border-4 bg-[var(--b1)] overflow-hidden"
+  class="grid grid-rows-[auto_1fr] w-full max-w-[250px] h-[350px] border-4 bg-(--b1) overflow-hidden"
 >
   <div class="flex items-center justify-center h-48">
     <img
@@ -20,7 +20,7 @@ const { imgSrc, imgAlt = "Image", children, theme } = Astro.props;
       class="object-contain h-32 w-32 mix-blend-darken"
     />
   </div>
-  <div class="p-4 flex flex-col justify-center text-[var(--bc)]">
+  <div class="p-4 flex flex-col justify-center text-(--bc)">
     <slot>{children}</slot>
   </div>
 </div>

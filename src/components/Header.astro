@@ -9,7 +9,14 @@ interface Props {
 const { theme = "ca-va-trailer" } = Astro.props;
 const isProjetsPageSSR = Astro.url.pathname === "/projets" || Astro.url.pathname.startsWith("/projets/");
 const isLegalPageSSR = Astro.url.pathname.includes("/mentions-legales") || Astro.url.pathname.includes("/politique-confidentialite");
-const pageClass = isProjetsPageSSR ? "projet-page" : (isLegalPageSSR ? "legal-page" : "");
+const isServicesPageSSR = Astro.url.pathname.includes("/services");
+const pageClass = isProjetsPageSSR
+  ? "projet-page"
+  : isLegalPageSSR
+  ? "legal-page"
+  : isServicesPageSSR
+  ? "services-page"
+  : "";
 const headerClass = `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all duration-500 bg-transparent ${pageClass}`.trim();
 ---
 

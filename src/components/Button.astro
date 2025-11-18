@@ -4,6 +4,7 @@ interface Props {
   background?: string;
   shadowColor?: string;
   href?: string;
+  onClick?: string;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   className?: string;
@@ -26,6 +27,7 @@ const {
   background = "var(--color-white)",
   shadowColor,
   href,
+  onClick,
   type = "button",
   disabled = false,
   className = "",
@@ -123,11 +125,11 @@ const btnClass = `
 
 {
   href ? (
-    <a {href} class={btnClass} style={btnStyle} role="button">
+    <a {href} class={btnClass} style={btnStyle} role="button" onclick={onClick}>
       <span class="btn-text"><slot>{label}</slot></span>
     </a>
   ) : (
-    <button class={btnClass} style={btnStyle} {type} {disabled}>
+    <button class={btnClass} style={btnStyle} {type} {disabled} onclick={onClick}>
       <span class="btn-text"><slot>{label}</slot></span>
     </button>
   )
