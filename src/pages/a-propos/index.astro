@@ -6,7 +6,11 @@ const theme = "les-12-fragments"; // Thème pour la page à propos
 const firstSectionTheme = "echo-safe"; // Thème de la première section pour le header
 ---
 
-<Layout theme={theme} firstSectionTheme={firstSectionTheme} title="À propos - Bryan Thierry">
+<Layout
+  theme={theme}
+  firstSectionTheme={firstSectionTheme}
+  title="À propos - Bryan Thierry"
+>
   <section
     class="mx-4 md:mx-8 lg:mx-16 py-10 pt-25 bg-[var(--b1)]"
     data-theme="echo-safe"
@@ -67,7 +71,7 @@ const firstSectionTheme = "echo-safe"; // Thème de la première section pour le
           <!-- Élément de timeline -->
           <div class="relative flex items-start mb-10">
             <div
-              class="flex-shrink-0 w-14 h-14 shadow-xl flex items-center justify-center z-10 transform-rotate-45 transition-colors duration-300"
+              class="flex-shrink-0 w-14 h-14 shadow-xl flex items-center justify-center z-10 transform-rotate-45 transition-colors duration-300 timeline-badge"
             >
               <span
                 class="font-primary text-xs transform-rotate-neg-45 timeline-badge-text"

@@ -27,22 +27,59 @@ const headerClass =
   `navbar w-full px-6 py-4 fixed top-0 z-50 transition-all duration-500 bg-transparent ${pageClass}`.trim();
 ---
 
-<header id="header" class={headerClass}>
-  <div class="navbar-start">
+<!-- Mobile Menu Backdrop -->
+<div
+  id="mobile-menu-backdrop"
+  class="fixed inset-0 z-[999] bg-black bg-opacity-50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 md:hidden"
+></div>
+
+<!-- Mobile Menu -->
+<div
+  id="mobile-menu"
+  class="fixed inset-0 z-[1000] bg-[var(--b1)] transform translate-x-full transition-transform duration-300 ease-in-out md:hidden overflow-y-auto"
+>
+  <div class="flex items-center justify-between px-6 py-4 border-b-2 border-[var(--bc)] border-opacity-10">
     <a
       href="/"
       class="logo-link font-primary text-4xl tracking-tight relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover"
     >
       BRYAN THIERRY
     </a>
+    <button
+      id="mobile-menu-close"
+      class="p-2 rounded-lg transition-colors duration-300 hover:bg-[var(--p)] hover:bg-opacity-10"
+      aria-label="Fermer le menu"
+    >
+      <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2.5"
+          d="M6 18L18 6M6 6l12 12"
+        ></path>
+      </svg>
+    </button>
   </div>
-
-  <div class="navbar-center hidden md:flex">
-    <ul class="menu menu-horizontal gap-10 px-1">
+  
+  <nav class="flex flex-col h-[calc(100%-80px)] px-6 py-8 justify-center">
+    <ul class="space-y-6 mb-12">
+      <li>
+        <a
+          href="/"
+          class="mobile-nav-link font-primary text-2xl block py-3 transition-all duration-300 hover:scale-105 hover:-rotate-1 text-[var(--bc)]"
+        >
+          ACCUEIL
+        </a>
+      </li>
       <li>
         <a
           href="/services"
-          class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link hover:bg-transparent"
+          class="mobile-nav-link font-primary text-2xl block py-3 transition-all duration-300 hover:scale-105 hover:-rotate-1 text-[var(--bc)]"
         >
           MES SERVICES
         </a>
@@ -50,7 +87,7 @@ const headerClass =
       <li>
         <a
           href="/projets"
-          class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link hover:bg-transparent"
+          class="mobile-nav-link font-primary text-2xl block py-3 transition-all duration-300 hover:scale-105 hover:-rotate-1 text-[var(--bc)]"
         >
           MES PROJETS
         </a>
@@ -58,25 +95,156 @@ const headerClass =
       <li>
         <a
           href="/a-propos"
-          class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link hover:bg-transparent"
+          class="mobile-nav-link font-primary text-2xl block py-3 transition-all duration-300 hover:scale-105 hover:-rotate-1 text-[var(--bc)]"
         >
           A PROPOS
         </a>
       </li>
     </ul>
-  </div>
-
-  <div class="navbar-end flex items-center gap-4">
-    <ThemeToggle />
+    
     <button
-      onclick="window.openContactModal()"
-      aria-label="Me contacter"
-      class="header-button font-primary relative inline-flex h-11 px-8 items-center justify-center overflow-hidden cursor-pointer transition-all duration-200 btn-gradient-primary btn-shadow"
+      onclick="window.openContactModal(); document.getElementById('mobile-menu').classList.add('translate-x-full'); document.getElementById('mobile-menu-backdrop').classList.add('opacity-0', 'pointer-events-none'); document.body.style.overflow = '';"
+      class="w-full font-primary relative inline-flex h-11 px-8 items-center justify-center overflow-hidden cursor-pointer transition-all duration-200 btn-gradient-primary btn-shadow"
     >
       <span class="btn-text relative z-10 btn-text-white">ME CONTACTER</span>
     </button>
+  </nav>
+</div>
+
+<header id="header" class={headerClass}>
+  <!-- Mobile: Logo + Hamburger -->
+  <div class="flex items-center justify-between w-full md:hidden">
+    <a
+      href="/"
+      class="mobile-logo-link logo-link font-primary text-2xl tracking-tight relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover"
+    >
+      BRYAN THIERRY
+    </a>
+    
+    <div class="flex items-center gap-3">
+      <button
+        id="mobile-menu-btn"
+        class="mobile-hamburger p-2 rounded-lg transition-colors duration-300 hover:bg-[var(--p)] hover:bg-opacity-10"
+        aria-label="Menu"
+        aria-expanded="false"
+      >
+        <svg
+          class="w-6 h-6 transition-all duration-300"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            class="hamburger-line"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2.5"
+            d="M4 6h16M4 12h16M4 18h16"
+          ></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Desktop: Logo + Nav + Actions -->
+  <div class="hidden md:flex items-center justify-between w-full">
+    <div class="navbar-start">
+      <a
+        href="/"
+        class="desktop-logo-link logo-link font-primary text-4xl tracking-tight relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover"
+      >
+        BRYAN THIERRY
+      </a>
+    </div>
+
+    <div class="navbar-center">
+      <ul class="menu menu-horizontal gap-10 px-1">
+        <li>
+          <a
+            href="/services"
+            class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link hover:bg-transparent"
+          >
+            MES SERVICES
+          </a>
+        </li>
+        <li>
+          <a
+            href="/projets"
+            class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link hover:bg-transparent"
+          >
+            MES PROJETS
+          </a>
+        </li>
+        <li>
+          <a
+            href="/a-propos"
+            class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link hover:bg-transparent"
+          >
+            A PROPOS
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="navbar-end flex items-center gap-4">
+      <ThemeToggle />
+      <button
+        onclick="window.openContactModal()"
+        aria-label="Me contacter"
+        class="header-button font-primary relative inline-flex h-11 px-8 items-center justify-center overflow-hidden cursor-pointer transition-all duration-200 btn-gradient-primary btn-shadow"
+      >
+        <span class="btn-text relative z-10 btn-text-white">ME CONTACTER</span>
+      </button>
+    </div>
   </div>
 </header>
+
+<script>
+  // Gestion du menu mobile
+  const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+  const mobileMenuClose = document.getElementById("mobile-menu-close");
+  const mobileMenu = document.getElementById("mobile-menu");
+  const mobileMenuBackdrop = document.getElementById("mobile-menu-backdrop");
+  const mobileNavLinks = document.querySelectorAll(".mobile-nav-link");
+
+  function openMobileMenu() {
+    mobileMenu?.classList.remove("translate-x-full");
+    mobileMenuBackdrop?.classList.remove("opacity-0", "pointer-events-none");
+    mobileMenuBtn?.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeMobileMenu() {
+    mobileMenu?.classList.add("translate-x-full");
+    mobileMenuBackdrop?.classList.add("opacity-0", "pointer-events-none");
+    mobileMenuBtn?.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+  }
+
+  mobileMenuBtn?.addEventListener("click", () => {
+    const isOpen = !mobileMenu?.classList.contains("translate-x-full");
+    if (isOpen) {
+      closeMobileMenu();
+    } else {
+      openMobileMenu();
+    }
+  });
+
+  mobileMenuClose?.addEventListener("click", closeMobileMenu);
+  mobileMenuBackdrop?.addEventListener("click", closeMobileMenu);
+
+  // Fermer le menu au clic sur un lien
+  mobileNavLinks.forEach(link => {
+    link.addEventListener("click", closeMobileMenu);
+  });
+
+  // Fermer le menu si on redimensionne vers desktop
+  window.addEventListener("resize", () => {
+    if (window.innerWidth >= 768) {
+      closeMobileMenu();
+    }
+  });
+</script>
 
 <script>
   // @ts-nocheck
@@ -112,15 +280,27 @@ const headerClass =
     const header = document.getElementById("header");
     if (!header) return;
     
-    const logo = header.querySelector(".logo-link");
+    const desktopLogo = header.querySelector(".desktop-logo-link");
+    const mobileLogo = header.querySelector(".mobile-logo-link");
     const navLinks = header.querySelectorAll(".nav-link");
     const textClass = getHeaderTextClass();
     
     // Appliquer la classe de texte
-    if (logo) logo.className = logo.className.replace(/text-\[var\(--\w+\)\]/g, textClass);
+    if (desktopLogo) desktopLogo.className = desktopLogo.className.replace(/text-\[var\(--\w+\)\]/g, textClass);
+    if (mobileLogo) mobileLogo.className = mobileLogo.className.replace(/text-\[var\(--\w+\)\]/g, textClass);
     navLinks.forEach(link => {
       link.className = link.className.replace(/text-\[var\(--\w+\)\]/g, textClass);
     });
+    
+    // Gérer la couleur du logo desktop selon le mode
+    const isDarkMode = localStorage.getItem("darkMode") === "true";
+    if (desktopLogo) {
+      if (isDarkMode) {
+        desktopLogo.style.color = "white";
+      } else {
+        desktopLogo.style.color = "";
+      }
+    }
   }
 
   function updateHeaderStyle() {
@@ -141,6 +321,8 @@ const headerClass =
       const heroHeight = window.innerHeight;
       const scrolled = currentScrollY > heroHeight - 100;
       const headerButton = document.querySelector(".header-button");
+      const mobileHamburger = document.querySelector(".mobile-hamburger");
+      const hamburgerSvg = mobileHamburger?.querySelector("svg");
 
       // Fond avec couleur du thème après le hero
       if (scrolled) {
@@ -150,6 +332,11 @@ const headerClass =
           "rgba(var(--b1-rgb, 250, 249, 247), 0.96)";
         header.style.backdropFilter = "blur(10px)";
         header.style.boxShadow = "0 2px 10px rgba(0, 0, 0, 0.1)";
+
+        // Hamburger devient noir après le hero
+        if (hamburgerSvg) {
+          hamburgerSvg.style.color = "var(--bc)";
+        }
 
         // Seulement si on change d'état (hero -> après hero)
         if (isInHero && headerButton) {
@@ -175,6 +362,11 @@ const headerClass =
         header.style.backgroundColor = "transparent";
         header.style.backdropFilter = "none";
         header.style.boxShadow = "none";
+
+        // Hamburger devient blanc dans le hero
+        if (hamburgerSvg) {
+          hamburgerSvg.style.color = "white";
+        }
 
         // Seulement si on change d'état (après hero -> hero)
         if (!isInHero && headerButton) {
@@ -324,6 +516,9 @@ const headerClass =
   // Initialisation au chargement
   if (isHomePage) {
     const headerButton = document.querySelector(".header-button");
+    const mobileHamburger = document.querySelector(".mobile-hamburger");
+    const hamburgerSvg = mobileHamburger?.querySelector("svg");
+    
     if (headerButton && window.scrollY <= window.innerHeight - 100) {
       headerButton.classList.add("hero-button");
       const textEl = headerButton.querySelector(".btn-text");
@@ -332,6 +527,12 @@ const headerClass =
         textEl.style.textShadow = "none";
       }
     }
+    
+    // Initialiser le hamburger à blanc si on est dans le hero
+    if (hamburgerSvg && window.scrollY <= window.innerHeight - 100) {
+      hamburgerSvg.style.color = "white";
+    }
+    
     updateHeaderStyle();
     applyHeaderContrast();
   } else {

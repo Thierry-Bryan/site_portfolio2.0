@@ -16,6 +16,33 @@ html[data-theme]:not([data-theme*="-dark"]) {
   color: #000;
 }
 
+/* === SCROLLBAR PERSONNALISÉE AVEC COULEUR DU THÈME === */
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--p) var(--b1);
+}
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--b1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--p);
+  border-radius: 6px;
+  border: 2px solid var(--b1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--s);
+}
+
 /* === VARIABLES GLOBALES === */
 @theme {
   --font-primary: Bangers, cursive;
