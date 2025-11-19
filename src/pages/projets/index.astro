@@ -20,11 +20,12 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
 
 <Layout title="Mes Projets" theme="ca-va-trailer">
   <section class="bg-(--b1) min-h-screen py-30 px-4 md:px-6">
-
     <div class="max-w-7xl mx-auto">
       <!-- Header -->
       <div class="flex items-center justify-center mb-12">
-        <h2 class="text-4xl md:text-6xl text-(--bc) font-primary">MES PROJETS</h2>
+        <h2 class="text-4xl md:text-6xl text-(--bc) font-primary">
+          MES PROJETS
+        </h2>
       </div>
 
       <!-- Filtres et Vue -->
@@ -103,8 +104,10 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
               .map((tag: any) => (tag?.name || "").trim())
               .filter(Boolean);
             const tagNames = tagTokens.join(" ");
-            const tagNamesLower = tagTokens.map((t: string) => t.toLowerCase()).join(" ");
-            
+            const tagNamesLower = tagTokens
+              .map((t: string) => t.toLowerCase())
+              .join(" ");
+
             // Récupérer les technologies depuis expand
             const projetTechnologies = projet.expand?.technologies || [];
 
@@ -123,7 +126,11 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
                   >
                     <BackgroundComics theme={projet.theme} />
                     <img
-                      src={projet.hero_image ? getFileUrl(projet, projet.hero_image) : "/images/placeholder.webp"}
+                      src={
+                        projet.hero_image
+                          ? getFileUrl(projet, projet.hero_image)
+                          : "/images/placeholder.webp"
+                      }
                       alt={projet.title}
                       class="absolute z-10 h-[220px] object-cover drop-shadow-2xl transform transition-all duration-300 group-hover:h-[250px]"
                     />
@@ -156,7 +163,11 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
                     >
                       <BackgroundComics theme={projet.theme} />
                       <img
-                        src={projet.hero_image ? getFileUrl(projet, projet.hero_image) : "/images/placeholder.webp"}
+                        src={
+                          projet.hero_image
+                            ? getFileUrl(projet, projet.hero_image)
+                            : "/images/placeholder.webp"
+                        }
                         alt={projet.title}
                         class="absolute z-10 h-40 object-cover drop-shadow-2xl transform transition-all duration-300 group-hover:h-[180px]"
                       />
@@ -183,14 +194,21 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
             );
           })
         }
-        
+
         <!-- Projet À venir -->
-        <div class="projet-card projet-a-venir block w-full max-w-[350px]" data-tags="">
-          <div class="grid-view-content border-2 border-(--bc) bg-(--b1) h-full flex items-center justify-center min-h-[220px]">
+        <div
+          class="projet-card projet-a-venir block w-full max-w-[350px]"
+          data-tags=""
+        >
+          <div
+            class="grid-view-content border-2 border-(--bc) bg-(--b1) h-full flex items-center justify-center min-h-[220px]"
+          >
             <span class="text-(--bc) text-2xl font-primary">À VENIR</span>
           </div>
           <div class="list-view-content hidden">
-            <div class="coming-soon-list flex items-center justify-center bg-(--b1) border-2 border-(--bc) h-[180px] w-full">
+            <div
+              class="coming-soon-list flex items-center justify-center bg-(--b1) border-2 border-(--bc) h-[180px] w-full"
+            >
               <span class="text-(--bc) text-2xl font-primary">À VENIR</span>
             </div>
           </div>
@@ -280,8 +298,6 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
     display: none !important;
   }
 
-
-
   @media (max-width: 768px) {
     .list-view .list-view-content > div {
       flex-direction: column;
@@ -309,72 +325,75 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
 <script>
   // @ts-nocheck
   // Script simplifié : utilise style.display pour cacher/montrer
-  const filterBtns = Array.from(document.querySelectorAll('.filter-btn'));
-  const projetCards = Array.from(document.querySelectorAll('.projet-card'));
-  const noResults = document.getElementById('no-results');
-  const cardAVenir = document.querySelector('.projet-a-venir');
+  const filterBtns = Array.from(document.querySelectorAll(".filter-btn"));
+  const projetCards = Array.from(document.querySelectorAll(".projet-card"));
+  const noResults = document.getElementById("no-results");
+  const cardAVenir = document.querySelector(".projet-a-venir");
 
   /** @type {(tag: string) => void} */
   const applyFilter = (tag) => {
-    const wanted = (tag || '').toLowerCase();
+    const wanted = (tag || "").toLowerCase();
     let visible = 0;
-    projetCards.forEach(card => {
-      if (card.classList.contains('projet-a-venir')) {
-        card.classList.remove('is-hidden');
-        card.removeAttribute('style');
-        card.setAttribute('aria-hidden', 'false');
+    projetCards.forEach((card) => {
+      if (card.classList.contains("projet-a-venir")) {
+        card.classList.remove("is-hidden");
+        card.removeAttribute("style");
+        card.setAttribute("aria-hidden", "false");
         return; // ne compte pas dans visible
       }
-      const tags = (card.getAttribute('data-tags-lower') || '').toLowerCase().split(/\s+/).filter(Boolean);
-      const match = wanted === 'tous' || tags.includes(wanted);
+      const tags = (card.getAttribute("data-tags-lower") || "")
+        .toLowerCase()
+        .split(/\s+/)
+        .filter(Boolean);
+      const match = wanted === "tous" || tags.includes(wanted);
       if (match) {
-        card.classList.remove('is-hidden');
-        card.removeAttribute('style');
-        card.setAttribute('aria-hidden', 'false');
+        card.classList.remove("is-hidden");
+        card.removeAttribute("style");
+        card.setAttribute("aria-hidden", "false");
         visible++;
       } else {
-        card.classList.add('is-hidden');
-        card.setAttribute('style', 'display: none !important;');
-        card.setAttribute('aria-hidden', 'true');
+        card.classList.add("is-hidden");
+        card.setAttribute("style", "display: none !important;");
+        card.setAttribute("aria-hidden", "true");
       }
     });
     if (noResults) {
-      noResults.classList.toggle('hidden', visible !== 0);
+      noResults.classList.toggle("hidden", visible !== 0);
     }
-  }
+  };
 
   // Initialisation
   if (filterBtns[0]) {
-    filterBtns[0].classList.add('active');
-    applyFilter(filterBtns[0].getAttribute('data-type'));
+    filterBtns[0].classList.add("active");
+    applyFilter(filterBtns[0].getAttribute("data-type"));
   }
 
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      applyFilter(btn.getAttribute('data-type'));
+  filterBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      filterBtns.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      applyFilter(btn.getAttribute("data-type"));
     });
   });
 
   // Vue grille / liste (inchangé sauf style.display si nécessaire)
-  const gridViewBtn = document.getElementById('grid-view-btn');
-  const listViewBtn = document.getElementById('list-view-btn');
-  const projetsContainer = document.getElementById('projets-container');
+  const gridViewBtn = document.getElementById("grid-view-btn");
+  const listViewBtn = document.getElementById("list-view-btn");
+  const projetsContainer = document.getElementById("projets-container");
 
   /** @type {(mode: 'grid'|'list') => void} */
   const setView = (mode) => {
     if (!projetsContainer) return;
-    if (mode === 'grid') {
-      projetsContainer.classList.remove('list-view');
-      gridViewBtn?.classList.add('active');
-      listViewBtn?.classList.remove('active');
+    if (mode === "grid") {
+      projetsContainer.classList.remove("list-view");
+      gridViewBtn?.classList.add("active");
+      listViewBtn?.classList.remove("active");
     } else {
-      projetsContainer.classList.add('list-view');
-      listViewBtn?.classList.add('active');
-      gridViewBtn?.classList.remove('active');
+      projetsContainer.classList.add("list-view");
+      listViewBtn?.classList.add("active");
+      gridViewBtn?.classList.remove("active");
     }
-  }
-  gridViewBtn?.addEventListener('click', () => setView('grid'));
-  listViewBtn?.addEventListener('click', () => setView('list'));
+  };
+  gridViewBtn?.addEventListener("click", () => setView("grid"));
+  listViewBtn?.addEventListener("click", () => setView("list"));
 </script>
