@@ -263,6 +263,38 @@ const headerClass =
     window.location.pathname.startsWith("/projets/");
   const isAProposPage = window.location.pathname.includes("/a-propos");
 
+  // Gérer le hover du logo sur la page à propos
+  if (isAProposPage) {
+    const handleLogoHover = () => {
+      const header = document.getElementById("header");
+      const desktopLogo = header?.querySelector(".desktop-logo-link");
+      const mobileLogo = header?.querySelector(".mobile-logo-link");
+      const isDarkMode = localStorage.getItem("darkMode") === "true";
+      const hoverColor = isDarkMode ? "white" : "black";
+      
+      const setHoverColor = (logo) => {
+        if (!logo) return;
+        logo.addEventListener("mouseenter", () => {
+          const currentDarkMode = localStorage.getItem("darkMode") === "true";
+          logo.style.color = currentDarkMode ? "white" : "black";
+        });
+        logo.addEventListener("mouseleave", () => {
+          logo.style.color = "var(--p)";
+        });
+      };
+      
+      setHoverColor(desktopLogo);
+      setHoverColor(mobileLogo);
+    };
+    
+    // Attendre que le DOM soit prêt
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", handleLogoHover);
+    } else {
+      handleLogoHover();
+    }
+  }
+
   // Helper pour obtenir le contraste du header
   function getHeaderTextClass() {
     const header = document.getElementById("header");
@@ -292,13 +324,21 @@ const headerClass =
       link.className = link.className.replace(/text-\[var\(--\w+\)\]/g, textClass);
     });
     
-    // Gérer la couleur du logo desktop selon le mode
+    // Gérer la couleur du logo selon le mode et la page
     const isDarkMode = localStorage.getItem("darkMode") === "true";
-    if (desktopLogo) {
-      if (isDarkMode) {
-        desktopLogo.style.color = "white";
-      } else {
-        desktopLogo.style.color = "";
+    
+    // Sur la page à propos, toujours utiliser --p
+    if (isAProposPage) {
+      if (desktopLogo) desktopLogo.style.color = "var(--p)";
+      if (mobileLogo) mobileLogo.style.color = "var(--p)";
+    } else {
+      // Sur les autres pages, blanc en mode sombre, couleur par défaut en mode clair
+      if (desktopLogo) {
+        if (isDarkMode) {
+          desktopLogo.style.color = "white";
+        } else {
+          desktopLogo.style.color = "";
+        }
       }
     }
   }
@@ -454,6 +494,17 @@ const headerClass =
         setTimeout(() => {
           header.style.backgroundColor =
             "rgba(var(--b1-rgb, 250, 249, 247), 0.96)";
+          
+          // Forcer le logo à la couleur --p sur la page à propos
+          const desktopLogo = header.querySelector(".desktop-logo-link");
+          const mobileLogo = header.querySelector(".mobile-logo-link");
+          if (desktopLogo) {
+            desktopLogo.style.color = "var(--p)";
+          }
+          if (mobileLogo) {
+            mobileLogo.style.color = "var(--p)";
+          }
+          
           applyHeaderContrast(); // Appliquer le contraste après changement de thème
         }, 10);
       }
@@ -502,6 +553,14 @@ const headerClass =
   // Écouter les changements de thème pour TOUTES les pages
   window.addEventListener("storage", (e) => {
     if (e.key === "darkMode") {
+      // Forcer la mise à jour immédiate du logo sur la page à propos
+      if (isAProposPage) {
+        const header = document.getElementById("header");
+        const desktopLogo = header?.querySelector(".desktop-logo-link");
+        const mobileLogo = header?.querySelector(".mobile-logo-link");
+        if (desktopLogo) desktopLogo.style.color = "var(--p)";
+        if (mobileLogo) mobileLogo.style.color = "var(--p)";
+      }
       updateHeaderStyle();
       applyHeaderContrast();
     }
@@ -509,6 +568,14 @@ const headerClass =
 
   // Écouter les changements via l'événement custom (pour le même onglet)
   window.addEventListener("themeChanged", () => {
+    // Forcer la mise à jour immédiate du logo sur la page à propos
+    if (isAProposPage) {
+      const header = document.getElementById("header");
+      const desktopLogo = header?.querySelector(".desktop-logo-link");
+      const mobileLogo = header?.querySelector(".mobile-logo-link");
+      if (desktopLogo) desktopLogo.style.color = "var(--p)";
+      if (mobileLogo) mobileLogo.style.color = "var(--p)";
+    }
     updateHeaderStyle();
     applyHeaderContrast();
   });
@@ -531,6 +598,20 @@ const headerClass =
     // Initialiser le hamburger à blanc si on est dans le hero
     if (hamburgerSvg && window.scrollY <= window.innerHeight - 100) {
       hamburgerSvg.style.color = "white";
+    }
+    
+    updateHeaderStyle();
+    applyHeaderContrast();
+  } else if (isAProposPage) {
+    // Initialiser le logo à la couleur --p sur la page à propos
+    const header = document.getElementById("header");
+    const desktopLogo = header?.querySelector(".desktop-logo-link");
+    const mobileLogo = header?.querySelector(".mobile-logo-link");
+    if (desktopLogo) {
+      desktopLogo.style.color = "var(--p)";
+    }
+    if (mobileLogo) {
+      mobileLogo.style.color = "var(--p)";
     }
     
     updateHeaderStyle();

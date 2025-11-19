@@ -84,12 +84,9 @@ const projets = await getProjets();
                   data-theme={projet.theme}
                 >
                   <BackgroundComics theme={projet.theme} />
-                  <Image
+                  <img
                     src={imageUrl}
                     alt={projet.title}
-                    width={350}
-                    height={220}
-                    loading="lazy"
                     class="absolute z-10 h-[220px] object-cover drop-shadow-2xl transform transition-all duration-300 group-hover:h-[250px]"
                   />
                   <div class="absolute z-30 bg-black opacity-0 group-hover:opacity-50 transition-all duration-300 w-[340px] h-[210px] group-hover:w-[380px] group-hover:h-[250px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
