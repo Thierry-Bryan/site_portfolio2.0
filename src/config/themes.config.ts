@@ -1,37 +1,23 @@
 /**
  * Configuration des thèmes du portfolio
- * Chaque thème possède des couleurs primaires, secondaires et des valeurs RGB pour la transparence
+ * Chaque thème possède des couleurs primaires, secondaires, valeurs RGB et contraste du header
  */
 
-export type ThemeName =
-  | "RBA"
-  | "les-12-fragments"
-  | "orange"
-  | "ca-va-trailer"
-  | "basique"
-  | "echo-safe"
-  | "omnisphere"
-  | "ocean"
-  | "cyberpunk"
-  | "sunset"
-  | "multicolore";
+import type { ThemeName, ThemeConfig } from "../types";
 
-export interface ThemeColors {
-  primary: string;
-  secondary: string;
-  b1RGB: {
-    light: string;
-    dark: string;
-  };
-}
+export type { ThemeName };
 
-export const themes: Record<ThemeName, ThemeColors> = {
+export const themes: Record<ThemeName, ThemeConfig> = {
   "RBA": {
     primary: "#ff4500",
     secondary: "#ffd700",
     b1RGB: {
       light: "250, 249, 247",
       dark: "0, 0, 0",
+    },
+    headerContrast: {
+      light: "dark", // Fond clair = texte foncé
+      dark: "light", // Fond noir = texte clair
     },
   },
   "les-12-fragments": {
@@ -41,6 +27,10 @@ export const themes: Record<ThemeName, ThemeColors> = {
       light: "250, 249, 247",
       dark: "0, 0, 0",
     },
+    headerContrast: {
+      light: "dark",
+      dark: "light",
+    },
   },
   "orange": {
     primary: "#ff8c00",
@@ -48,6 +38,10 @@ export const themes: Record<ThemeName, ThemeColors> = {
     b1RGB: {
       light: "250, 249, 247",
       dark: "0, 0, 0",
+    },
+    headerContrast: {
+      light: "dark",
+      dark: "light",
     },
   },
   "ca-va-trailer": {
@@ -57,6 +51,10 @@ export const themes: Record<ThemeName, ThemeColors> = {
       light: "250, 249, 247",
       dark: "0, 0, 0",
     },
+    headerContrast: {
+      light: "dark",
+      dark: "light",
+    },
   },
   "basique": {
     primary: "#000000",
@@ -64,6 +62,10 @@ export const themes: Record<ThemeName, ThemeColors> = {
     b1RGB: {
       light: "250, 249, 247",
       dark: "0, 0, 0",
+    },
+    headerContrast: {
+      light: "dark",
+      dark: "light",
     },
   },
   "echo-safe": {
@@ -73,6 +75,10 @@ export const themes: Record<ThemeName, ThemeColors> = {
       light: "250, 249, 247",
       dark: "0, 0, 0",
     },
+    headerContrast: {
+      light: "dark",
+      dark: "light",
+    },
   },
   "omnisphere": {
     primary: "#3104fa",
@@ -80,6 +86,10 @@ export const themes: Record<ThemeName, ThemeColors> = {
     b1RGB: {
       light: "250, 249, 247",
       dark: "0, 0, 0",
+    },
+    headerContrast: {
+      light: "dark",
+      dark: "light",
     },
   },
   "ocean": {
@@ -89,6 +99,10 @@ export const themes: Record<ThemeName, ThemeColors> = {
       light: "250, 249, 247",
       dark: "0, 0, 0",
     },
+    headerContrast: {
+      light: "dark",
+      dark: "light",
+    },
   },
   "cyberpunk": {
     primary: "#ff1493",
@@ -96,6 +110,10 @@ export const themes: Record<ThemeName, ThemeColors> = {
     b1RGB: {
       light: "250, 249, 247",
       dark: "0, 0, 0",
+    },
+    headerContrast: {
+      light: "dark",
+      dark: "light",
     },
   },
   "sunset": {
@@ -105,6 +123,10 @@ export const themes: Record<ThemeName, ThemeColors> = {
       light: "250, 249, 247",
       dark: "0, 0, 0",
     },
+    headerContrast: {
+      light: "dark",
+      dark: "light",
+    },
   },
   "multicolore": {
     primary: "#ff00ff",
@@ -113,13 +135,17 @@ export const themes: Record<ThemeName, ThemeColors> = {
       light: "250, 249, 247",
       dark: "0, 0, 0",
     },
+    headerContrast: {
+      light: "dark",
+      dark: "light",
+    },
   },
 } as const;
 
 /**
  * Obtenir les couleurs d'un thème avec fallback sur ca-va-trailer
  */
-export function getThemeColors(themeName: string): ThemeColors {
+export function getThemeConfig(themeName: string): ThemeConfig {
   return themes[themeName as ThemeName] || themes["ca-va-trailer"];
 }
 
@@ -128,6 +154,17 @@ export function getThemeColors(themeName: string): ThemeColors {
  */
 export function isValidTheme(themeName: string): themeName is ThemeName {
   return themeName in themes;
+}
+
+/**
+ * Obtenir le contraste du header selon le thème et le mode
+ */
+export function getHeaderContrast(
+  themeName: string,
+  isDarkMode: boolean
+): "light" | "dark" {
+  const theme = getThemeConfig(themeName);
+  return isDarkMode ? theme.headerContrast.dark : theme.headerContrast.light;
 }
 
 export type ThemesConfig = typeof themes;

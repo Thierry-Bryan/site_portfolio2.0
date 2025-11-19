@@ -2,19 +2,10 @@
 import Button from "./Button.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 import { navigationConfig } from "../config";
+import type { ThemeName } from "../types";
 
 interface Props {
-  theme?:
-    | "RBA"
-    | "les-12-fragments"
-    | "orange"
-    | "ca-va-trailer"
-    | "echo-safe"
-    | "omnisphere"
-    | "ocean"
-    | "cyberpunk"
-    | "sunset"
-    | "basique";
+  theme?: ThemeName;
 }
 
 const { theme = "ca-va-trailer" } = Astro.props;
@@ -89,6 +80,8 @@ const headerClass =
 
 <script>
   // @ts-nocheck
+  import { getHeaderContrast } from "../config/themes.config";
+
   let lastScrollY = 0;
   let ticking = false;
   let isInHero = true; // Track si on est dans le hero
@@ -101,6 +94,34 @@ const headerClass =
     window.location.pathname === "/projets" ||
     window.location.pathname.startsWith("/projets/");
   const isAProposPage = window.location.pathname.includes("/a-propos");
+
+  // Helper pour obtenir le contraste du header
+  function getHeaderTextClass() {
+    const header = document.getElementById("header");
+    if (!header) return "text-[var(--bc)]";
+    
+    const currentTheme = header.getAttribute("data-theme") || "ca-va-trailer";
+    const isDarkMode = localStorage.getItem("darkMode") === "true";
+    
+    // Simplification : on utilise toujours var(--bc) qui s'adapte automatiquement
+    return "text-[var(--bc)]";
+  }
+
+  // Appliquer le contraste au header
+  function applyHeaderContrast() {
+    const header = document.getElementById("header");
+    if (!header) return;
+    
+    const logo = header.querySelector(".logo-link");
+    const navLinks = header.querySelectorAll(".nav-link");
+    const textClass = getHeaderTextClass();
+    
+    // Appliquer la classe de texte
+    if (logo) logo.className = logo.className.replace(/text-\[var\(--\w+\)\]/g, textClass);
+    navLinks.forEach(link => {
+      link.className = link.className.replace(/text-\[var\(--\w+\)\]/g, textClass);
+    });
+  }
 
   function updateHeaderStyle() {
     const header = document.getElementById("header");
@@ -241,6 +262,7 @@ const headerClass =
         setTimeout(() => {
           header.style.backgroundColor =
             "rgba(var(--b1-rgb, 250, 249, 247), 0.96)";
+          applyHeaderContrast(); // Appliquer le contraste après changement de thème
         }, 10);
       }
     } else {
@@ -289,12 +311,14 @@ const headerClass =
   window.addEventListener("storage", (e) => {
     if (e.key === "darkMode") {
       updateHeaderStyle();
+      applyHeaderContrast();
     }
   });
 
   // Écouter les changements via l'événement custom (pour le même onglet)
   window.addEventListener("themeChanged", () => {
     updateHeaderStyle();
+    applyHeaderContrast();
   });
 
   // Initialisation au chargement
@@ -309,7 +333,9 @@ const headerClass =
       }
     }
     updateHeaderStyle();
+    applyHeaderContrast();
   } else {
     updateHeaderStyle();
+    applyHeaderContrast();
   }
 </script>

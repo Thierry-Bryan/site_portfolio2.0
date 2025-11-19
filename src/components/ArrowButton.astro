@@ -1,21 +1,18 @@
 ---
+import type { ThemeName } from "../types";
+
 interface Props {
   direction: "prev" | "next";
   dataAttribute: string;
   className?: string;
-  theme?:
-    | "echo-safe"
-    | "les-12-fragments"
-    | "omnisphere"
-    | "ca-va-trailer"
-    | "RBA";
+  theme?: ThemeName;
 }
 
 const {
   direction,
   dataAttribute,
   className = "",
-  theme = "blue",
+  theme = "ca-va-trailer",
 } = Astro.props;
 
 const isPrev = direction === "prev";
@@ -41,7 +38,7 @@ const wrapperClass = `arrow-wrapper arrow-wrapper-${direction} relative inline-b
     data-theme={theme}
   >
     <svg
-      class={`w-10 h-6 md:w-12 md:h-7 relative z-10 ${isPrev ? "text-[var(--b1)]" : "text-[var(--p)]"}`}
+      class={`w-10 h-6 md:w-12 md:h-7 relative z-10 ${isPrev ? "text-[var(--bc)]" : "text-[var(--p)]"}`}
       fill="none"
       stroke="currentColor"
       viewBox="0 0 28 24"

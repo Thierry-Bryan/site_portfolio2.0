@@ -4,25 +4,12 @@ import Hero from "../components/Hero.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import ContactModal from "../components/ContactModal.astro";
+import type { ThemeName } from "../types";
 
 interface Props {
   title?: string;
-  theme?:
-    | "RBA"
-    | "les-12-fragments"
-    | "orange"
-    | "ca-va-trailer"
-    | "echo-safe"
-    | "omnisphere"
-    | "basique";
-  firstSectionTheme?:
-    | "RBA"
-    | "les-12-fragments"
-    | "orange"
-    | "ca-va-trailer"
-    | "echo-safe"
-    | "omnisphere"
-    | "basique";
+  theme?: ThemeName;
+  firstSectionTheme?: ThemeName;
 }
 
 const { title = "Portfolio", theme = "ca-va-trailer", firstSectionTheme } = Astro.props;

@@ -1,23 +1,14 @@
 ---
 import BackgroundComics from "./BackgroundComics.astro";
 import { siteConfig } from "../config";
+import type { ThemeName } from "../types";
 // Import SVGs as raw strings to inline them (ensures display + theming)
 import InstagramSVG from "../../public/icons/Instagram-icons.svg?raw";
 import LinkedinSVG from "../../public/icons/Linkedin-icons.svg?raw";
 import BehanceSVG from "../../public/icons/Behance-icons.svg?raw";
 
 interface Props {
-  theme?:
-    | "RBA"
-    | "les-12-fragments"
-    | "orange"
-    | "ca-va-trailer"
-    | "echo-safe"
-    | "omnisphere"
-    | "ocean"
-    | "cyberpunk"
-    | "sunset"
-    | "basique";
+  theme?: ThemeName;
 }
 
 const { theme = "ca-va-trailer" } = Astro.props;

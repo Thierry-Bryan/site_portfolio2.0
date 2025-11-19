@@ -5,10 +5,10 @@
 export { siteConfig, type SiteConfig } from "./site.config";
 export {
   themes,
-  getThemeColors,
+  getThemeConfig,
+  getHeaderContrast,
   isValidTheme,
   type ThemeName,
-  type ThemeColors,
   type ThemesConfig,
 } from "./themes.config";
 export {

@@ -4,7 +4,7 @@
  * et mise à jour du contenu sans rechargement de page
  */
 
-import { getThemeColors } from "../config";
+import { getThemeConfig } from "../config";
 
 export interface ProjetData {
   slug: string;
@@ -128,7 +128,7 @@ export async function handleArrowClick(
   if (!nextId || !projetsData[nextId]) return;
 
   const newProjet = projetsData[nextId];
-  const newColors = getThemeColors(newProjet.theme);
+  const newColors = getThemeConfig(newProjet.theme);
 
   const heroDevice = document.getElementById("hero-device") as HTMLImageElement;
   if (!heroDevice) return;
@@ -298,7 +298,7 @@ function updateContentSection(newProjet: ProjetData, themeToApply: string): void
 function updateBanner(newProjet: ProjetData, themeToApply: string): void {
   const bannerContent = document.getElementById("banner-content");
   const projetBanner = document.getElementById("projet-banner");
-  const newColors = getThemeColors(newProjet.theme);
+  const newColors = getThemeConfig(newProjet.theme);
 
   if (bannerContent) {
     const newBannerHTML = Array.from({ length: 20 })

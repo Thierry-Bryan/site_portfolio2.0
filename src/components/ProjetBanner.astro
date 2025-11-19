@@ -1,7 +1,9 @@
 ---
+import type { ThemeName } from "../types";
+
 interface Props {
   title: string;
-  theme?: string;
+  theme?: ThemeName;
 }
 
 const { title, theme = "ca-va-trailer" } = Astro.props;

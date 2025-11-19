@@ -1,9 +1,11 @@
 ---
+import type { ThemeName } from "../types";
+
 interface Props {
   imgSrc: string;
   imgAlt?: string;
   children?: any;
-  theme?: "RBA" | "les-12-fragments" | "orange" | "basique";
+  theme?: ThemeName;
 }
 
 const { imgSrc, imgAlt = "Image", children, theme } = Astro.props;

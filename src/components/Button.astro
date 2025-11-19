@@ -1,4 +1,6 @@
 ---
+import type { ThemeName } from "../types";
+
 interface Props {
   label?: string;
   background?: string;
@@ -8,18 +10,7 @@ interface Props {
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   className?: string;
-  theme?:
-    | "RBA"
-    | "les-12-fragments"
-    | "orange"
-    | "ca-va-trailer"
-    | "purple"
-    | "omnisphere"
-    | "ocean"
-    | "cyberpunk"
-    | "sunset"
-    | "echo-safe"
-    | "basique";
+  theme?: ThemeName;
 }
 
 const {
