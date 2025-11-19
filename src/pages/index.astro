@@ -5,6 +5,7 @@ import Button from "../components/Button.astro";
 import Hero from "../components/Hero.astro";
 import BackgroundComics from "../components/BackgroundComics.astro";
 import { getProjets, getFileUrl } from "../utils/pb.ts";
+import { Image } from "astro:assets";
 
 const theme = "basique";
 
@@ -83,9 +84,12 @@ const projets = await getProjets();
                   data-theme={projet.theme}
                 >
                   <BackgroundComics theme={projet.theme} />
-                  <img
+                  <Image
                     src={imageUrl}
                     alt={projet.title}
+                    width={350}
+                    height={220}
+                    loading="lazy"
                     class="absolute z-10 h-[220px] object-cover drop-shadow-2xl transform transition-all duration-300 group-hover:h-[250px]"
                   />
                   <div class="absolute z-30 bg-black opacity-0 group-hover:opacity-50 transition-all duration-300 w-[340px] h-[210px] group-hover:w-[380px] group-hover:h-[250px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
@@ -116,9 +120,12 @@ const projets = await getProjets();
       <div
         class="order-1 md:order-2 flex justify-center items-center mb-6 md:mb-0"
       >
-        <img
+        <Image
           src="/avatar/a-propos.webp"
           alt="Photo de Bryan Thierry"
+          width={400}
+          height={450}
+          loading="lazy"
           class="object-contain h-full w-full max-h-[450px] max-w-[400px] brightness-90 contrast-110 mx-auto"
         />
       </div>

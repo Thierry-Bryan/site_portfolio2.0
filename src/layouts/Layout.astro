@@ -24,6 +24,13 @@ const { title = "Portfolio", theme = "ca-va-trailer", firstSectionTheme } = Astr
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     
+    <!-- Préchargement des fonts critiques -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="dns-prefetch" href="https://portfolio.bryan-thierry.fr" />
+    
+    <!-- Préchargement des assets critiques -->
+    <link rel="preload" as="image" href="/avatar/footer.webp" fetchpriority="high" />
+    
     <!-- Script CRITIQUE EN PREMIER pour éviter tout flash -->
     <script is:inline define:vars={{ pageTheme: theme, initialHeaderTheme: firstSectionTheme }}>
       // EXÉCUTÉ AVANT TOUT LE RESTE DU HTML
@@ -249,6 +256,9 @@ const { title = "Portfolio", theme = "ca-va-trailer", firstSectionTheme } = Astr
         });
       })();
     </script>
+    
+    <!-- Précharger les scripts critiques de navigation -->
+    <link rel="modulepreload" href="/src/scripts/projet-navigation.ts" />
   </head>
   <body class="overflow-x-hidden">
     <Header theme={theme} />

@@ -66,7 +66,7 @@ export function initializeProjetTheme(currentTheme: string): void {
   const themeToApply = isDarkMode ? currentTheme + "-dark" : currentTheme;
   htmlElement.setAttribute("data-theme", themeToApply);
 
-  // Mettre à jour le data-theme du header et footer
+  // Mettre à jour le data-theme du header et footer avec le thème du projet
   const header = document.getElementById("header");
   const footer = document.querySelector("footer");
   
@@ -80,6 +80,7 @@ export function initializeProjetTheme(currentTheme: string): void {
     }, 10);
   }
   
+  // Le footer doit toujours prendre le thème du projet actuel
   if (footer) footer.setAttribute("data-theme", themeToApply);
 
   // Mettre à jour la section contenu
@@ -346,10 +347,26 @@ export function setupArrowListeners(
 /**
  * Écoute les changements de thème pour mettre à jour les flèches
  */
-export function listenThemeChanges(currentTheme: string): void {
+export function listenThemeChanges(projetsData: ProjetsDataMap): void {
   window.addEventListener("themeChanged", () => {
+    // Récupérer le thème du projet actuel
+    const currentId = getCurrentProjetId();
+    if (!currentId || !projetsData[currentId]) return;
+    
+    const currentProjet = projetsData[currentId];
     const isDarkMode = localStorage.getItem("darkMode") === "true";
-    const themeToApply = isDarkMode ? currentTheme + "-dark" : currentTheme;
+    const themeToApply = isDarkMode ? currentProjet.theme + "-dark" : currentProjet.theme;
+    
+    // Mettre à jour header, footer et flèches avec le thème du projet
+    updateHeaderFooter(themeToApply);
     updateArrowsTheme(themeToApply);
+    
+    // Mettre à jour la section contenu
+    const contenuSection = document.getElementById("contenu");
+    if (contenuSection) contenuSection.setAttribute("data-theme", themeToApply);
+    
+    // Mettre à jour le bandeau
+    const projetBanner = document.getElementById("projet-banner");
+    if (projetBanner) projetBanner.setAttribute("data-theme", themeToApply);
   });
 }

@@ -153,8 +153,8 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
       // Configurer les event listeners pour les flèches
       setupArrowListeners(projetsData, currentTheme);
 
-      // Écouter les changements de thème
-      listenThemeChanges(currentTheme);
+      // Écouter les changements de thème avec projetsData pour récupérer le thème actuel
+      listenThemeChanges(projetsData);
     });
   </script>
   <script

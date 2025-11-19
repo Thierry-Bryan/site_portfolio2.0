@@ -1,5 +1,6 @@
 ---
 import Button from "./Button.astro";
+import { Image } from "astro:assets";
 
 const theme = "ca-va-trailer";
 ---
@@ -8,10 +9,14 @@ const theme = "ca-va-trailer";
   class="hero min-h-screen w-screen relative overflow-hidden bg-black"
   data-theme={theme}
 >
-  <!-- Image héro -->
-  <img
+  <!-- Image héro optimisée -->
+  <Image
     src="/hero/hero.webp"
     alt="Hero Image"
+    width={1920}
+    height={1080}
+    loading="eager"
+    fetchpriority="high"
     class="absolute inset-0 w-full h-full object-cover object-center brightness-90 contrast-110 z-10"
   />
 

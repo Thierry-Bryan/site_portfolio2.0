@@ -70,7 +70,7 @@ export default defineConfig({
       },
       // Optimisation des assets
       assetsInlineLimit: 4096, // Inline les assets < 4KB (réduire les requêtes HTTP)
-      cssCodeSplit: false, // Un seul fichier CSS global (moins de requêtes)
+      cssCodeSplit: true, // Activer le split CSS par page pour meilleures performances
     },
   },
 });
