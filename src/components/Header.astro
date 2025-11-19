@@ -31,14 +31,17 @@ const headerClass =
 <div
   id="mobile-menu-backdrop"
   class="fixed inset-0 z-[999] bg-black bg-opacity-50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 md:hidden"
-></div>
+>
+</div>
 
 <!-- Mobile Menu -->
 <div
   id="mobile-menu"
   class="fixed inset-0 z-[1000] bg-[var(--b1)] transform translate-x-full transition-transform duration-300 ease-in-out md:hidden overflow-y-auto"
 >
-  <div class="flex items-center justify-between px-6 py-4 border-b-2 border-[var(--bc)] border-opacity-10">
+  <div
+    class="flex items-center justify-between px-6 py-4 border-b-2 border-[var(--bc)] border-opacity-10"
+  >
     <a
       href="/"
       class="logo-link font-primary text-4xl tracking-tight relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover"
@@ -60,12 +63,11 @@ const headerClass =
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2.5"
-          d="M6 18L18 6M6 6l12 12"
-        ></path>
+          d="M6 18L18 6M6 6l12 12"></path>
       </svg>
     </button>
   </div>
-  
+
   <nav class="flex flex-col h-[calc(100%-80px)] px-6 py-8 justify-center">
     <ul class="space-y-6 mb-12">
       <li>
@@ -101,7 +103,7 @@ const headerClass =
         </a>
       </li>
     </ul>
-    
+
     <button
       onclick="window.openContactModal(); document.getElementById('mobile-menu').classList.add('translate-x-full'); document.getElementById('mobile-menu-backdrop').classList.add('opacity-0', 'pointer-events-none'); document.body.style.overflow = '';"
       class="w-full font-primary relative inline-flex h-11 px-8 items-center justify-center overflow-hidden cursor-pointer transition-all duration-200 btn-gradient-primary btn-shadow"
@@ -120,7 +122,7 @@ const headerClass =
     >
       BRYAN THIERRY
     </a>
-    
+
     <div class="flex items-center gap-3">
       <button
         id="mobile-menu-btn"
@@ -139,8 +141,7 @@ const headerClass =
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2.5"
-            d="M4 6h16M4 12h16M4 18h16"
-          ></path>
+            d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
       </button>
     </div>
@@ -181,6 +182,16 @@ const headerClass =
             class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link hover:bg-transparent"
           >
             A PROPOS
+          </a>
+        </li>
+        <li>
+          <a
+            href="https://drive.google.com/file/d/131iGnUi14cpPTDuErtoiXowOnDe0IRPr/view?usp=drive_link"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link hover:bg-transparent"
+          >
+            Voir mon CV
           </a>
         </li>
       </ul>
@@ -234,7 +245,7 @@ const headerClass =
   mobileMenuBackdrop?.addEventListener("click", closeMobileMenu);
 
   // Fermer le menu au clic sur un lien
-  mobileNavLinks.forEach(link => {
+  mobileNavLinks.forEach((link) => {
     link.addEventListener("click", closeMobileMenu);
   });
 
@@ -271,7 +282,7 @@ const headerClass =
       const mobileLogo = header?.querySelector(".mobile-logo-link");
       const isDarkMode = localStorage.getItem("darkMode") === "true";
       const hoverColor = isDarkMode ? "white" : "black";
-      
+
       const setHoverColor = (logo) => {
         if (!logo) return;
         logo.addEventListener("mouseenter", () => {
@@ -282,11 +293,11 @@ const headerClass =
           logo.style.color = "var(--p)";
         });
       };
-      
+
       setHoverColor(desktopLogo);
       setHoverColor(mobileLogo);
     };
-    
+
     // Attendre que le DOM soit prêt
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", handleLogoHover);
@@ -299,10 +310,10 @@ const headerClass =
   function getHeaderTextClass() {
     const header = document.getElementById("header");
     if (!header) return "text-[var(--bc)]";
-    
+
     const currentTheme = header.getAttribute("data-theme") || "ca-va-trailer";
     const isDarkMode = localStorage.getItem("darkMode") === "true";
-    
+
     // Simplification : on utilise toujours var(--bc) qui s'adapte automatiquement
     return "text-[var(--bc)]";
   }
@@ -311,22 +322,33 @@ const headerClass =
   function applyHeaderContrast() {
     const header = document.getElementById("header");
     if (!header) return;
-    
+
     const desktopLogo = header.querySelector(".desktop-logo-link");
     const mobileLogo = header.querySelector(".mobile-logo-link");
     const navLinks = header.querySelectorAll(".nav-link");
     const textClass = getHeaderTextClass();
-    
+
     // Appliquer la classe de texte
-    if (desktopLogo) desktopLogo.className = desktopLogo.className.replace(/text-\[var\(--\w+\)\]/g, textClass);
-    if (mobileLogo) mobileLogo.className = mobileLogo.className.replace(/text-\[var\(--\w+\)\]/g, textClass);
-    navLinks.forEach(link => {
-      link.className = link.className.replace(/text-\[var\(--\w+\)\]/g, textClass);
+    if (desktopLogo)
+      desktopLogo.className = desktopLogo.className.replace(
+        /text-\[var\(--\w+\)\]/g,
+        textClass
+      );
+    if (mobileLogo)
+      mobileLogo.className = mobileLogo.className.replace(
+        /text-\[var\(--\w+\)\]/g,
+        textClass
+      );
+    navLinks.forEach((link) => {
+      link.className = link.className.replace(
+        /text-\[var\(--\w+\)\]/g,
+        textClass
+      );
     });
-    
+
     // Gérer la couleur du logo selon le mode et la page
     const isDarkMode = localStorage.getItem("darkMode") === "true";
-    
+
     // Sur la page à propos, toujours utiliser --p
     if (isAProposPage) {
       if (desktopLogo) desktopLogo.style.color = "var(--p)";
@@ -494,7 +516,7 @@ const headerClass =
         setTimeout(() => {
           header.style.backgroundColor =
             "rgba(var(--b1-rgb, 250, 249, 247), 0.96)";
-          
+
           // Forcer le logo à la couleur --p sur la page à propos
           const desktopLogo = header.querySelector(".desktop-logo-link");
           const mobileLogo = header.querySelector(".mobile-logo-link");
@@ -504,7 +526,7 @@ const headerClass =
           if (mobileLogo) {
             mobileLogo.style.color = "var(--p)";
           }
-          
+
           applyHeaderContrast(); // Appliquer le contraste après changement de thème
         }, 10);
       }
@@ -585,7 +607,7 @@ const headerClass =
     const headerButton = document.querySelector(".header-button");
     const mobileHamburger = document.querySelector(".mobile-hamburger");
     const hamburgerSvg = mobileHamburger?.querySelector("svg");
-    
+
     if (headerButton && window.scrollY <= window.innerHeight - 100) {
       headerButton.classList.add("hero-button");
       const textEl = headerButton.querySelector(".btn-text");
@@ -594,12 +616,12 @@ const headerClass =
         textEl.style.textShadow = "none";
       }
     }
-    
+
     // Initialiser le hamburger à blanc si on est dans le hero
     if (hamburgerSvg && window.scrollY <= window.innerHeight - 100) {
       hamburgerSvg.style.color = "white";
     }
-    
+
     updateHeaderStyle();
     applyHeaderContrast();
   } else if (isAProposPage) {
@@ -613,7 +635,7 @@ const headerClass =
     if (mobileLogo) {
       mobileLogo.style.color = "var(--p)";
     }
-    
+
     updateHeaderStyle();
     applyHeaderContrast();
   } else {
