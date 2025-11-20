@@ -11,6 +11,7 @@ interface Props {
   disabled?: boolean;
   className?: string;
   theme?: ThemeName;
+  target?: string;
 }
 
 const {
@@ -23,6 +24,7 @@ const {
   disabled = false,
   className = "",
   theme = "cyberpunk",
+  target,
 } = Astro.props;
 
 const btnClass = `
@@ -113,7 +115,13 @@ const btnClass = `
 
 {
   href ? (
-    <a {href} class={btnClass} role="button" onclick={onClick}>
+    <a
+      href={href}
+      class={btnClass}
+      role="button"
+      onclick={onClick}
+      {...(target ? { target, rel: target === "_blank" ? "noopener noreferrer" : undefined } : {})}
+    >
       <span class="btn-text"><slot>{label}</slot></span>
     </a>
   ) : (

@@ -37,6 +37,9 @@ if (!projet) {
 // Récupérer les URLs des images
 const heroImageUrl = getFileUrl(projet, projet.hero_image);
 const imagesUrls = getMultipleFileUrls(projet, "images");
+
+// Récupérer les technologies du projet depuis expand
+const projetTechnologies = projet.expand?.technologies || [];
 ---
 
 <Layout
@@ -170,6 +173,7 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
         contentDescription: p.content_description,
         images: getMultipleFileUrls(p, "images"),
         siteUrl: p.site_url,
+        technologies: p.expand?.technologies || [],
       })),
     }}
     data-projet-init
@@ -190,9 +194,20 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
         <!-- Contenu texte sticky -->
         <div class="lg:sticky lg:top-8">
           <div>
-            <h2 class="font-primary text-4xl mb-6 transform -rotate-1">
-              DESCRIPTION
-            </h2>
+            <div class="flex flex-wrap items-center gap-4 mb-6">
+              <h2 class="font-primary text-4xl transform -rotate-1 m-0">
+                DESCRIPTION
+              </h2>
+              <div id="projet-technologies" class="flex flex-wrap gap-2">
+                {projet.expand?.technologies && projet.expand.technologies.length > 0
+                  ? projet.expand.technologies.map((tech: any) => (
+                      <span class="px-2 py-1 text-xs font-secondary border border-(--bc) text-(--bc)">
+                        {tech.name}
+                      </span>
+                    ))
+                  : null}
+              </div>
+            </div>
             <div
               id="projet-description"
               class="text-lg leading-relaxed mb-8 text-color-bc transition-color"
@@ -208,6 +223,7 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
                   href={projet.site_url}
                   className="font-primary text-lg px-8 py-4"
                   theme={projet.theme as any}
+                  target="_blank"
                 >
                   VOIR LE SITE FINAL
                 </Button>

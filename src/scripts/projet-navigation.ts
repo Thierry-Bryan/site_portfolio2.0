@@ -17,6 +17,7 @@ export interface ProjetData {
   siteUrl?: string;
   prevId: string;
   nextId: string;
+  technologies: any[];
 }
 
 export type ProjetsDataMap = Record<string, ProjetData>;
@@ -30,7 +31,6 @@ export function generateProjetsData(allProjets: any[]): ProjetsDataMap {
   allProjets.forEach((p, index) => {
     const prevIndex = index === 0 ? allProjets.length - 1 : index - 1;
     const nextIndex = index === allProjets.length - 1 ? 0 : index + 1;
-    
     projetsData[p.slug] = {
       slug: p.slug,
       theme: p.theme,
@@ -42,6 +42,7 @@ export function generateProjetsData(allProjets: any[]): ProjetsDataMap {
       siteUrl: p.siteUrl,
       prevId: allProjets[prevIndex].slug,
       nextId: allProjets[nextIndex].slug,
+      technologies: p.technologies || [],
     };
   });
   
@@ -245,7 +246,7 @@ function updateArrows(
 }
 
 /**
- * Met à jour la section contenu (description, images, bouton)
+ * Met à jour la section contenu (description, images, bouton, technologies)
  */
 function updateContentSection(newProjet: ProjetData, themeToApply: string): void {
   const contenuSection = document.getElementById("contenu");
@@ -289,6 +290,23 @@ function updateContentSection(newProjet: ProjetData, themeToApply: string): void
       }
     } else {
       buttonContainer.style.display = "none";
+    }
+  }
+
+  // Mettre à jour dynamiquement les badges technologies
+  const techContainer = document.querySelector("#projet-technologies") as HTMLElement | null;
+  if (techContainer) {
+    // Toujours garder le conteneur visible
+    techContainer.style.display = "flex";
+    if (Array.isArray(newProjet.technologies) && newProjet.technologies.length > 0) {
+      techContainer.innerHTML = newProjet.technologies
+        .map(
+          (tech: any) =>
+            `<span class=\"px-2 py-1 text-xs font-secondary border border-(--bc) text-(--bc)\">${tech.name}</span>`
+        )
+        .join("");
+    } else {
+      techContainer.innerHTML = "";
     }
   }
 }
