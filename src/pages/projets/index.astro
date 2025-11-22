@@ -155,32 +155,12 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
 
                 {/* Vue liste - rectangle horizontal */}
                 <div class="list-view-content hidden">
-                  <div class="flex items-center bg-(--b1) border-2 border-(--bc) overflow-hidden group h-[180px]">
-                    {/* Image à gauche avec BackgroundComics */}
-                    <div
-                      class="w-[250px] h-full flex items-center justify-center overflow-visible relative shrink-0"
-                      data-theme={projet.theme}
-                    >
-                      <BackgroundComics theme={projet.theme} />
-                      <img
-                        src={
-                          projet.hero_image
-                            ? getFileUrl(projet, projet.hero_image)
-                            : "/images/placeholder.webp"
-                        }
-                        alt={projet.title}
-                        class="absolute z-10 h-40 object-cover drop-shadow-2xl transform transition-all duration-300 group-hover:h-[180px]"
-                      />
-                    </div>
-                    {/* Contenu texte à droite */}
-                    <div class="flex-1 p-6">
-                      <h3 class="text-2xl font-primary text-(--bc) mb-2">
+                  <div class="list-row flex items-center bg-(--b1) border-2 border-(--bc) overflow-hidden group h-20 md:h-20 px-4 w-full">
+                    <div class="flex flex-col w-full md:flex-row md:items-center md:justify-between">
+                      <h3 class="text-2xl font-primary text-(--bc) text-left leading-tight mb-1 md:mb-0">
                         {projet.title}
                       </h3>
-                      <p class="text-sm font-secondary text-(--bc) mb-3">
-                        {projet.subtitle || ""}
-                      </p>
-                      <div class="flex flex-wrap gap-2">
+                      <div class="flex flex-wrap gap-2 items-center justify-start md:justify-end">
                         {projetTechnologies.map((tech: any) => (
                           <span class="px-2 py-1 text-xs font-secondary border border-(--bc) text-(--bc)">
                             {tech.name}
@@ -215,13 +195,7 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
         </div>
       </div>
 
-      <!-- Message si aucun projet -->
-      <div
-        id="no-results"
-        class="hidden text-center py-20 font-secondary text-xl text-(--bc)"
-      >
-        Aucun projet trouvé pour ce filtre 😢
-      </div>
+      <!-- Message si aucun projet supprimé -->
     </div>
   </section>
 </Layout>
@@ -291,7 +265,16 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
 
   .list-view .list-view-content > div {
     width: 100% !important;
+    align-items: flex-start !important;
+    min-height: 64px !important;
+    height: auto !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+    box-sizing: border-box;
   }
+  .list-row { min-height: 64px; }
 
   /* Forcer le masquage en mode liste comme en grille */
   .projet-card.is-hidden {
@@ -300,20 +283,28 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
 
   @media (max-width: 768px) {
     .list-view .list-view-content > div {
-      flex-direction: column;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      padding-top: 0.75rem !important;
+      padding-bottom: 0.75rem !important;
+      min-height: 64px !important;
       height: auto !important;
+      gap: 0 !important;
     }
-
-    .list-view .list-view-content > div > div:first-child {
-      order: 2;
+    .list-row { min-height: 64px !important; }
+    .list-view .list-view-content h3 {
+      margin-bottom: 0.25rem !important;
+      font-size: 1.1rem !important;
     }
-
-    .list-view .list-view-content > div > div:last-child {
+    .list-view .list-view-content > div > div {
+      flex-direction: column !important;
+      align-items: flex-start !important;
       width: 100% !important;
-      height: 220px;
-      order: 1;
+      gap: 0.25rem !important;
     }
-
+    .list-view .list-view-content > div > div > div {
+      justify-content: flex-start !important;
+    }
     /* Garder le texte centré pour la carte "À venir" en vue liste sur mobile */
     .list-view .coming-soon-list {
       flex-direction: row !important;
