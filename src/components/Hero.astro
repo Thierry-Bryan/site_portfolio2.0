@@ -17,16 +17,18 @@ const theme = "ca-va-trailer";
     height={1080}
     loading="eager"
     fetchpriority="high"
-    class="absolute inset-0 w-full h-full object-cover object-center brightness-90 contrast-110 z-10"
+    class="absolute left-0 bottom-0 w-full h-170 sm:h-170 md:h-full object-cover object-[22%_center] md:object-center brightness-90 contrast-110 z-10 transition-all duration-500"
   />
 
-  <!-- Contenu texte positionné -->
-  <div
-    class="absolute inset-0 z-30 flex items-start justify-end p-8 md:p-4 pt-20 md:pt-40 md:pr-20"
-  >
-    <div class="flex flex-col items-end">
+  <!-- Grille pour centrer le contenu dans la colonne de droite -->
+  <div class="relative z-30 grid grid-cols-1 md:grid-cols-2 min-h-screen w-full">
+    <!-- Colonne gauche vide (ou pour un futur usage) -->
+    <div class="hidden md:block"></div>
+    <!-- Colonne droite : contenu centré -->
+    <div class="flex flex-col items-center justify-start md:justify-center md:items-center h-full w-full px-6 pt-30 md:pt-0 pb-4 md:py-16">
       <h1
-        class="font-primary text-[9rem] text-[var(--color-white)] text-right -rotate-2"
+        class="font-primary text-8xl sm:text-7xl md:text-8xl lg:text-[8rem] text-[var(--color-white)] text-center -rotate-2 mb-8 drop-shadow-lg"
+        style="word-break:break-word;"
       >
         BRYAN THIERRY
       </h1>

@@ -51,9 +51,9 @@ const projetTechnologies = projet.expand?.technologies || [];
     class="relative h-[calc(120vh-7rem)] flex items-stretch overflow-hidden"
   >
     <div class="w-full h-full relative">
-      <!-- Zone gauche : Texte sur fond avec angle prononcé -->
+      <!-- Zone gauche : Texte sur fond avec angle prononcé (desktop uniquement) -->
       <div
-        class="absolute left-0 top-0 h-full flex flex-col justify-center pl-12 md:pl-16 lg:pl-20 pr-8 py-12 w-[35%] min-w-[340px] z-30"
+        class="hidden md:flex absolute left-0 top-0 h-full flex-col justify-center pl-12 md:pl-16 lg:pl-20 pr-8 py-12 w-[35%] min-w-[340px] z-30"
       >
         <div class="absolute inset-0 -z-10 shadow-left clip-hero-left"></div>
         <h1
@@ -68,12 +68,11 @@ const projetTechnologies = projet.expand?.technologies || [];
         </p>
       </div>
 
-      <!-- Zone centrale : comics + device -->
+      <!-- Zone centrale : comics + device (desktop uniquement) -->
       <div
-        class="absolute left-[38%] top-0 h-full flex items-center justify-center w-[60%] z-20 clip-hero-center"
+        class="hidden md:flex absolute left-[38%] top-0 h-full items-center justify-center w-[60%] z-20 clip-hero-center"
         id="hero-center"
       >
-        <div></div>
         <!-- Background pattern comics -->
         <div
           class="absolute inset-0 w-full h-full overflow-visible transition-all duration-700"
@@ -83,29 +82,44 @@ const projetTechnologies = projet.expand?.technologies || [];
         </div>
       </div>
 
-      <!-- Device image en absolute qui dépasse -->
+      <!-- Background comics plein écran mobile uniquement -->
       <div
-        class="absolute left-1/2 top-1/2 -translate-x-[70px] -translate-y-1/2 z-22"
+        class="md:hidden absolute inset-0 w-full h-full overflow-visible transition-all duration-700 z-10"
+        id="background-comics-mobile"
+      >
+        <BackgroundComics theme={projet.theme as any} />
+      </div>
+
+      <!-- Titre mobile en blanc, positionné en haut -->
+      <h1
+        class="md:hidden absolute top-32 left-0 right-0 z-30 text-5xl leading-tight text-center px-6 text-white"
+      >
+        {projet.title}
+      </h1>
+
+      <!-- Device image : centrée mobile, décalée desktop -->
+      <div
+        class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:-translate-x-[70px] z-20 md:z-22"
       >
         <img
           src={heroImageUrl}
           alt={projet.title}
-          class="max-h-[180px] md:max-h-[280px] lg:max-h-[360px] w-auto transition-opacity duration-500 drop-shadow-hero"
+          class="block mx-auto w-[100vw] max-w-[420px] max-h-[500px] md:max-h-[280px] lg:max-h-[360px] h-auto transition-opacity duration-500 drop-shadow-hero"
           id="hero-device"
         />
       </div>
 
-      <!-- Zone droite : triangle avec angle prononcé -->
+      <!-- Zone droite : triangle avec angle prononcé (desktop uniquement) -->
       <div
-        class="triangle-right absolute right-0 top-0 h-full w-[25%] min-w-[160px] z-25 pointer-events-none transition-all duration-700 card-bg-p clip-hero-right"
+        class="triangle-right hidden md:block absolute right-0 top-0 h-full w-[25%] min-w-[160px] z-25 pointer-events-none transition-all duration-700 card-bg-p clip-hero-right"
       >
         <div class="absolute inset-0 -z-10 shadow-right clip-triangle-right">
         </div>
       </div>
 
-      <!-- Flèches de navigation style comics avec angles -->
+      <!-- Flèches de navigation : centrées mobile, positionnées desktop -->
       <div
-        class="absolute bottom-20 left-[35%] z-40 cursor-pointer"
+        class="absolute bottom-24 left-8 md:bottom-20 md:left-[35%] z-40 cursor-pointer"
         id="prev-arrow-wrapper"
         data-prev-projet={previousProjet?.slug || ""}
       >
@@ -116,7 +130,7 @@ const projetTechnologies = projet.expand?.technologies || [];
         />
       </div>
       <div
-        class="absolute bottom-20 right-[17%] z-40 cursor-pointer"
+        class="absolute bottom-24 right-8 md:bottom-20 md:right-[17%] z-40 cursor-pointer"
         id="next-arrow-wrapper"
         data-next-projet={nextProjet?.slug || ""}
       >
@@ -199,13 +213,16 @@ const projetTechnologies = projet.expand?.technologies || [];
                 DESCRIPTION
               </h2>
               <div id="projet-technologies" class="flex flex-wrap gap-2">
-                {projet.expand?.technologies && projet.expand.technologies.length > 0
-                  ? projet.expand.technologies.map((tech: any) => (
-                      <span class="px-2 py-1 text-xs font-secondary border border-(--bc) text-(--bc)">
-                        {tech.name}
-                      </span>
-                    ))
-                  : null}
+                {
+                  projet.expand?.technologies &&
+                  projet.expand.technologies.length > 0
+                    ? projet.expand.technologies.map((tech: any) => (
+                        <span class="px-2 py-1 text-xs font-secondary border border-(--bc) text-(--bc)">
+                          {tech.name}
+                        </span>
+                      ))
+                    : null
+                }
               </div>
             </div>
             <div

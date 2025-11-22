@@ -182,11 +182,17 @@ function updateHeaderFooter(themeToApply: string): void {
  */
 function updateHeroContent(newProjet: ProjetData, heroDevice: HTMLImageElement): void {
   heroDevice.src = newProjet.backgroundImage;
-  
+
+  // Desktop title
   const heroTitle = document.querySelector(".hero-title");
-  const heroDescription = document.querySelector(".hero-description");
-  
   if (heroTitle) heroTitle.textContent = newProjet.title;
+
+  // Mobile title
+  const mobileTitle = document.querySelector("h1.md\\:hidden");
+  if (mobileTitle) mobileTitle.textContent = newProjet.title;
+
+  // Desktop description
+  const heroDescription = document.querySelector(".hero-description");
   if (heroDescription) heroDescription.textContent = newProjet.description;
 }
 
@@ -196,7 +202,10 @@ function updateHeroContent(newProjet: ProjetData, heroDevice: HTMLImageElement):
 function updateTriangleAndBackground(newColors: { primary: string; secondary: string }): void {
   const triangleRight = document.querySelector(".triangle-right") as HTMLElement;
   if (triangleRight) {
-    triangleRight.style.background = newColors.primary;
+    // Supprimer tout background direct
+    triangleRight.style.removeProperty("background");
+    // Forcer background via style inline avec !important
+    triangleRight.style.setProperty("background", "var(--p)", "important");
   }
 
   const backgroundComics = document.getElementById("background-comics");
@@ -226,7 +235,10 @@ function updateArrows(
     const prevButton = prevWrapper.querySelector("button") as HTMLElement;
     if (prevButton) {
       prevButton.setAttribute("data-theme", themeToApply);
-      prevButton.style.background = newColors.primary;
+      // Supprimer tout background direct
+      prevButton.style.removeProperty("background");
+      // Forcer background via style inline avec !important
+      prevButton.style.setProperty("background", "var(--p)", "important");
       prevButton.style.boxShadow = `-5px 5px 0 0 rgba(255, 255, 255, 1)`;
     }
   }

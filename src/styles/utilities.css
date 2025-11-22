@@ -104,7 +104,7 @@
 
 /* === CLIP PATHS === */
 .clip-hero-left {
-  clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+  clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%);
 }
 
 .clip-hero-center {
