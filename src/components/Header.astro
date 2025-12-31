@@ -198,7 +198,7 @@ const headerClass =
     </div>
 
     <div class="navbar-end flex items-center gap-4">
-      <ThemeToggle />
+      {Astro.url.pathname !== "/" && <ThemeToggle />}
       <button
         onclick="window.openContactModal()"
         aria-label="Me contacter"
