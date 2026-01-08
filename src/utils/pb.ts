@@ -11,7 +11,7 @@ if (import.meta.env.MODE === 'development') {
 } else {
     // Si nous sommes en production (npm run build)
     // Remplacer l'URL ci-dessous par votre domaine complet
-    path = 'https://portfolio.bryan-thierry.fr:443'   // url du site de production
+    path = 'https://pocketbase-portfolio-production.up.railway.app'
 }
 
 // Créer l'instance PocketBase
