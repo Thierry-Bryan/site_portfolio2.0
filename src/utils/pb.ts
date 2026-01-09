@@ -10,9 +10,11 @@ if (import.meta.env.MODE === 'development') {
     path = 'http://localhost:8090'    // localhost = machine de dev
 } else {
     // Si nous sommes en production (npm run build)
-    // Remplacer l'URL ci-dessous par votre domaine complet
+    // URL directe vers Railway PocketBase
     path = 'https://pocketbase-portfolio-production.up.railway.app'
 }
+
+console.log('PocketBase URL:', path);
 
 // Créer l'instance PocketBase
 export const pb = new PocketBase(path);
@@ -30,15 +32,18 @@ pb.autoCancellation(false);
  */
 export async function getProjets() {
     try {
+        console.log('Tentative de récupération des projets...');
         const records = await pb.collection("projets").getFullList({
             filter: "published = true",
             sort: "order",
             expand: "tags,technologies",
         });
-    return records;
-  } catch (error) {
-    return [];
-  }
+        console.log('Projets récupérés:', records.length);
+        return records;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des projets:', error);
+        return [];
+    }
 }/**
  * Récupérer un projet par son slug avec ses relations
  * @param {string} slug
