@@ -1,7 +1,7 @@
 // astro.config.mjs
 // @ts-check
 import { defineConfig } from "astro/config";
-import node from "@astrojs/node"; // <-- NOUVEAU : Import de l'adaptateur Node
+import vercel from '@astrojs/vercel/serverless';
 import compression from "vite-plugin-compression";
 
 import tailwindcss from "@tailwindcss/vite";
@@ -11,10 +11,8 @@ export default defineConfig({
   site: "https://portfolio.bryan-thierry.fr",
   // NOUVEAU : Configure Astro pour créer un build SSR (Server-Side Rendering)
   output: "server",
-  // NOUVEAU : Utilise l'adaptateur Node pour générer le code de serveur
-  adapter: node({
-    mode: "standalone", // Nécessaire pour générer entry.mjs, utilisé par PM2
-  }),
+  // NOUVEAU : Utilise l'adaptateur Vercel pour générer le code de serveur
+  adapter: vercel(),
 
   // Optimisation des images avec Sharp
   image: {
