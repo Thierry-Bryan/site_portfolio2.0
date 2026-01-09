@@ -25,6 +25,11 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Create underscore directory and copy redirect
+        run: |
+          mkdir -p ./dist/_
+          cp ./public/_redirect.html ./dist/_/index.html
+
       - name: Deploy to FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:

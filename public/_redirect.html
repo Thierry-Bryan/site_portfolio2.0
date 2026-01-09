@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Redirection vers PocketBase</title>
+    <script>
+        // Récupère le chemin après /_/
+        const path = window.location.pathname.replace(/^\/_\//, '');
+        const search = window.location.search;
+        const hash = window.location.hash;
+        
+        // Construit l'URL PocketBase complète
+        const pocketbaseUrl = `https://pocketbase-portfolio-production.up.railway.app/_/${path}${search}${hash}`;
+        
+        // Redirection immédiate
+        window.location.replace(pocketbaseUrl);
+    </script>
+</head>
+<body>
+    <p>Redirection vers PocketBase...</p>
+</body>
+</html>
