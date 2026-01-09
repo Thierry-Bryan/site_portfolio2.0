@@ -3,16 +3,28 @@ import Layout from "../../layouts/Layout.astro";
 import BackgroundComics from "../../components/BackgroundComics.astro";
 import { pb, getFileUrl } from "../../utils/pb.ts";
 
-// Récupérer les tags depuis PocketBase
-const tags = await pb.collection("tags").getFullList({
-  sort: "name",
-});
+// Récupérer les tags depuis PocketBase avec gestion d'erreurs
+let tags = [];
+try {
+  tags = await pb.collection("tags").getFullList({
+    sort: "name",
+  });
+} catch (error) {
+  console.log("Erreur lors de la récupération des tags:", error);
+  tags = [];
+}
 
-// Récupérer les projets avec leurs relations
-const projets = await pb.collection("projets").getFullList({
-  sort: "order",
-  expand: "tags,technologies",
-});
+// Récupérer les projets avec leurs relations avec gestion d'erreurs
+let projets = [];
+try {
+  projets = await pb.collection("projets").getFullList({
+    sort: "order",
+    expand: "tags,technologies",
+  });
+} catch (error) {
+  console.log("Erreur lors de la récupération des projets:", error);
+  projets = [];
+}
 
 // Préparer les options de filtre (Tous + les tags)
 const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
