@@ -10,7 +10,7 @@
     "build:css": "npx @tailwindcss/cli -i app.css -o public/output.css"
   },
   "dependencies": {
-    "@astrojs/node": "^9.5.0",
+    "@astrojs/node": "^9.5.1",
     "@astrojs/vercel": "^9.0.3",
     "@emailjs/browser": "^4.4.1",
     "@tailwindcss/cli": "^4.1.16",
