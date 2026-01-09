@@ -1,7 +1,7 @@
 // astro.config.mjs
 // @ts-check
 import { defineConfig } from "astro/config";
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel';
 import compression from "vite-plugin-compression";
 
 import tailwindcss from "@tailwindcss/vite";
