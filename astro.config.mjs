@@ -1,7 +1,6 @@
 // astro.config.mjs
 // @ts-check
 import { defineConfig } from "astro/config";
-import node from "@astrojs/node";
 import compression from "vite-plugin-compression";
 
 import tailwindcss from "@tailwindcss/vite";
@@ -9,12 +8,8 @@ import tailwindcss from "@tailwindcss/vite";
 // https://astro.build/config
 export default defineConfig({
   site: "https://portfolio.bryan-thierry.fr",
-  // NOUVEAU : Configure Astro pour créer un build SSR (Server-Side Rendering)
-  output: "server",
-  // NOUVEAU : Utilise l'adaptateur Node.js pour générer le code de serveur
-  adapter: node({
-    mode: "standalone",
-  }),
+  // MODIFIÉ : Configure Astro pour créer un build statique pour Infomaniak
+  output: "static",
 
   // Optimisation des images avec Sharp
   image: {
