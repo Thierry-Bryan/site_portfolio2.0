@@ -1,7 +1,7 @@
 // astro.config.mjs
 // @ts-check
 import { defineConfig } from "astro/config";
-import vercel from '@astrojs/vercel';
+import vercel from "@astrojs/vercel";
 import compression from "vite-plugin-compression";
 
 import tailwindcss from "@tailwindcss/vite";
@@ -49,12 +49,12 @@ export default defineConfig({
     ],
     build: {
       // Minification optimale
-      minify: 'terser',
+      minify: "terser",
       terserOptions: {
         compress: {
           drop_console: true, // Supprimer les console.log en production
           drop_debugger: true,
-          pure_funcs: ['console.log', 'console.info', 'console.debug'],
+          pure_funcs: ["console.log", "console.info", "console.debug"],
         },
       },
       // Optimisation du bundling
@@ -62,7 +62,7 @@ export default defineConfig({
         output: {
           manualChunks: {
             // Bundler les dépendances communes
-            'emailjs': ['@emailjs/browser'],
+            emailjs: ["@emailjs/browser"],
           },
         },
       },
