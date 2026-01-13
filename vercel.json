@@ -1,17 +1,5 @@
 {
-  "framework": "astro",
   "env": {
     "POCKETBASE_URL": "https://pocketbase-portfolio-production.up.railway.app"
-  },
-  "functions": {
-    "pages/api/**/*.js": {
-      "runtime": "nodejs18.x"
-    }
-  },
-  "rewrites": [
-    {
-      "source": "/api/revalidate",
-      "destination": "/api/revalidate.js"
-    }
-  ]
+  }
 }

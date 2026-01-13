@@ -2,7 +2,6 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import compression from "vite-plugin-compression";
-import vercel from "@astrojs/vercel";
 
 import tailwindcss from "@tailwindcss/vite";
 
