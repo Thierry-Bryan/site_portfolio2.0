@@ -2,14 +2,18 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import compression from "vite-plugin-compression";
+import node from "@astrojs/node";
 
 import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://portfolio.bryan-thierry.fr",
-  // Mode static - compatibilité Infomaniak garantie
-  output: "static",
+  // Mode server pour Node.js Infomaniak
+  output: "server",
+  adapter: node({
+    mode: "standalone",
+  }),
 
   // Optimisation des images avec Sharp
   image: {
