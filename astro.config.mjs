@@ -9,11 +9,8 @@ import tailwindcss from "@tailwindcss/vite";
 // https://astro.build/config
 export default defineConfig({
   site: "https://portfolio.bryan-thierry.fr",
-  // MODE SERVEUR pour données dynamiques PocketBase
-  output: "server",
-  adapter: node({
-    mode: "standalone"
-  }),
+  // MODIFIÉ : Mode static pour Apache avec rebuild ultra-rapide
+  output: "static",
 
   // Optimisation des images avec Sharp
   image: {

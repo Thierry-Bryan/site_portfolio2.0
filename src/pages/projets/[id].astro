@@ -1,19 +1,25 @@
 ---
-// MODE SERVEUR : Données PocketBase en temps réel
-export const prerender = false;
-
 import Layout from "../../layouts/Layout.astro";
 import Button from "../../components/Button.astro";
 import BackgroundComics from "../../components/BackgroundComics.astro";
 import ArrowButton from "../../components/ArrowButton.astro";
 import ProjetBanner from "../../components/ProjetBanner.astro";
 import {
+  getProjets,
   getProjetBySlug,
   getFileUrl,
   getMultipleFileUrls,
   getNextProjet,
   getPreviousProjet,
 } from "../../utils/pb.ts";
+
+// Générer les routes statiques pour tous les projets
+export async function getStaticPaths() {
+  const projets = await getProjets();
+  return projets.map((projet) => ({
+    params: { id: projet.slug },
+  }));
+}
 
 // Récupérer le slug depuis les paramètres de l'URL
 const { id } = Astro.params;
