@@ -1,0 +1,49 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Motif de points halftone -->
+    <pattern id="halftonePattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <rect width="20" height="20" fill="white"/>
+      <circle cx="10" cy="10" r="8" fill="black"/>
+    </pattern>
+    
+    <!-- Gradient radial pour l'effet de densité -->
+    <radialGradient id="densityGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(0,0,0,0.1)"/>
+      <stop offset="30%" stop-color="rgba(0,0,0,0.3)"/>
+      <stop offset="60%" stop-color="rgba(0,0,0,0.6)"/>
+      <stop offset="80%" stop-color="rgba(0,0,0,0.8)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,1)"/>
+    </radialGradient>
+
+    <!-- Motif de points de différentes tailles -->
+    <pattern id="halftoneSmall" x="0" y="0" width="15" height="15" patternUnits="userSpaceOnUse">
+      <rect width="15" height="15" fill="white"/>
+      <circle cx="7.5" cy="7.5" r="3" fill="black"/>
+    </pattern>
+    
+    <pattern id="halftoneMedium" x="0" y="0" width="25" height="25" patternUnits="userSpaceOnUse">
+      <rect width="25" height="25" fill="white"/>
+      <circle cx="12.5" cy="12.5" r="8" fill="black"/>
+    </pattern>
+    
+    <pattern id="halftoneLarge" x="0" y="0" width="35" height="35" patternUnits="userSpaceOnUse">
+      <rect width="35" height="35" fill="white"/>
+      <circle cx="17.5" cy="17.5" r="12" fill="black"/>
+    </pattern>
+  </defs>
+
+  <!-- Fond blanc -->
+  <rect width="100%" height="100%" fill="white"/>
+  
+  <!-- Couche de points fins (centre) -->
+  <ellipse cx="400" cy="300" rx="150" ry="100" fill="url(#halftoneSmall)" opacity="0.8"/>
+  
+  <!-- Couche de points moyens -->
+  <ellipse cx="400" cy="300" rx="250" ry="180" fill="url(#halftoneMedium)" opacity="0.6"/>
+  
+  <!-- Couche de points larges (extérieur) -->
+  <ellipse cx="400" cy="300" rx="350" ry="250" fill="url(#halftoneLarge)" opacity="0.4"/>
+  
+  <!-- Masque de gradient pour l'effet de densité -->
+  <rect width="100%" height="100%" fill="url(#densityGradient)"/>
+</svg>

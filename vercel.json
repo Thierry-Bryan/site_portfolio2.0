@@ -1,23 +1,25 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "dist/server/entry.mjs",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "dist/client/**/*",
-      "use": "@vercel/static"
+  "framework": "astro",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "installCommand": "npm install",
+  "env": {
+    "POCKETBASE_URL": "https://pocketbase-portfolio-production.up.railway.app"
+  },
+  "functions": {
+    "app/server/**/*.js": {
+      "maxDuration": 30
     }
-  ],
-  "routes": [
+  },
+  "headers": [
     {
-      "src": "/client/(.*)",
-      "dest": "/client/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/server/entry.mjs"
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=0, max-age=0"
+        }
+      ]
     }
   ]
 }

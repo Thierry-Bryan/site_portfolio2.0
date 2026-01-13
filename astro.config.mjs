@@ -2,15 +2,18 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import compression from "vite-plugin-compression";
-import node from "@astrojs/node";
+import vercel from "@astrojs/vercel";
 
 import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://portfolio.bryan-thierry.fr",
-  // SOLUTION FINALE : Static avec webhook instantané depuis PocketBase
-  output: "static",
+  // SOLUTION DÉFINITIVE : Mode server avec Vercel pour données temps réel
+  output: "server",
+  adapter: vercel({
+    webAnalytics: { enabled: true }
+  }),
 
   // Optimisation des images avec Sharp
   image: {
