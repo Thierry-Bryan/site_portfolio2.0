@@ -12,7 +12,7 @@ export default defineConfig({
   // MODIFIÉ : Mode server pour fonctionnement optimal
   output: "server",
   adapter: node({
-    mode: "standalone"
+    mode: "standalone",
   }),
 
   // Optimisation des images avec Sharp
