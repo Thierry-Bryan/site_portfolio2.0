@@ -7,8 +7,8 @@ on:
   repository_dispatch:
     types: [pocketbase-update]
   schedule:
-    # Rebuild automatique toutes les 2 minutes pour réactivité maximale
-    - cron: '*/2 * * * *'
+    # Rebuild automatique toutes les 5 minutes (plus stable que 2min)
+    - cron: '*/5 * * * *'
   workflow_dispatch:
     # Permet de déclencher manuellement
 
