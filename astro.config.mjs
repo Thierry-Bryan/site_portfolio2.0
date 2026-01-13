@@ -9,7 +9,7 @@ import tailwindcss from "@tailwindcss/vite";
 // https://astro.build/config
 export default defineConfig({
   site: "https://portfolio.bryan-thierry.fr",
-  // Mode server pour Infomaniak avec FTP
+  // Mode server pour Infomaniak avec FTP - v2
   output: "server",
   adapter: node({
     mode: "standalone",
