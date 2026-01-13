@@ -1,4 +1,7 @@
 ---
+// Force cette page à être rendue côté serveur pour récupérer les données en temps réel
+export const prerender = false;
+
 import Layout from "../../layouts/Layout.astro";
 import BackgroundComics from "../../components/BackgroundComics.astro";
 import { pb, getFileUrl } from "../../utils/pb.ts";

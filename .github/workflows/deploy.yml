@@ -37,7 +37,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
-          server-dir: ./sites/portfolio.bryan-thierry.fr/ # ⬅️ CHANGEMENT ICI
+          server-dir: ./sites/portfolio.bryan-thierry.fr/ 
           exclude: |
             **/.git*
             **/.git*/**
