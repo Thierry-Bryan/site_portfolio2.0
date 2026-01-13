@@ -1,0 +1,11 @@
+{
+  "name": "portfolio-server",
+  "scripts": {
+    "start": "node ./dist/server/entry.mjs",
+    "build": "astro build",
+    "dev": "astro dev"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

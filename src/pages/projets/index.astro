@@ -1,4 +1,7 @@
 ---
+// MODE SERVEUR : Données PocketBase en temps réel
+export const prerender = false;
+
 import Layout from "../../layouts/Layout.astro";
 import BackgroundComics from "../../components/BackgroundComics.astro";
 import { pb, getFileUrl } from "../../utils/pb.ts";
@@ -29,6 +32,7 @@ try {
 // Préparer les options de filtre (Tous + les tags)
 const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
 ---
+---
 
 <Layout title="Mes Projets" theme="ca-va-trailer">
   <section class="bg-(--b1) min-h-screen py-30 px-4 md:px-6">
@@ -40,26 +44,30 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
         </h2>
       </div>
 
-      <!-- Filtres et Vue -->
-      <div
-        class="flex flex-col md:flex-row justify-between items-center gap-6 mb-12"
-      >
-        <!-- Filtres de type -->
-        <div
-          class="flex flex-wrap gap-3 justify-center md:justify-start"
-          id="type-filters"
-        >
-          {
-            filterOptions.map((filterName) => (
-              <button
-                class="filter-btn px-6 py-2 border-2 border-(--bc) bg-(--b1) text-(--bc) font-primary cursor-pointer transition-all duration-300 hover:bg-(--p) hover:text-(--b1) hover:border-(--p)"
-                data-type={filterName}
-              >
-                {filterName}
-              </button>
-            ))
-          }
+      <!-- Loading indicator -->
+      <div id="loading-indicator" class="text-center py-20">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-(--p) mx-auto mb-4"></div>
+        <p class="text-(--bc)">🔄 Chargement temps réel depuis PocketBase...</p>
+      </div>
+
+      <!-- Error message -->
+      <div id="error-message" class="hidden text-center py-20">
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded max-w-md mx-auto">
+          <strong>Erreur!</strong> Impossible de charger les projets.
+          <button onclick="location.reload()" class="block mt-4 mx-auto px-4 py-2 bg-red-600 text-white rounded">
+            Réessayer
+          </button>
         </div>
+      </div>
+
+      <!-- Main content (hidden until loaded) -->
+      <div id="main-content" class="hidden">
+        <!-- Filtres et Vue -->
+        <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
+          <!-- Filtres de type -->
+          <div class="flex flex-wrap gap-3 justify-center md:justify-start" id="type-filters">
+            <!-- Populated by JavaScript -->
+          </div>
 
         <!-- Toggle vue grille/ligne -->
         <div class="flex gap-2 p-1 bg-(--b1) border-2 border-(--bc)">
@@ -403,4 +411,171 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
   };
   gridViewBtn?.addEventListener("click", () => setView("grid"));
   listViewBtn?.addEventListener("click", () => setView("list"));
+
+  // SOLUTION TEMPS RÉEL - Chargement dynamique PocketBase
+  async function loadRealTimeData() {
+    try {
+      // Import PocketBase depuis CDN
+      const { default: PocketBase } = await import('https://cdn.jsdelivr.net/npm/pocketbase@0.21.1/dist/pocketbase.umd.js');
+      const pb = new PocketBase('https://pocketbase-portfolio-production.up.railway.app');
+      
+      console.log('🔄 Chargement temps réel depuis PocketBase...');
+      
+      // Charger tags et projets
+      const [newTags, newProjets] = await Promise.all([
+        pb.collection("tags").getFullList({ sort: "name" }),
+        pb.collection("projets").getFullList({ sort: "order", expand: "tags,technologies" })
+      ]);
+      
+      console.log('✅ Données mises à jour:', { tags: newTags.length, projets: newProjets.length });
+      
+      // Mettre à jour les filtres
+      updateFilters(newTags);
+      
+      // Mettre à jour les projets
+      updateProjects(newProjets, pb);
+      
+    } catch (error) {
+      console.error('❌ Erreur chargement temps réel:', error);
+    }
+  }
+
+  function updateFilters(newTags) {
+    const typeFilters = document.getElementById('type-filters');
+    if (!typeFilters) return;
+    
+    const newFilterOptions = ["Tous", ...newTags.map(tag => tag.name)];
+    
+    typeFilters.innerHTML = newFilterOptions.map(filterName => `
+      <button
+        class="filter-btn px-6 py-2 border-2 border-(--bc) bg-(--b1) text-(--bc) font-primary cursor-pointer transition-all duration-300 hover:bg-(--p) hover:text-(--b1) hover:border-(--p)"
+        data-type="${filterName}"
+      >
+        ${filterName}
+      </button>
+    `).join('');
+    
+    // Réattacher les event listeners
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filterType = btn.getAttribute('data-type');
+        applyFilter(filterType);
+      });
+    });
+    
+    // Activer "Tous" par défaut
+    if (filterBtns[0]) {
+      filterBtns[0].classList.add('active');
+    }
+  }
+
+  function updateProjects(newProjets, pb) {
+    const container = document.getElementById('projets-container');
+    if (!container) return;
+    
+    const gridContent = container.querySelector('.grid-view-content');
+    const listContent = container.querySelector('.list-view-content');
+    
+    if (gridContent) {
+      gridContent.innerHTML = generateGridProjects(newProjets, pb);
+    }
+    
+    if (listContent) {
+      listContent.innerHTML = generateListProjects(newProjets, pb);
+    }
+  }
+
+  function generateGridProjects(projets, pb) {
+    return projets.map(projet => {
+      const heroImage = projet.hero_image 
+        ? pb.files.getUrl(projet, projet.hero_image)
+        : '/images/placeholder.webp';
+      
+      const tags = projet.expand?.tags || [];
+      const tagsStr = tags.map(t => t.name.toLowerCase()).join(' ');
+      
+      return `
+        <article 
+          class="projet-card group cursor-pointer relative overflow-hidden rounded-xl bg-(--b2) shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+          data-tags-lower="${tagsStr}"
+          onclick="window.location.href='/projets/${projet.slug}'"
+        >
+          <div class="relative">
+            <img
+              src="${heroImage}"
+              alt="${projet.title}"
+              class="absolute z-10 h-[220px] object-cover drop-shadow-2xl transform transition-all duration-300 group-hover:h-[250px]"
+              loading="lazy"
+            />
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/20"></div>
+          <h3 class="absolute bottom-6 left-6 text-2xl font-bold text-white z-20 drop-shadow-lg">
+            ${projet.title}
+          </h3>
+        </article>
+      `;
+    }).join('');
+  }
+
+  function generateListProjects(projets, pb) {
+    return projets.map(projet => {
+      const heroImage = projet.hero_image 
+        ? pb.files.getUrl(projet, projet.hero_image)
+        : '/images/placeholder.webp';
+      
+      const tags = projet.expand?.tags || [];
+      const tagsStr = tags.map(t => t.name.toLowerCase()).join(' ');
+      
+      return `
+        <article 
+          class="projet-card group cursor-pointer flex items-center gap-8 p-6 bg-(--b2) rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02]"
+          data-tags-lower="${tagsStr}"
+          onclick="window.location.href='/projets/${projet.slug}'"
+        >
+          <div class="flex-shrink-0">
+            <img
+              src="${heroImage}"
+              alt="${projet.title}"
+              class="w-32 h-32 object-cover rounded-lg shadow-md"
+              loading="lazy"
+            />
+          </div>
+          <div class="flex-1">
+            <h3 class="text-2xl font-bold text-(--bc) mb-2 font-primary">
+              ${projet.title}
+            </h3>
+            <p class="text-(--bc) opacity-70 mb-3 line-clamp-2">
+              ${projet.short_description || 'Description à venir...'}
+            </p>
+            ${tags.length > 0 ? `
+              <div class="flex flex-wrap gap-2">
+                ${tags.map(tag => `
+                  <span class="px-3 py-1 text-sm bg-(--p) text-(--b1) rounded-full">
+                    ${tag.name}
+                  </span>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+        </article>
+      `;
+    }).join('');
+  }
+
+  // Charger les données temps réel au démarrage
+  loadRealTimeData();
+  
+  // Recharger toutes les 30 secondes pour voir les changements
+  setInterval(loadRealTimeData, 30000);
+  
+  // Recharger quand la page reprend le focus
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      console.log('🔄 Page active - rechargement des données...');
+      loadRealTimeData();
+    }
+  });
 </script>
