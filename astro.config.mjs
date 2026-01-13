@@ -9,9 +9,8 @@ import tailwindcss from "@tailwindcss/vite";
 // https://astro.build/config
 export default defineConfig({
   site: "https://portfolio.bryan-thierry.fr",
-  // SOLUTION DÉFINITIVE : Mode server avec Vercel pour données temps réel
-  output: "server",
-  adapter: vercel(),
+  // NOUVELLE STRATÉGIE : Mode static avec données fraîches automatiques
+  output: "static",
 
   // Optimisation des images avec Sharp
   image: {
