@@ -1,11 +1,8 @@
 import PocketBase from 'pocketbase';
 
-var path = "";
-{
-  path = "https://pocketbase-portfolio-production.up.railway.app";
-}
-console.log("PocketBase URL:", path);
-const pb = new PocketBase(path);
+const POCKETBASE_URL = process.env.POCKETBASE_URL || "https://pocketbase-portfolio-production.up.railway.app";
+console.log("PocketBase URL:", POCKETBASE_URL);
+const pb = new PocketBase(POCKETBASE_URL);
 pb.autoCancellation(false);
 async function getProjets() {
   try {

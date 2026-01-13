@@ -1,6 +1,6 @@
 import { c as createComponent, r as renderComponent, f as renderScript, a as renderTemplate, m as maybeRenderHead, d as addAttribute } from '../chunks/astro/server_yuAGbZrg.mjs';
 import { $ as $$Layout, a as $$BackgroundComics } from '../chunks/Layout_-GPg4m4z.mjs';
-import { p as pb, c as getFileUrl } from '../chunks/pb_CZZwb-7T.mjs';
+import { p as pb, c as getFileUrl } from '../chunks/pb_Dkg0ci9l.mjs';
 /* empty css                                 */
 export { renderers } from '../renderers.mjs';
 

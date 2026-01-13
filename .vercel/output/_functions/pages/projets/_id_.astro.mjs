@@ -3,7 +3,7 @@ import { $ as $$Layout, a as $$BackgroundComics } from '../../chunks/Layout_-GPg
 import { $ as $$Button } from '../../chunks/Button_Bo0Bj-8a.mjs';
 import 'clsx';
 /* empty css                                   */
-import { g as getProjetBySlug, a as getNextProjet, b as getPreviousProjet, c as getFileUrl, d as getMultipleFileUrls, e as getProjets } from '../../chunks/pb_CZZwb-7T.mjs';
+import { g as getProjetBySlug, a as getNextProjet, b as getPreviousProjet, c as getFileUrl, d as getMultipleFileUrls, e as getProjets } from '../../chunks/pb_Dkg0ci9l.mjs';
 export { renderers } from '../../renderers.mjs';
 
 const $$Astro$2 = createAstro("https://portfolio.bryan-thierry.fr");

@@ -1,25 +1,18 @@
 import PocketBase from "pocketbase";
 
 // ----------------------------------------------------
-// LOGIQUE D'INITIALISATION CONFORME AU COURS
+// CONFIGURATION POCKETBASE POUR VERCEL
 // ----------------------------------------------------
-var path = '';
 
-if (import.meta.env.MODE === 'development') {
-    // Si nous sommes en développement (npm run dev)
-    path = 'http://localhost:8090'    // localhost = machine de dev
-} else {
-    // Si nous sommes en production (npm run build)
-    // URL directe vers Railway PocketBase
-    path = 'https://pocketbase-portfolio-production.up.railway.app'
-}
+// Utiliser la variable d'environnement ou fallback
+const POCKETBASE_URL = import.meta.env.POCKETBASE_URL || process.env.POCKETBASE_URL || 'https://pocketbase-portfolio-production.up.railway.app';
 
-console.log('PocketBase URL:', path);
+console.log('PocketBase URL:', POCKETBASE_URL);
 
-// Créer l'instance PocketBase
-export const pb = new PocketBase(path);
+// Créer l'instance PocketBase avec gestion d'erreur
+export const pb = new PocketBase(POCKETBASE_URL);
 
-// Désactiver le auto-refresh (pour éviter les problèmes côté serveur)
+// Configuration pour Vercel serverless
 pb.autoCancellation(false);
 
 // ----------------------------------------------------
