@@ -38,6 +38,13 @@ jobs:
         run: |
           mkdir -p ./dist/_
           cp ./public/_redirect.html ./dist/_/index.html
+          
+      - name: Copy server proxy files  
+        run: |
+          cp ./public/.htaccess ./dist/.htaccess
+          cp ./public/index.php ./dist/index.php
+          cp ./start-server.js ./dist/start-server.js
+          cp ./package.json ./dist/package.json
 
       - name: Deploy to FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5

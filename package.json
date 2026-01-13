@@ -7,7 +7,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "build:css": "npx @tailwindcss/cli -i app.css -o public/output.css"
+    "build:css": "npx @tailwindcss/cli -i app.css -o public/output.css",
+    "start": "node start-server.js",
+    "production": "npm run build && npm run start"
   },
   "dependencies": {
     "@astrojs/node": "^9.5.1",
