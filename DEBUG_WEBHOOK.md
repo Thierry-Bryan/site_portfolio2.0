@@ -1,52 +1,50 @@
-# Test du Webhook GitHub Actions
+# 🚨 Diagnostic Webhook - Problèmes Courants
 
-## 🔍 Diagnostic du Problème
+## ✅ **Actions à vérifier MAINTENANT :**
 
-### 1. **Test Manuel du Workflow**
+### 1. **GitHub Actions a-t-il été déclenché ?**
+➡️ Allez sur : `https://github.com/Thierry-Bryan/site_portfolio2.0/actions`
+➡️ Vérifiez si le workflow "Deploy to Infomaniak via FTP" s'est lancé après le dernier push
 
-Allons sur GitHub Actions pour déclencher manuellement :
-- GitHub.com → Votre repo → Actions onglet
-- "Deploy to Infomaniak via FTP" → Run workflow
-- Vérifiez si ça fonctionne
-
-### 2. **Vérification des Secrets GitHub**
-
-Dans votre repo → Settings → Secrets and variables → Actions, vérifiez que vous avez :
-
+### 2. **URL Webhook PocketBase (EXACTE)**
 ```
-✅ FTP_SERVER
-✅ FTP_USERNAME  
-✅ FTP_PASSWORD
-✅ POCKETBASE_URL
-🚨 WEBHOOK_TOKEN (probablement manquant)
+https://api.github.com/repos/Thierry-Bryan/site_portfolio2.0/dispatches
 ```
 
-### 3. **Test Webhook PocketBase**
+### 3. **Configuration Complète PocketBase**
+Dans Railway PocketBase Admin → Settings → Webhooks :
 
-Ouvrez votre PocketBase Admin et testez le webhook :
+```
+Name: GitHub Auto Deploy
+URL: https://api.github.com/repos/Thierry-Bryan/site_portfolio2.0/dispatches
+Method: POST
 
-**URL à utiliser :** 
-```
-https://api.github.com/repos/VOTRE-USERNAME/site_portfolio2.0/dispatches
-```
-
-**Headers requis :**
-```
-Authorization: token ghp_VOTRE_TOKEN_GITHUB
+Headers:
+Authorization: token ghp_VOTRE_TOKEN_ICI
 Content-Type: application/json
-```
 
-**Body :**
-```json
+Body:
 {
   "event_type": "pocketbase-update"
 }
+
+Events:
+☑️ projets (onCreate, onUpdate, onDelete)
+☑️ tags (onCreate, onUpdate, onDelete)
+☑️ technologies (onCreate, onUpdate, onDelete)
 ```
 
-### 4. **URL Webhook Correcte**
+### 4. **SOLUTION DE DÉPANNAGE**
 
-Remplacez `VOTRE-USERNAME` par votre vrai nom d'utilisateur GitHub dans l'URL du webhook.
+J'ai créé `auto-rebuild.yml` qui rebuild automatiquement toutes les 30 minutes.
 
-### 5. **Test Rapide**
+**Test immédiat :**
+1. Allez sur GitHub → Actions 
+2. "Auto Rebuild - Scheduled & Webhook"
+3. "Run workflow" 
+4. Attendez 3 minutes
+5. Vérifiez votre site
 
-Créez ce fichier de test et poussez-le :
+### 5. **Dépannage Rapide**
+
+Si vous êtes pressé, utilisez le rebuild manuel :
