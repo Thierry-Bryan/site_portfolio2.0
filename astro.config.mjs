@@ -9,8 +9,11 @@ import tailwindcss from "@tailwindcss/vite";
 // https://astro.build/config
 export default defineConfig({
   site: "https://portfolio.bryan-thierry.fr",
-  // MODIFIÉ : Mode static pour Apache avec rebuild ultra-rapide
-  output: "static",
+  // MODIFIÉ : Mode server pour fonctionnement optimal
+  output: "server",
+  adapter: node({
+    mode: "standalone"
+  }),
 
   // Optimisation des images avec Sharp
   image: {
