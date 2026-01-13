@@ -44,7 +44,7 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
       <!-- Loading indicator -->
       <div id="loading-indicator" class="text-center py-20">
         <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-(--p) mx-auto mb-4"></div>
-        <p class="text-(--bc)">🔄 Chargement temps réel depuis PocketBase...</p>
+        <p class="text-(--bc)">Chargement des projets...</p>
       </div>
 
       <!-- Error message -->
@@ -416,7 +416,7 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
       const { default: PocketBase } = await import('https://cdn.jsdelivr.net/npm/pocketbase@0.21.1/dist/pocketbase.umd.js');
       const pb = new PocketBase('https://pocketbase-portfolio-production.up.railway.app');
       
-      console.log('🔄 Chargement temps réel depuis PocketBase...');
+      console.log('Chargement des projets...');
       
       // Charger tags et projets
       const [newTags, newProjets] = await Promise.all([
