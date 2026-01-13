@@ -13,8 +13,13 @@ export default defineConfig({
   output: "server",
   adapter: node({
     mode: "standalone",
-    host: "0.0.0.0",
   }),
+
+  // Configuration serveur pour Infomaniak
+  server: {
+    host: "0.0.0.0",
+    port: 3000,
+  },
 
   // Optimisation des images avec Sharp
   image: {
