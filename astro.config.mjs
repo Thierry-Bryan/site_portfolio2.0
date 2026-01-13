@@ -9,11 +9,8 @@ import tailwindcss from "@tailwindcss/vite";
 // https://astro.build/config
 export default defineConfig({
   site: "https://portfolio.bryan-thierry.fr",
-  // MODIFIÉ : Mode server pour fonctionnement optimal
-  output: "server",
-  adapter: node({
-    mode: "standalone",
-  }),
+  // SOLUTION FINALE : Static avec webhook instantané depuis PocketBase
+  output: "static",
 
   // Optimisation des images avec Sharp
   image: {
