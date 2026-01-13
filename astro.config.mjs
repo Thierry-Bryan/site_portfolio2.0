@@ -11,9 +11,7 @@ export default defineConfig({
   site: "https://portfolio.bryan-thierry.fr",
   // SOLUTION DÉFINITIVE : Mode server avec Vercel pour données temps réel
   output: "server",
-  adapter: vercel({
-    webAnalytics: { enabled: true }
-  }),
+  adapter: vercel(),
 
   // Optimisation des images avec Sharp
   image: {
