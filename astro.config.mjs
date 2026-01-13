@@ -2,18 +2,14 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import compression from "vite-plugin-compression";
-import node from "@astrojs/node";
 
 import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://portfolio.bryan-thierry.fr",
-  // MODIFIÉ : Mode serveur pour permettre la récupération dynamique des données PocketBase
-  output: "server",
-  adapter: node({
-    mode: "standalone"
-  }),
+  // MODIFIÉ : Mode static pour Apache avec rebuild automatique via webhook
+  output: "static",
 
   // Optimisation des images avec Sharp
   image: {

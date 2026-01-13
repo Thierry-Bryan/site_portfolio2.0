@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  repository_dispatch:
+    types: [pocketbase-update]
 
 jobs:
   build-and-deploy:
@@ -24,6 +26,8 @@ jobs:
 
       - name: Build project
         run: npm run build
+        env:
+          POCKETBASE_URL: ${{ secrets.POCKETBASE_URL }}
 
       - name: Create underscore directory and copy redirect
         run: |
@@ -42,3 +46,9 @@ jobs:
             **/.git*
             **/.git*/**
             **/node_modules/**
+            
+      - name: Notify deployment success
+        run: |
+          echo "✅ Site déployé avec succès sur Infomaniak"
+          echo "📅 $(date)"
+          echo "🔗 https://portfolio.bryan-thierry.fr"

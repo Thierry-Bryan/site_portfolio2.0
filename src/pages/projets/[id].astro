@@ -1,7 +1,4 @@
 ---
-// Force cette page à être rendue côté serveur pour récupérer les données en temps réel
-export const prerender = false;
-
 import Layout from "../../layouts/Layout.astro";
 import Button from "../../components/Button.astro";
 import BackgroundComics from "../../components/BackgroundComics.astro";
@@ -14,7 +11,17 @@ import {
   getMultipleFileUrls,
   getNextProjet,
   getPreviousProjet,
+  getProjets,
+  getProjetBySlug,
 } from "../../utils/pb.ts";
+
+// Générer les routes statiques pour tous les projets
+export async function getStaticPaths() {
+  const projets = await getProjets();
+  return projets.map((projet) => ({
+    params: { id: projet.slug },
+  }));
+}
 
 // Récupérer le slug depuis les paramètres de l'URL
 const { id } = Astro.params;
