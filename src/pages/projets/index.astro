@@ -410,7 +410,7 @@ const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
     const loadingIndicator = document.getElementById("loading-indicator");
     const errorMessage = document.getElementById("error-message");
     const mainContent = document.getElementById("main-content");
-    
+
     if (loadingIndicator) loadingIndicator.style.display = "none";
     if (errorMessage) errorMessage.style.display = "none";
     if (mainContent) mainContent.classList.remove("hidden");
