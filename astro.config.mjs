@@ -1,5 +1,6 @@
 // astro.config.mjs
 // @ts-check
+import "dotenv/config";
 import { defineConfig } from "astro/config";
 import compression from "vite-plugin-compression";
 import node from "@astrojs/node";

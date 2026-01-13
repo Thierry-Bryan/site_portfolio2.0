@@ -17,6 +17,7 @@
     "@tailwindcss/cli": "^4.1.16",
     "@tailwindcss/vite": "^4.1.16",
     "astro": "^5.15.1",
+    "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "express-static-gzip": "^3.0.0",
     "pocketbase": "^0.26.3"
