@@ -18,19 +18,42 @@ export interface ProjetData {
   prevId: string;
   nextId: string;
   technologies: any[];
+  tags: any[];
+  primaryTag?: string;
 }
 
 export type ProjetsDataMap = Record<string, ProjetData>;
 
 /**
- * Génère la map de projets avec navigation circulaire
+ * Génère la map de projets avec navigation circulaire par catégorie
  */
 export function generateProjetsData(allProjets: any[]): ProjetsDataMap {
   const projetsData: ProjetsDataMap = {};
   
   allProjets.forEach((p, index) => {
-    const prevIndex = index === 0 ? allProjets.length - 1 : index - 1;
-    const nextIndex = index === allProjets.length - 1 ? 0 : index + 1;
+    // Récupérer les tags du projet actuel
+    const currentTags = p.tags || [];
+    const primaryTag = currentTags[0]?.name || null;
+    
+    // Filtrer les projets par même tag (premier tag du projet)
+    const projetsInSameCategory = primaryTag 
+      ? allProjets.filter(proj => {
+          const pTags = proj.tags || [];
+          return pTags.some(tag => tag.name === primaryTag);
+        })
+      : allProjets;
+    
+    // Trouver l'index dans la catégorie filtrée
+    const categoryIndex = projetsInSameCategory.findIndex(proj => proj.slug === p.slug);
+    const totalInCategory = projetsInSameCategory.length;
+    
+    // Navigation circulaire dans la catégorie
+    const nextIndex = (categoryIndex + 1) % totalInCategory;
+    const prevIndex = (categoryIndex - 1 + totalInCategory) % totalInCategory;
+    
+    const nextProjet = projetsInSameCategory[nextIndex];
+    const prevProjet = projetsInSameCategory[prevIndex];
+
     projetsData[p.slug] = {
       slug: p.slug,
       theme: p.theme,
@@ -40,9 +63,11 @@ export function generateProjetsData(allProjets: any[]): ProjetsDataMap {
       contentDescription: p.contentDescription,
       images: p.images,
       siteUrl: p.siteUrl,
-      prevId: allProjets[prevIndex].slug,
-      nextId: allProjets[nextIndex].slug,
+      prevId: prevProjet.slug,
+      nextId: nextProjet.slug,
       technologies: p.technologies || [],
+      tags: currentTags,
+      primaryTag: primaryTag,
     };
   });
   

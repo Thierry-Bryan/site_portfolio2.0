@@ -26,13 +26,37 @@ const { id } = Astro.params;
 
 // Récupérer les données du projet
 const projet = await getProjetBySlug(id);
-const nextProjet = await getNextProjet(id);
-const previousProjet = await getPreviousProjet(id);
 
 // Si le projet n'existe pas, rediriger vers la page d'accueil
 if (!projet) {
   return Astro.redirect("/");
 }
+
+// NOUVELLE LOGIQUE : Navigation par catégorie
+const allProjets = await getProjets();
+
+// Récupérer le tag principal du projet actuel
+const currentTags = projet.expand?.tags || [];
+const primaryTag = currentTags[0]?.name || null;
+
+// Filtrer les projets par même tag
+const projetsInSameCategory = primaryTag 
+  ? allProjets.filter(p => {
+      const pTags = p.expand?.tags || [];
+      return pTags.some(tag => tag.name === primaryTag);
+    })
+  : allProjets;
+
+// Trouver l'index dans la catégorie
+const categoryIndex = projetsInSameCategory.findIndex(p => p.slug === projet.slug);
+const totalInCategory = projetsInSameCategory.length;
+
+// Navigation circulaire dans la catégorie
+const nextIndex = (categoryIndex + 1) % totalInCategory;
+const prevIndex = (categoryIndex - 1 + totalInCategory) % totalInCategory;
+
+const nextProjet = projetsInSameCategory[nextIndex];
+const previousProjet = projetsInSameCategory[prevIndex];
 
 // Récupérer les URLs des images
 const heroImageUrl = getFileUrl(projet, projet.hero_image);
@@ -50,6 +74,15 @@ const projetTechnologies = projet.expand?.technologies || [];
   <section
     class="relative h-[calc(120vh-7rem)] flex items-stretch overflow-hidden"
   >
+    <!-- Indicateur de catégorie -->
+    {primaryTag && totalInCategory > 1 && (
+      <div class="category-navigation absolute top-4 left-4 text-white z-50 bg-black/20 backdrop-blur-sm px-3 py-1 rounded-full">
+        <span class="text-sm font-medium opacity-90">
+          {primaryTag.toUpperCase()} ({categoryIndex + 1}/{totalInCategory})
+        </span>
+      </div>
+    )}
+    
     <div class="w-full h-full relative">
       <!-- Zone gauche : Texte sur fond avec angle prononcé (desktop uniquement) -->
       <div
@@ -178,7 +211,7 @@ const projetTechnologies = projet.expand?.technologies || [];
     is:inline
     define:vars={{
       currentTheme: projet.theme,
-      allProjets: (await getProjets()).map((p) => ({
+      allProjets: allProjets.map((p) => ({
         slug: p.slug,
         theme: p.theme,
         backgroundImage: getFileUrl(p, p.hero_image),
@@ -188,6 +221,7 @@ const projetTechnologies = projet.expand?.technologies || [];
         images: getMultipleFileUrls(p, "images"),
         siteUrl: p.site_url,
         technologies: p.expand?.technologies || [],
+        tags: p.expand?.tags || [],
       })),
     }}
     data-projet-init
