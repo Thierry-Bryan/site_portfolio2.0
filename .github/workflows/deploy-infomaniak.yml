@@ -23,7 +23,7 @@ jobs:
             echo "🔄 Starting deployment..."
             
             # Naviguer vers le dossier de l'application
-            cd ~/app || { echo "❌ Directory ~/app not found"; exit 1; }
+            cd /srv/customer || { echo "❌ Directory /srv/customer not found"; exit 1; }
             
             echo "📥 Pulling latest changes from GitHub..."
             git pull origin main || { echo "❌ Git pull failed"; exit 1; }
