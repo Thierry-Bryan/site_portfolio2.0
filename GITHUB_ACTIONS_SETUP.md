@@ -10,7 +10,7 @@ Pour que l'auto-déploiement fonctionne, vous devez configurer ces secrets dans 
 2. **Settings** → **Secrets and variables** → **Actions**  
 3. **Cliquez "New repository secret"**
 
-### 🔐 Secrets à ajouter :
+### 🔐 Secrets à ajouter : 
 
 | Secret | Description | Exemple |
 |--------|-------------|---------|
