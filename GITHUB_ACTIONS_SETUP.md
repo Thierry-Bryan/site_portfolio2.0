@@ -14,8 +14,8 @@ Pour que l'auto-déploiement fonctionne, vous devez configurer ces secrets dans 
 
 | Secret | Description | Exemple |
 |--------|-------------|---------|
-| `INFOMANIAK_HOST` | Adresse du serveur Node.js | `nodejs.infomaniak.com` |
-| `INFOMANIAK_USER` | Nom d'utilisateur SSH | `votre-username` |  
+| `INFOMANIAK_HOST` | Adresse SSH externe | `57-106538.ssh.hosting-ik.com` |
+| `INFOMANIAK_USER` | Nom d'utilisateur SSH | `client` |  
 | `INFOMANIAK_PASSWORD` | Mot de passe SSH | `votre-password` |
 | `INFOMANIAK_PORT` | Port SSH (optionnel) | `22` |
 
