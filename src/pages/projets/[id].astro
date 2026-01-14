@@ -179,6 +179,23 @@ const projetTechnologies = projet.expand?.technologies || [];
   <!-- Bandeau de défilement du nom du projet -->
   <ProjetBanner title={projet.title} theme={projet.theme as any} />
 
+  <style>
+    /* Style pour les flèches désactivées */
+    .arrow-wrapper-disabled {
+      opacity: 0.3 !important;
+      pointer-events: none !important;
+      cursor: not-allowed !important;
+    }
+    
+    .arrow-wrapper-disabled button {
+      opacity: 0.5 !important;
+    }
+    
+    .arrow-wrapper-disabled svg {
+      opacity: 0.6 !important;
+    }
+  </style>
+
   <script>
     import {
       generateProjetsData,

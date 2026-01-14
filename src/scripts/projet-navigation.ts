@@ -30,22 +30,32 @@ export type ProjetsDataMap = Record<string, ProjetData>;
 export function generateProjetsData(allProjets: any[]): ProjetsDataMap {
   const projetsData: ProjetsDataMap = {};
   
+  // Debug initial pour voir toutes les données
+  console.log('=== GÉNÉRATION PROJETS DATA ===');
+  console.log('Tous les projets:', allProjets);
+  
   allProjets.forEach((p, index) => {
-    // Récupérer les tags du projet actuel depuis expand
+    // Récupérer les tags du projet actuel
     const currentTags = p.tags || [];
     const primaryTag = currentTags.length > 0 ? currentTags[0].name : null;
     
     // Debug pour voir les tags
     console.log(`Projet ${p.slug}:`, {
       tags: currentTags,
-      primaryTag: primaryTag
+      primaryTag: primaryTag,
+      tagsLength: currentTags.length
     });
     
     // Filtrer les projets par même tag (premier tag du projet)
     const projetsInSameCategory = primaryTag 
       ? allProjets.filter(proj => {
           const pTags = proj.tags || [];
-          return pTags.some(tag => tag.name === primaryTag);
+          const hasMatchingTag = pTags.some(tag => tag.name === primaryTag);
+          console.log(`  Comparaison avec ${proj.slug}:`, {
+            projTags: pTags,
+            hasMatchingTag
+          });
+          return hasMatchingTag;
         })
       : allProjets;
     
@@ -82,6 +92,9 @@ export function generateProjetsData(allProjets: any[]): ProjetsDataMap {
       primaryTag: primaryTag,
     };
   });
+  
+  console.log('=== DONNÉES FINALES ===');
+  console.log('projetsData:', projetsData);
   
   return projetsData;
 }

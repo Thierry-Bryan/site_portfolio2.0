@@ -352,7 +352,8 @@ const filterOptions = tags.map((tag) => tag.name);
         .toLowerCase()
         .split(/\s+/)
         .filter(Boolean);
-      const match = wanted === "tous" || tags.includes(wanted);
+      // PLUS DE TOUS - seulement filtrage par tag spécifique
+      const match = tags.includes(wanted);
       if (match) {
         card.classList.remove("is-hidden");
         card.removeAttribute("style");
