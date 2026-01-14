@@ -31,9 +31,15 @@ export function generateProjetsData(allProjets: any[]): ProjetsDataMap {
   const projetsData: ProjetsDataMap = {};
   
   allProjets.forEach((p, index) => {
-    // Récupérer les tags du projet actuel
+    // Récupérer les tags du projet actuel depuis expand
     const currentTags = p.tags || [];
-    const primaryTag = currentTags[0]?.name || null;
+    const primaryTag = currentTags.length > 0 ? currentTags[0].name : null;
+    
+    // Debug pour voir les tags
+    console.log(`Projet ${p.slug}:`, {
+      tags: currentTags,
+      primaryTag: primaryTag
+    });
     
     // Filtrer les projets par même tag (premier tag du projet)
     const projetsInSameCategory = primaryTag 
@@ -42,6 +48,8 @@ export function generateProjetsData(allProjets: any[]): ProjetsDataMap {
           return pTags.some(tag => tag.name === primaryTag);
         })
       : allProjets;
+    
+    console.log(`Projets dans la catégorie "${primaryTag}":`, projetsInSameCategory.map(p => p.slug));
     
     // Trouver l'index dans la catégorie filtrée
     const categoryIndex = projetsInSameCategory.findIndex(proj => proj.slug === p.slug);
