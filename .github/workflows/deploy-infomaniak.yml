@@ -2,14 +2,14 @@ name: 🚀 Auto-Deploy to Infomaniak Node.js
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch: # Permet de déclencher manuellement
 
 jobs:
   deploy:
     name: 📦 Deploy to Production
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: 🚀 Deploy to Infomaniak Server
         uses: appleboy/ssh-action@v1.0.3
@@ -21,25 +21,25 @@ jobs:
           timeout: 60s
           script: |
             echo "🔄 Starting deployment..."
-            
+
             # Naviguer vers le dossier de l'application
             cd /srv/customer || { echo "❌ Directory /srv/customer not found"; exit 1; }
-            
+
             echo "📥 Pulling latest changes from GitHub..."
             git pull origin main || { echo "❌ Git pull failed"; exit 1; }
-            
+
             echo "📦 Installing dependencies..."
             npm install || { echo "❌ npm install failed"; exit 1; }
-            
+
             echo "🏗️ Building application..."
             npm run build || { echo "❌ Build failed"; exit 1; }
-            
+
             echo "🔄 Restarting Node.js application..."
             # Redémarrer l'application (ajuster selon votre configuration Infomaniak)
             pkill -f "node" || true
             sleep 2
             nohup npm start > app.log 2>&1 &
-            
+
             echo "✅ Deployment completed successfully!"
             echo "🌍 Site should be available at: https://portfolio.bryan-thierry.fr"
 
