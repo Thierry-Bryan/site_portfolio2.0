@@ -55,12 +55,16 @@ export function generateProjetsData(allProjets: any[]): ProjetsDataMap {
     const categoryIndex = projetsInSameCategory.findIndex(proj => proj.slug === p.slug);
     const totalInCategory = projetsInSameCategory.length;
     
-    // Navigation circulaire dans la catégorie
-    const nextIndex = (categoryIndex + 1) % totalInCategory;
-    const prevIndex = (categoryIndex - 1 + totalInCategory) % totalInCategory;
+    // Navigation circulaire dans la catégorie (seulement si plus d'un projet)
+    let nextProjet = p;
+    let prevProjet = p;
     
-    const nextProjet = projetsInSameCategory[nextIndex];
-    const prevProjet = projetsInSameCategory[prevIndex];
+    if (totalInCategory > 1) {
+      const nextIndex = (categoryIndex + 1) % totalInCategory;
+      const prevIndex = (categoryIndex - 1 + totalInCategory) % totalInCategory;
+      nextProjet = projetsInSameCategory[nextIndex];
+      prevProjet = projetsInSameCategory[prevIndex];
+    }
 
     projetsData[p.slug] = {
       slug: p.slug,
@@ -186,7 +190,7 @@ export async function handleArrowClick(
   // Mise à jour du contenu
   updateHeroContent(newProjet, heroDevice);
   updateTriangleAndBackground(newColors);
-  updateArrows(newProjet, newColors, themeToApply);
+  updateArrows(newProjet, newColors, themeToApply, projetsData);
   updateContentSection(newProjet, themeToApply);
   updateBanner(newProjet, themeToApply);
 
@@ -258,21 +262,33 @@ function updateTriangleAndBackground(newColors: { primary: string; secondary: st
 function updateArrows(
   newProjet: ProjetData,
   newColors: { primary: string; secondary: string },
-  themeToApply: string
+  themeToApply: string,
+  projetsData: ProjetsDataMap
 ): void {
   const prevWrapper = document.getElementById("prev-arrow-wrapper");
   const nextWrapper = document.getElementById("next-arrow-wrapper");
+  
+  // Vérifier s'il y a plusieurs projets dans la catégorie
+  const projetsInCategory = Object.values(projetsData).filter(p => p.primaryTag === newProjet.primaryTag);
+  const hasMultipleProjects = projetsInCategory.length > 1;
 
   if (prevWrapper) {
     prevWrapper.setAttribute("data-prev-projet", newProjet.prevId);
     const prevButton = prevWrapper.querySelector("button") as HTMLElement;
     if (prevButton) {
       prevButton.setAttribute("data-theme", themeToApply);
-      // Supprimer tout background direct
       prevButton.style.removeProperty("background");
-      // Forcer background via style inline avec !important
       prevButton.style.setProperty("background", "var(--p)", "important");
       prevButton.style.boxShadow = `-5px 5px 0 0 rgba(255, 255, 255, 1)`;
+    }
+    
+    // Gestion de l'affichage
+    if (hasMultipleProjects) {
+      prevWrapper.style.opacity = "1";
+      prevWrapper.style.pointerEvents = "auto";
+    } else {
+      prevWrapper.style.opacity = "0.3";
+      prevWrapper.style.pointerEvents = "none";
     }
   }
 
@@ -286,6 +302,15 @@ function updateArrows(
       if (nextSvg) {
         nextSvg.style.color = newColors.primary;
       }
+    }
+    
+    // Gestion de l'affichage
+    if (hasMultipleProjects) {
+      nextWrapper.style.opacity = "1";
+      nextWrapper.style.pointerEvents = "auto";
+    } else {
+      nextWrapper.style.opacity = "0.3";
+      nextWrapper.style.pointerEvents = "none";
     }
   }
 }
@@ -391,19 +416,43 @@ export function setupArrowListeners(
   projetsData: ProjetsDataMap,
   currentTheme: string
 ): void {
+  const currentId = getCurrentProjetId();
+  if (!currentId || !projetsData[currentId]) return;
+  
+  const currentProjet = projetsData[currentId];
+  const primaryTag = currentProjet.primaryTag;
+  
+  // Compter les projets dans la même catégorie
+  const projetsInCategory = Object.values(projetsData).filter(p => p.primaryTag === primaryTag);
+  const hasMultipleProjects = projetsInCategory.length > 1;
+  
   const prevArrowWrapper = document.getElementById("prev-arrow-wrapper");
   const nextArrowWrapper = document.getElementById("next-arrow-wrapper");
 
   if (prevArrowWrapper) {
-    prevArrowWrapper.addEventListener("click", () =>
-      handleArrowClick(true, projetsData, currentTheme)
-    );
+    if (hasMultipleProjects) {
+      prevArrowWrapper.style.opacity = "1";
+      prevArrowWrapper.style.pointerEvents = "auto";
+      prevArrowWrapper.addEventListener("click", () =>
+        handleArrowClick(true, projetsData, currentTheme)
+      );
+    } else {
+      prevArrowWrapper.style.opacity = "0.3";
+      prevArrowWrapper.style.pointerEvents = "none";
+    }
   }
 
   if (nextArrowWrapper) {
-    nextArrowWrapper.addEventListener("click", () =>
-      handleArrowClick(false, projetsData, currentTheme)
-    );
+    if (hasMultipleProjects) {
+      nextArrowWrapper.style.opacity = "1";
+      nextArrowWrapper.style.pointerEvents = "auto";
+      nextArrowWrapper.addEventListener("click", () =>
+        handleArrowClick(false, projetsData, currentTheme)
+      );
+    } else {
+      nextArrowWrapper.style.opacity = "0.3";
+      nextArrowWrapper.style.pointerEvents = "none";
+    }
   }
 }
 

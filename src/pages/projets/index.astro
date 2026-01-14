@@ -26,8 +26,8 @@ try {
   projets = [];
 }
 
-// Préparer les options de filtre (Tous + les tags)
-const filterOptions = ["Tous", ...tags.map((tag) => tag.name)];
+// Préparer les options de filtre (seulement les tags)
+const filterOptions = tags.map((tag) => tag.name);
 ---
 
 <Layout title="Mes Projets" theme="ca-va-trailer">
