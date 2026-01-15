@@ -31,7 +31,12 @@ jobs:
       - name: 🏗️ Build application
         run: npm run build
 
-      - name: 🚀 Deploy files via FTP
+      - name: � Copy server scripts to dist
+        run: |
+          cp restart-server.sh dist/
+          chmod +x dist/restart-server.sh
+
+      - name: �🚀 Deploy files via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
