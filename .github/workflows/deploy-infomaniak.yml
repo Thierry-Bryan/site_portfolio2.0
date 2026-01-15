@@ -38,7 +38,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
-          server-dir: /srv/customer/sites/portfolio.bryan-thierry.fr/
+          server-dir: ~/sites/portfolio.bryan-thierry.fr/
           exclude: |
             **/node_modules/**
 
@@ -49,7 +49,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           script: |
-            cd /srv/customer/sites/portfolio.bryan-thierry.fr/
+            cd ~/sites/portfolio.bryan-thierry.fr/
             ./restart-server.sh
 
       - name: ✅ Deploy completed
