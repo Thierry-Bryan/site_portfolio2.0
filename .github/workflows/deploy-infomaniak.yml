@@ -21,9 +21,9 @@ jobs:
           timeout: 120s
           script: |
             echo "🔄 Starting deployment..."
-            
+
             cd /srv/customer/sites/portfolio.bryan-thierry.fr || { echo "❌ Directory not found"; exit 1; }
-            
+
             if [ ! -d ".git" ]; then
               echo "📥 Cloning repository..."
               rm -rf * .[^.]*
@@ -42,10 +42,10 @@ jobs:
             echo "🔄 Restarting application..."
             pkill -f "node" || echo "No processes found"
             sleep 3
-            
+
             # Démarrer avec les bonnes variables d'environnement
             nohup bash -c 'HOST=0.0.0.0 PORT=4321 node dist/server/entry.mjs' > app.log 2>&1 &
             sleep 2
-            
+
             echo "✅ Deployment completed!"
             echo "🌍 Site available at: https://portfolio.bryan-thierry.fr"

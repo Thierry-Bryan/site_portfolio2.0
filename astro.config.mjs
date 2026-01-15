@@ -22,6 +22,13 @@ export default defineConfig({
     port: 3000,
   },
 
+  // Assure que les assets sont bien servis
+  vite: {
+    build: {
+      assetsInlineLimit: 0,
+    },
+  },
+
   // Optimisation des images avec Sharp
   image: {
     service: {
