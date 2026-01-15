@@ -42,5 +42,15 @@ jobs:
           exclude: |
             **/node_modules/**
 
+      - name: 🔄 Restart Node.js server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          script: |
+            cd /srv/customer/sites/portfolio.bryan-thierry.fr/
+            ./restart-server.sh
+
       - name: ✅ Deploy completed
-        run: echo "✅ Files deployed successfully!"
+        run: echo "✅ Files deployed and server restarted successfully!"
