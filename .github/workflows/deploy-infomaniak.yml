@@ -32,17 +32,22 @@ jobs:
         run: npm run build
 
       - name: 🚀 SSH Deploy with password (like deploy.ps1)
-        run: |
-          sudo apt-get update && sudo apt-get install -y sshpass
-          sshpass -p "${{ secrets.INFOMANIAK_PASSWORD }}" ssh -o StrictHostKeyChecking=no Hr2eaRMsArq_bryan_portfolio@57-106538.ssh.hosting-ik.com "
-            cd /srv/customer/sites/portfolio.bryan-thierry.fr &&
-            git pull origin main &&
-            echo 'POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app' > .env &&
-            echo 'PUBLIC_POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app' >> .env &&
-            npm install &&
-            npm run build &&
-            pkill -f 'node' || echo 'No processes found' &&
-            sleep 2 &&
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 57-106538.ssh.hosting-ik.com
+          username: Hr2eaRMsArq_bryan_portfolio
+          password: ${{ secrets.INFOMANIAK_PASSWORD }}
+          port: 22
+          timeout: 120s
+          command_timeout: 30m
+          script: |
+            cd /srv/customer/sites/portfolio.bryan-thierry.fr
+            git pull origin main
+            echo "POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" > .env
+            echo "PUBLIC_POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" >> .env
+            npm install
+            npm run build
+            pkill -f "node" || echo "No processes found"
+            sleep 2
             nohup bash -c 'HOST=0.0.0.0 PORT=4321 node dist/server/entry.mjs' > app.log 2>&1 &
-            echo '✅ Déploiement terminé!'
-          "
+            echo "✅ Déploiement terminé!"
