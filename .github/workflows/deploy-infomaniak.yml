@@ -31,59 +31,15 @@ jobs:
       - name: 🏗️ Build application
         run: npm run build
 
-      - name: 🚀 SSH Deploy - exactly like deploy.ps1
+      - name: 🚀 Deploy files via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: /srv/customer/sites/portfolio.bryan-thierry.fr/dist/
+
+      - name: 🔄 Trigger server restart
         run: |
-          # Install expect for interactive SSH
-          sudo apt-get update && sudo apt-get install -y expect
-          
-          # Create expect script
-          cat > ssh_deploy.exp << 'EOF'
-          #!/usr/bin/expect -f
-          set timeout 300
-          spawn ssh -o StrictHostKeyChecking=no Hr2eaRMsArq_bryan_portfolio@57-106538.ssh.hosting-ik.com
-          expect {
-            "password:" {
-              send "$env(SSH_PASSWORD)\r"
-            }
-            "Are you sure you want to continue connecting" {
-              send "yes\r"
-              expect "password:"
-              send "$env(SSH_PASSWORD)\r"
-            }
-          }
-          expect "$ "
-          send "cd /srv/customer/sites/portfolio.bryan-thierry.fr\r"
-          expect "$ "
-          send "git pull origin main\r"
-          expect "$ "
-          send "echo \"POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app\" > .env\r"
-          expect "$ "
-          send "echo \"PUBLIC_POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app\" >> .env\r"
-          expect "$ "
-          send "npm install\r"
-          expect "$ "
-          send "npm run build\r"
-          expect "$ "
-          send "pkill -f \"node\" || echo \"No processes found\"\r"
-          expect "$ "
-          send "pm2 stop portfolio || echo \"No PM2 process\"\r"
-          expect "$ "
-          send "pm2 delete portfolio || echo \"No PM2 process\"\r"
-          expect "$ "
-          send "sleep 2\r"
-          expect "$ "
-          send "pm2 start dist/server/entry.mjs --name portfolio --env HOST=0.0.0.0 --env PORT=4321\r"
-          expect "$ "
-          send "pm2 save\r"
-          expect "$ "
-          send "echo \"✅ Déploiement terminé!\"\r"
-          expect "$ "
-          send "pm2 status\r"
-          expect "$ "
-          send "exit\r"
-          expect eof
-          EOF
-          
-          # Run SSH deploy
-          chmod +x ssh_deploy.exp
-          SSH_PASSWORD="${{ secrets.INFOMANIAK_PASSWORD }}" ./ssh_deploy.exp
+          curl -X POST "http://portfolio.bryan-thierry.fr:3001/restart" || echo "Restart endpoint not ready"
