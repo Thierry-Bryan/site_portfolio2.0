@@ -31,10 +31,6 @@ jobs:
       - name: 🏗️ Build application
         run: npm run build
 
-      - name: � Copy server scripts to dist
-        run: |
-          cp restart-server.sh dist/
-          chmod +x dist/restart-server.sh
 
       - name: �🚀 Deploy files via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -55,7 +51,13 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           script: |
             cd ~/sites/portfolio.bryan-thierry.fr/
-            ./restart-server.sh
+            pkill -f "node.*dist/server/entry.mjs" || true
+            sleep 2
+            export POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app
+            export PUBLIC_POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app
+            nohup node dist/server/entry.mjs > app.log 2>&1 &
+            sleep 2
+            echo "✅ Server restarted"
 
       - name: ✅ Deploy completed
         run: echo "✅ Files deployed and server restarted successfully!"
