@@ -1,0 +1,33 @@
+name: 🚀 Auto-Deploy to Infomaniak Node.js
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: 📦 Deploy to Production  
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚀 Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          timeout: 120s
+          script: |
+            cd ~/sites/portfolio.bryan-thierry.fr/
+            git pull origin main
+            echo "POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" > .env
+            echo "PUBLIC_POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" >> .env
+            npm run build
+            pkill -f "node.*dist/server/entry.mjs" 2>/dev/null || echo "No process to kill"
+            sleep 2
+            nohup node dist/server/entry.mjs > app.log 2>&1 < /dev/null &
+            echo "✅ Full deployment completed!"
+
+      - name: ✅ Deploy completed
+        run: echo "✅ Full automated deployment completed!"
