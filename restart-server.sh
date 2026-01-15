@@ -9,20 +9,22 @@ echo "🔄 Surveillance démarrée..."
 restart_server() {
     echo "🚀 Redémarrage du serveur..."
     
-    # Arrêter
-    pm2 stop portfolio 2>/dev/null || echo "Pas de PM2"
-    pm2 delete portfolio 2>/dev/null || echo "Pas de PM2"
+    # Arrêter tous les processus node
     pkill -f "node" 2>/dev/null || echo "Pas de Node"
     
     # Variables env
     echo "POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" > .env
     echo "PUBLIC_POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" >> .env
     
-    # Démarrer
-    pm2 start dist/server/entry.mjs --name portfolio --env HOST=0.0.0.0 --env PORT=4321
-    pm2 save
+    # Attendre un peu
+    sleep 2
+    
+    # Démarrer le serveur en arrière-plan
+    nohup HOST=0.0.0.0 PORT=4321 node dist/server/entry.mjs > app.log 2>&1 &
     
     echo "✅ Serveur redémarré!"
+    echo "🔍 Processus Node.js actifs:"
+    ps aux | grep node | grep -v grep
 }
 
 # Démarrage initial
