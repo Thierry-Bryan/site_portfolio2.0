@@ -28,14 +28,15 @@ jobs:
           echo "POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" > .env
           echo "PUBLIC_POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" >> .env
 
-      - name: 🏗️ Build application
-        run: npm run build
-
-      - name: 🚀 Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: 🚀 Deploy and restart server via SSH
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/
-          server-dir: /srv/customer/sites/portfolio.bryan-thierry.fr/
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            cd /srv/customer/sites/portfolio.bryan-thierry.fr
+            git pull origin main
+            npm ci
+            npm run build
+            pm2 restart portfolio || pm2 start npm --name "portfolio" -- start
