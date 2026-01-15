@@ -21,11 +21,13 @@ echo "PUBLIC_POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.a
 npm install || exit 1
 npm run build || exit 1
 pkill -f "node" || echo "No processes found"
+pm2 stop portfolio || echo "No PM2 process"
+pm2 delete portfolio || echo "No PM2 process"
 sleep 2
-nohup HOST=0.0.0.0 PORT=4321 node dist/server/entry.mjs > app.log 2>&1 &
-disown
+pm2 start dist/server/entry.mjs --name portfolio --env HOST=0.0.0.0 --env PORT=4321
+pm2 save
 echo "✅ Déploiement terminé!"
-ps aux | grep node
+pm2 status
 '@
 
 # Exécution SSH
