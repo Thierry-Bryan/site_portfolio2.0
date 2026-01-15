@@ -20,7 +20,9 @@ restart_server() {
     sleep 2
     
     # Démarrer le serveur en arrière-plan
-    nohup HOST=0.0.0.0 PORT=4321 node dist/server/entry.mjs > app.log 2>&1 &
+    export HOST=0.0.0.0
+    export PORT=4321
+    nohup node dist/server/entry.mjs > app.log 2>&1 &
     
     echo "✅ Serveur redémarré!"
     echo "🔍 Processus Node.js actifs:"
