@@ -22,8 +22,10 @@ npm install || exit 1
 npm run build || exit 1
 pkill -f "node" || echo "No processes found"
 sleep 2
-HOST=0.0.0.0 PORT=4321 node dist/server/entry.mjs &
+nohup HOST=0.0.0.0 PORT=4321 node dist/server/entry.mjs > app.log 2>&1 &
+disown
 echo "✅ Déploiement terminé!"
+ps aux | grep node
 '@
 
 # Exécution SSH
