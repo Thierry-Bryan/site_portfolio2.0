@@ -40,9 +40,17 @@ jobs:
           cat > ssh_deploy.exp << 'EOF'
           #!/usr/bin/expect -f
           set timeout 300
-          spawn ssh Hr2eaRMsArq_bryan_portfolio@57-106538.ssh.hosting-ik.com
-          expect "password:"
-          send "$env(SSH_PASSWORD)\r"
+          spawn ssh -o StrictHostKeyChecking=no Hr2eaRMsArq_bryan_portfolio@57-106538.ssh.hosting-ik.com
+          expect {
+            "password:" {
+              send "$env(SSH_PASSWORD)\r"
+            }
+            "Are you sure you want to continue connecting" {
+              send "yes\r"
+              expect "password:"
+              send "$env(SSH_PASSWORD)\r"
+            }
+          }
           expect "$ "
           send "cd /srv/customer/sites/portfolio.bryan-thierry.fr\r"
           expect "$ "
