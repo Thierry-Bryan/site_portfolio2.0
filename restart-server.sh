@@ -1,5 +1,5 @@
 #!/bin/bash
-# Surveillance des fichiers et redémarrage automatique
+# Surveillance simple sans inotify
 
 cd /srv/customer/sites/portfolio.bryan-thierry.fr
 
@@ -25,11 +25,22 @@ restart_server() {
     echo "✅ Serveur redémarré!"
 }
 
-# Surveillance des fichiers dist/
+# Démarrage initial
+restart_server
+
+# Surveillance par polling simple
+LAST_MOD=""
 while true; do
-    inotifywait -r -e modify,create,delete dist/ 2>/dev/null
-    echo "📁 Changement détecté dans dist/"
-    sleep 3
-    restart_server
-    sleep 10
+    if [ -d "dist/" ]; then
+        CURRENT_MOD=$(find dist/ -type f -exec stat -c %Y {} \; 2>/dev/null | sort -n | tail -1)
+        if [ "$CURRENT_MOD" != "$LAST_MOD" ] && [ -n "$CURRENT_MOD" ]; then
+            if [ -n "$LAST_MOD" ]; then
+                echo "📁 Changement détecté dans dist/"
+                sleep 2
+                restart_server
+            fi
+            LAST_MOD=$CURRENT_MOD
+        fi
+    fi
+    sleep 5
 done
