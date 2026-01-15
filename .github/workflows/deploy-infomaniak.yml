@@ -60,7 +60,7 @@ jobs:
           expect "$ "
           send "sleep 2\r"
           expect "$ "
-          send "nohup bash -c 'HOST=0.0.0.0 PORT=4321 node dist/server/entry.mjs' > app.log 2>&1 &\r"
+          send "HOST=0.0.0.0 PORT=4321 node dist/server/entry.mjs &\r"
           expect "$ "
           send "echo \"✅ Déploiement terminé!\"\r"
           expect "$ "

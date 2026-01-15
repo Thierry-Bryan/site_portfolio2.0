@@ -22,7 +22,7 @@ npm install || exit 1
 npm run build || exit 1
 pkill -f "node" || echo "No processes found"
 sleep 2
-nohup bash -c 'HOST=0.0.0.0 PORT=4321 node dist/server/entry.mjs' > app.log 2>&1 &
+HOST=0.0.0.0 PORT=4321 node dist/server/entry.mjs &
 echo "✅ Déploiement terminé!"
 '@
 
