@@ -31,22 +31,11 @@ jobs:
       - name: 🏗️ Build application
         run: npm run build
 
-      - name: 🚀 Deploy via FTP + SSH restart
+      - name: 🚀 Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
-          server-dir: /srv/customer/sites/portfolio.bryan-thierry.fr/dist/
-
-      - name: 🔄 Restart Node.js server via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.INFOMANIAK_HOST }}
-          username: ${{ secrets.INFOMANIAK_USER }}
-          key: ${{ secrets.INFOMANIAK_SSH_KEY }}
-          port: ${{ secrets.INFOMANIAK_PORT }}
-          script: |
-            cd /srv/customer/sites/portfolio.bryan-thierry.fr
-            pm2 restart portfolio || pm2 start npm --name "portfolio" -- start
+          server-dir: /srv/customer/sites/portfolio.bryan-thierry.fr/
