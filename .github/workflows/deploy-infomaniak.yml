@@ -21,9 +21,9 @@ jobs:
           timeout: 120s
           script: |
             echo "🔄 Starting deployment..."
-
+            
             cd /srv/customer/sites/portfolio.bryan-thierry.fr || { echo "❌ Directory not found"; exit 1; }
-
+            
             if [ ! -d ".git" ]; then
               echo "📥 Cloning repository..."
               rm -rf * .[^.]*
@@ -33,15 +33,14 @@ jobs:
               git pull origin main || { echo "❌ Git pull failed"; exit 1; }
             fi
 
+            echo "📄 Creating .env file..."
+            cat > .env << EOF
+            POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app
+            PUBLIC_POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app
+            EOF
+
             echo "📦 Installing dependencies..."
             npm install || { echo "❌ npm install failed"; exit 1; }
-
-            echo "🔧 Creating .env file..."
-            cat > .env << 'ENV_EOF'
-# URL de ton instance PocketBase
-POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app
-PUBLIC_POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app
-ENV_EOF
 
             echo "🏗️ Building application..."
             npm run build || { echo "❌ Build failed"; exit 1; }
@@ -49,10 +48,9 @@ ENV_EOF
             echo "🔄 Restarting application..."
             pkill -f "node" || echo "No processes found"
             sleep 3
-
-            # Démarrer avec les bonnes variables d'environnement
+            
             nohup bash -c 'HOST=0.0.0.0 PORT=4321 node dist/server/entry.mjs' > app.log 2>&1 &
             sleep 2
-
+            
             echo "✅ Deployment completed!"
             echo "🌍 Site available at: https://portfolio.bryan-thierry.fr"
