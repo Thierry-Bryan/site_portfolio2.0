@@ -1,25 +1,22 @@
 #!/bin/bash
-# Script à placer sur le serveur pour auto-déploiement
+# Script auto-deploy simple - vérification périodique
 
 cd /srv/customer/sites/portfolio.bryan-thierry.fr
 
-# Vérifier s'il y a des changements toutes les 30 secondes
 while true; do
-    # Fetch les derniers changements
-    git fetch origin main
+    git fetch origin main >/dev/null 2>&1
     
-    # Comparer avec la version locale
-    LOCAL=$(git rev-parse HEAD)
-    REMOTE=$(git rev-parse origin/main)
+    LOCAL=$(git rev-parse HEAD 2>/dev/null)
+    REMOTE=$(git rev-parse origin/main 2>/dev/null)
     
-    if [ $LOCAL != $REMOTE ]; then
-        echo "🚀 Nouveau déploiement détecté..."
+    if [ "$LOCAL" != "$REMOTE" ]; then
+        echo "🚀 Mise à jour détectée..."
         git pull origin main
-        npm ci
-        npm run build
-        pm2 restart portfolio
-        echo "✅ Déploiement terminé !"
+        npm ci >/dev/null 2>&1
+        npm run build >/dev/null 2>&1
+        pm2 restart portfolio >/dev/null 2>&1 || pm2 start npm --name "portfolio" -- start >/dev/null 2>&1
+        echo "✅ Déploiement terminé!"
     fi
     
-    sleep 30
+    sleep 10
 done
