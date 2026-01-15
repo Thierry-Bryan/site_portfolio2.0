@@ -9,7 +9,7 @@ Pour que l'auto-déploiement fonctionne, vous devez configurer ces secrets dans 
 1. **Allez sur GitHub** : https://github.com/Thierry-Bryan/site_portfolio2.0
 2. **Settings** → **Secrets and variables** → **Actions**  
 3. **Cliquez "New repository secret"**
-
+ 
 ### 🔐 Secrets à ajouter : 
 
 | Secret | Description | Exemple |
