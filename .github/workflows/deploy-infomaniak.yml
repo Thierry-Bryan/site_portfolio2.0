@@ -38,7 +38,9 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
-          server-dir: /srv/customer/sites/portfolio.bryan-thierry.fr/dist/
+          server-dir: /srv/customer/sites/portfolio.bryan-thierry.fr/
+          exclude: |
+            **/node_modules/**
 
       - name: ✅ Deploy completed
         run: echo "✅ Files deployed successfully!"
