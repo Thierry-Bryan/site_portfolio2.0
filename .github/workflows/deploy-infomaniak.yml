@@ -49,15 +49,16 @@ jobs:
           host: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          timeout: 60s
+          command_timeout: 30s
           script: |
             cd ~/sites/portfolio.bryan-thierry.fr/
-            pkill -f "node.*dist/server/entry.mjs" || true
-            sleep 2
-            export POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app
-            export PUBLIC_POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app
-            nohup node dist/server/entry.mjs > app.log 2>&1 &
-            sleep 2
-            echo "✅ Server restarted"
+            pkill -f "node.*dist/server/entry.mjs" 2>/dev/null || echo "No process to kill"
+            sleep 1
+            echo "POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" > .env
+            echo "PUBLIC_POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" >> .env
+            nohup node dist/server/entry.mjs > app.log 2>&1 < /dev/null &
+            echo "✅ Server restarted successfully"
 
       - name: ✅ Deploy completed
         run: echo "✅ Files deployed and server restarted successfully!"
