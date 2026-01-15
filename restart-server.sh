@@ -1,33 +1,35 @@
 #!/bin/bash
-# Auto-restart simple et efficace
+# Surveillance des fichiers et redémarrage automatique
 
-PORT=3001
-echo "🔗 Serveur de redémarrage sur port $PORT"
+cd /srv/customer/sites/portfolio.bryan-thierry.fr
 
-# Serveur de redémarrage simple
+echo "🔄 Surveillance démarrée..."
+
+# Fonction de redémarrage
+restart_server() {
+    echo "🚀 Redémarrage du serveur..."
+    
+    # Arrêter
+    pm2 stop portfolio 2>/dev/null || echo "Pas de PM2"
+    pm2 delete portfolio 2>/dev/null || echo "Pas de PM2"
+    pkill -f "node" 2>/dev/null || echo "Pas de Node"
+    
+    # Variables env
+    echo "POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" > .env
+    echo "PUBLIC_POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" >> .env
+    
+    # Démarrer
+    pm2 start dist/server/entry.mjs --name portfolio --env HOST=0.0.0.0 --env PORT=4321
+    pm2 save
+    
+    echo "✅ Serveur redémarré!"
+}
+
+# Surveillance des fichiers dist/
 while true; do
-  echo "HTTP/1.1 200 OK\r\nContent-Length: 2\r\n\r\nOK" | nc -l -p $PORT
-  
-  echo "🚀 Redémarrage déclenché..."
-  
-  # Aller dans le bon répertoire
-  cd /srv/customer/sites/portfolio.bryan-thierry.fr
-  
-  # Arrêter les processus
-  pm2 stop portfolio 2>/dev/null || echo "Pas de PM2"
-  pm2 delete portfolio 2>/dev/null || echo "Pas de PM2"
-  pkill -f "node" 2>/dev/null || echo "Pas de Node"
-  
-  # Variables d'environnement
-  echo "POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" > .env
-  echo "PUBLIC_POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" >> .env
-  
-  # Redémarrer
-  pm2 start dist/server/entry.mjs --name portfolio --env HOST=0.0.0.0 --env PORT=4321
-  pm2 save
-  
-  echo "✅ Serveur redémarré!"
-  pm2 status
-  
-  sleep 5
+    inotifywait -r -e modify,create,delete dist/ 2>/dev/null
+    echo "📁 Changement détecté dans dist/"
+    sleep 3
+    restart_server
+    sleep 10
 done
