@@ -41,10 +41,13 @@ jobs:
             # Créer le dossier s'il n'existe pas
             mkdir -p /var/www/portfolio
             
+            # Arrêter PM2 temporairement
+            pm2 stop portfolio || true
+            
             # Nettoyer l'ancien build
             rm -rf /var/www/portfolio/*
 
-      - name: 📤 Upload build files
+      - name: 📤 Upload dist folder
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -54,7 +57,16 @@ jobs:
           target: "/var/www/portfolio"
           strip_components: 1
 
-      - name: 🔄 Restart application with PM2
+      - name: 📤 Upload package files
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "package.json,package-lock.json"
+          target: "/var/www/portfolio"
+
+      - name: 🔄 Install dependencies and restart
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -63,14 +75,16 @@ jobs:
           script: |
             cd /var/www/portfolio
             
-            # Copier package.json si nécessaire
-            # (à adapter selon ton projet)
+            # Installer seulement les dépendances de production
+            npm ci --omit=dev
             
             # Redémarrer avec PM2
-            pm2 restart portfolio || pm2 start npm --name "portfolio" -- run preview -- --host 0.0.0.0 --port 3000
-            
-            # Sauvegarder la config PM2
+            cd /var/www/portfolio/server
+            pm2 delete portfolio || true
+            pm2 start entry.mjs --name "portfolio"
             pm2 save
+            
+            echo "✅ Deployment completed!"
 
       - name: ✅ Deploy completed
         run: echo "✅ Deployment to IONOS VPS completed successfully!"
