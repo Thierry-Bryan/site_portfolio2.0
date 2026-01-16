@@ -137,13 +137,17 @@ jobs:
             # Installer seulement les dépendances de production
             npm ci --omit=dev
 
+            # Créer .env pour production
+            echo "POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" > .env
+            echo "PUBLIC_POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" >> .env
+            
             # Redémarrer avec PM2 (port 4321 pour Astro server)
-            cd /var/www/portfolio/server
             pm2 delete portfolio || true
-            pm2 start entry.mjs --name "portfolio" -- --host=0.0.0.0 --port=4321
+            cd /var/www/portfolio
+            pm2 start server/entry.mjs --name "portfolio" -- --host 0.0.0.0 --port 4321
             pm2 save
-
-            echo "✅ Deployment completed!"
-
-      - name: ✅ Deploy completed
-        run: echo "✅ Deployment to IONOS VPS completed successfully!"
+            
+            # Vérifier que l'app démarre bien
+            sleep 5
+            pm2 status
+            pm2 logs portfolio --lines 10
