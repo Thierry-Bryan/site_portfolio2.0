@@ -82,19 +82,19 @@ jobs:
           script: |
             # Stop existing PocketBase
             sudo pkill -f pocketbase || true
-            
+
             # Create pocketbase directory and set permissions
             sudo mkdir -p /var/www/pocketbase
             sudo cp -r /var/www/portfolio/Backend/pocketbase/* /var/www/pocketbase/
             sudo chown -R www-data:www-data /var/www/pocketbase
             sudo chmod +x /var/www/pocketbase/pocketbase
-            
+
             # Start PocketBase in background
             sudo -u www-data nohup /var/www/pocketbase/pocketbase serve --http=127.0.0.1:8090 --dir=/var/www/pocketbase/pb_data > /var/log/pocketbase.log 2>&1 &
-            
+
             # Wait for PocketBase to start
             sleep 3
-            
+
             # Check if PocketBase is running
             if curl -f http://127.0.0.1:8090/_/ > /dev/null 2>&1; then
               echo "✅ PocketBase started successfully"
@@ -146,7 +146,7 @@ jobs:
                 }
             }
             NGINX_EOF
-            
+
             # Enable nginx site and reload
             sudo ln -sf /etc/nginx/sites-available/portfolio /etc/nginx/sites-enabled/
             sudo rm -f /etc/nginx/sites-enabled/default
@@ -162,15 +162,15 @@ jobs:
           script: |
             cd /var/www/portfolio
             npm ci --omit=dev
-            
+
             cd /var/www/portfolio/server
             pm2 delete portfolio || true
             pm2 start entry.mjs --name "portfolio"
             pm2 save
-            
+
             sleep 2
             pm2 list
-            
+
             echo "✅ Deployment completed!"
 
       - name: ✅ Deploy completed
