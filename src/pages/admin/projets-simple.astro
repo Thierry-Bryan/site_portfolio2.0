@@ -1,0 +1,244 @@
+---
+import LayoutAdmin from '../../layouts/LayoutAdmin.astro';
+import { pb } from '../../utils/pb';
+
+let message = '';
+let messageType = 'success';
+let projets = [];
+let tags = [];
+let technologies = [];
+let selectedProjet = null;
+
+try {
+  projets = await pb.collection('projets').getFullList({
+    sort: '-created',
+    expand: 'tags,technologies'
+  });
+  tags = await pb.collection('tags').getFullList({ sort: 'nom' });
+  technologies = await pb.collection('technologies').getFullList({ sort: 'nom' });
+} catch (error) {
+  message = `Erreur: ${error.message}`;
+  messageType = 'error';
+}
+
+if (Astro.request.method === 'POST') {
+  try {
+    const formData = await Astro.request.formData();
+    const action = formData.get('action');
+    
+    if (action === 'create' || action === 'update') {
+      const data = {
+        titre: formData.get('titre'),
+        description: formData.get('description'),
+        contenu: formData.get('contenu'),
+        lien_github: formData.get('lien_github'),
+        lien_demo: formData.get('lien_demo'),
+        statut: formData.get('statut'),
+        ordre_affichage: parseInt(formData.get('ordre_affichage')) || 0,
+        tags: formData.getAll('tags'),
+        technologies: formData.getAll('technologies')
+      };
+      
+      const imageFile = formData.get('image');
+      if (imageFile && imageFile.size > 0) {
+        data.image = imageFile;
+      }
+      
+      if (action === 'create') {
+        await pb.collection('projets').create(data);
+        message = 'Projet créé avec succès!';
+      } else {
+        const id = formData.get('id');
+        await pb.collection('projets').update(id, data);
+        message = 'Projet modifié avec succès!';
+      }
+      
+      return Astro.redirect('/admin/projets-simple');
+    }
+    
+    if (action === 'delete') {
+      const id = formData.get('id');
+      await pb.collection('projets').delete(id);
+      message = 'Projet supprimé avec succès!';
+      return Astro.redirect('/admin/projets-simple');
+    }
+    
+    if (action === 'edit') {
+      const id = formData.get('id');
+      selectedProjet = await pb.collection('projets').getOne(id, {
+        expand: 'tags,technologies'
+      });
+    }
+    
+  } catch (error) {
+    message = `Erreur: ${error.message}`;
+    messageType = 'error';
+  }
+}
+---
+
+<LayoutAdmin title="Projets">
+  <div class="p-6">
+    <h1 class="text-2xl font-bold mb-6">Gestion des Projets</h1>
+
+    {message && (
+      <div class={`alert ${messageType === 'error' ? 'alert-error' : 'alert-success'} mb-4`}>
+        <span>{message}</span>
+      </div>
+    )}
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Colonne gauche -->
+      <div>
+        {!selectedProjet ? (
+          <div>
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-xl font-semibold">Projets</h2>
+              <form method="POST">
+                <input type="hidden" name="action" value="edit" />
+                <input type="hidden" name="id" value="" />
+                <button type="submit" class="btn btn-primary">Nouveau</button>
+              </form>
+            </div>
+            
+            <div class="space-y-4">
+              {projets.map((projet) => (
+                <div class="card bg-base-100 border">
+                  <div class="card-body p-4">
+                    <h3 class="card-title text-lg">{projet.titre}</h3>
+                    <p class="text-sm text-gray-600 mb-2">{projet.description}</p>
+                    <div class="flex justify-between items-center">
+                      <span class="badge">{projet.statut}</span>
+                      <div class="flex gap-2">
+                        <form method="POST" class="inline">
+                          <input type="hidden" name="action" value="edit" />
+                          <input type="hidden" name="id" value={projet.id} />
+                          <button type="submit" class="btn btn-sm">Modifier</button>
+                        </form>
+                        <form method="POST" class="inline" onsubmit="return confirm('Supprimer ?')">
+                          <input type="hidden" name="action" value="delete" />
+                          <input type="hidden" name="id" value={projet.id} />
+                          <button type="submit" class="btn btn-sm btn-error">Supprimer</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div>
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-xl font-semibold">
+                {selectedProjet.id ? 'Modifier' : 'Nouveau'}
+              </h2>
+              <a href="/admin/projets-simple" class="btn btn-ghost btn-sm">Retour</a>
+            </div>
+            
+            <form method="POST" enctype="multipart/form-data" class="space-y-4">
+              <input type="hidden" name="action" value={selectedProjet.id ? 'update' : 'create'} />
+              {selectedProjet.id && <input type="hidden" name="id" value={selectedProjet.id} />}
+              
+              <div>
+                <label class="label">Titre</label>
+                <input type="text" name="titre" value={selectedProjet?.titre || ''} class="input input-bordered w-full" required />
+              </div>
+              
+              <div>
+                <label class="label">Description</label>
+                <textarea name="description" class="textarea textarea-bordered w-full">{selectedProjet?.description || ''}</textarea>
+              </div>
+              
+              <div>
+                <label class="label">Contenu</label>
+                <textarea name="contenu" class="textarea textarea-bordered w-full h-32">{selectedProjet?.contenu || ''}</textarea>
+              </div>
+              
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="label">GitHub</label>
+                  <input type="url" name="lien_github" value={selectedProjet?.lien_github || ''} class="input input-bordered w-full" />
+                </div>
+                <div>
+                  <label class="label">Démo</label>
+                  <input type="url" name="lien_demo" value={selectedProjet?.lien_demo || ''} class="input input-bordered w-full" />
+                </div>
+              </div>
+              
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="label">Statut</label>
+                  <select name="statut" class="select select-bordered w-full">
+                    <option value="brouillon" selected={selectedProjet?.statut === 'brouillon'}>Brouillon</option>
+                    <option value="publié" selected={selectedProjet?.statut === 'publié'}>Publié</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="label">Ordre</label>
+                  <input type="number" name="ordre_affichage" value={selectedProjet?.ordre_affichage || 0} class="input input-bordered w-full" />
+                </div>
+              </div>
+              
+              <div>
+                <label class="label">Image</label>
+                <input type="file" name="image" accept="image/*" class="file-input file-input-bordered w-full" />
+              </div>
+              
+              <div>
+                <label class="label">Tags</label>
+                <div class="flex flex-wrap gap-2">
+                  {tags.map((tag) => (
+                    <label class="label cursor-pointer">
+                      <input type="checkbox" name="tags" value={tag.id}
+                             checked={selectedProjet?.expand?.tags?.some(t => t.id === tag.id)} class="checkbox" />
+                      <span class="label-text ml-2">{tag.nom}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              
+              <div>
+                <label class="label">Technologies</label>
+                <div class="flex flex-wrap gap-2">
+                  {technologies.map((tech) => (
+                    <label class="label cursor-pointer">
+                      <input type="checkbox" name="technologies" value={tech.id}
+                             checked={selectedProjet?.expand?.technologies?.some(t => t.id === tech.id)} class="checkbox" />
+                      <span class="label-text ml-2">{tech.nom}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              
+              <div class="flex gap-2">
+                <button type="submit" class="btn btn-primary flex-1">
+                  {selectedProjet?.id ? 'Modifier' : 'Créer'}
+                </button>
+                <a href="/admin/projets-simple" class="btn">Annuler</a>
+              </div>
+            </form>
+          </div>
+        )}
+      </div>
+      
+      <!-- Colonne droite - Aperçu -->
+      <div>
+        {selectedProjet && (
+          <div>
+            <h2 class="text-xl font-semibold mb-4">Aperçu</h2>
+            <div class="border rounded overflow-hidden" style="height: 600px;">
+              <iframe src={`/projets/${selectedProjet.id}`} class="w-full h-full" title="Aperçu"></iframe>
+            </div>
+          </div>
+        )}
+        
+        {!selectedProjet && (
+          <div class="flex items-center justify-center h-64 border rounded bg-gray-50">
+            <p class="text-gray-500">Sélectionnez un projet pour voir l'aperçu</p>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</LayoutAdmin>
