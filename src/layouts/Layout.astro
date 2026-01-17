@@ -13,10 +13,13 @@ interface Props {
 }
 
 const { title = "Portfolio", theme = "basique", firstSectionTheme, dynamicCSS } = Astro.props;
+
+// Définir le thème initial pour le SSR
+const initialTheme = theme;
 ---
 
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-theme={initialTheme}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
