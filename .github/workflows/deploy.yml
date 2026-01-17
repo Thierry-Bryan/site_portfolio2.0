@@ -70,7 +70,8 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            sudo bash -c 'cat > /etc/nginx/sites-available/portfolio << '\''NGINX_EOF'\''
+            # Create nginx config file
+            sudo tee /etc/nginx/sites-available/portfolio > /dev/null << 'NGINX_EOF'
             server {
                 listen 80;
                 server_name portfolio.bryan-thierry.fr 87.106.23.57;
@@ -79,7 +80,7 @@ jobs:
                     proxy_pass http://127.0.0.1:3000;
                     proxy_http_version 1.1;
                     proxy_set_header Upgrade $http_upgrade;
-                    proxy_set_header Connection '\''upgrade'\'';
+                    proxy_set_header Connection 'upgrade';
                     proxy_set_header Host $host;
                     proxy_set_header X-Real-IP $remote_addr;
                     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -90,7 +91,7 @@ jobs:
                 location /_/ {
                     rewrite ^/_/(.*)$ /$1 break;
                     
-                    proxy_set_header Connection '\'''\'';
+                    proxy_set_header Connection '';
                     proxy_http_version 1.1;
                     proxy_buffering off;
                     proxy_cache off;
@@ -103,11 +104,13 @@ jobs:
                     proxy_pass http://127.0.0.1:8090/;
                 }
             }
-            NGINX_EOF'
+            NGINX_EOF
             
+            # Enable nginx site and reload
             sudo ln -sf /etc/nginx/sites-available/portfolio /etc/nginx/sites-enabled/
             sudo rm -f /etc/nginx/sites-enabled/default
             sudo nginx -t && sudo systemctl reload nginx
+            echo "✅ Nginx configured successfully"
 
       - name: 🔄 Install dependencies and restart
         uses: appleboy/ssh-action@v1.0.3
