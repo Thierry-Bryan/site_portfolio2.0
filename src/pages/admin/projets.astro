@@ -395,8 +395,8 @@ if (Astro.request.method === "POST") {
     </div>
   </dialog>
 
-  <script define:vars={{ projets, tags, technologies }}>
-    function openCreateModal() {
+  <script is:inline define:vars={{ projets, tags, technologies }}>
+    window.openCreateModal = function() {
       document.getElementById("modal-title").textContent = "Nouveau Projet";
       document.getElementById("form-action").value = "create";
       document.getElementById("projet-id").value = "";
@@ -405,7 +405,7 @@ if (Astro.request.method === "POST") {
       document.getElementById("edit-modal").showModal();
     }
 
-    async function openEditModal(projetId) {
+    window.openEditModal = function(projetId) {
       const projet = projets.find((p) => p.id === projetId);
       if (!projet) return;
 
@@ -443,13 +443,12 @@ if (Astro.request.method === "POST") {
       document.getElementById("edit-modal").showModal();
     }
 
-    function openPreviewModal(projetId) {
-      document.getElementById("full-preview-iframe").src =
-        `/projets/${projetId}`;
+    window.openPreviewModal = function(projetId) {
+      document.getElementById("full-preview-iframe").src = `/projets/${projetId}`;
       document.getElementById("preview-modal").showModal();
     }
 
-    async function deleteProjet(projetId) {
+    window.deleteProjet = function(projetId) {
       if (!confirm("Êtes-vous sûr de vouloir supprimer ce projet ?")) return;
 
       const form = document.createElement("form");
