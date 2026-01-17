@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import BackgroundComics from "../../components/BackgroundComics.astro";
-import { pb, getFileUrl } from "../../utils/pb.ts";
+import { pb, getFileUrl, generateThemeCSS } from "../../utils/pb.ts";
 
 // Récupérer les tags depuis PocketBase avec gestion d'erreurs
 let tags = [];
@@ -19,7 +19,7 @@ let projets = [];
 try {
   projets = await pb.collection("projets").getFullList({
     sort: "order",
-    expand: "tags,technologies",
+    expand: "tags,technologies,theme",
   });
 } catch (error) {
   console.log("Erreur lors de la récupération des projets:", error);
@@ -28,9 +28,20 @@ try {
 
 // Préparer les options de filtre (seulement les tags)
 const filterOptions = tags.map((tag) => tag.name);
+
+// Générer le CSS pour tous les thèmes utilisés
+const allThemes = new Set<any>();
+projets.forEach(p => {
+  const theme = Array.isArray(p.expand?.theme) ? p.expand.theme[0] : p.expand?.theme;
+  if (theme) allThemes.add(theme);
+});
+let dynamicThemeCSS = "";
+allThemes.forEach(theme => {
+  dynamicThemeCSS += generateThemeCSS(theme);
+});
 ---
 
-<Layout title="Mes Projets" theme="ca-va-trailer">
+<Layout title="Mes Projets" theme="ca-va-trailer" dynamicCSS={dynamicThemeCSS}>
   <section class="bg-[var(--b1)] min-h-screen py-30 px-4 md:px-6">
     <div class="max-w-7xl mx-auto">
       <!-- Header -->
@@ -122,6 +133,10 @@ const filterOptions = tags.map((tag) => tag.name);
 
             // Récupérer les technologies depuis expand
             const projetTechnologies = projet.expand?.technologies || [];
+            
+            // Extraire le nom du thème depuis expand
+            const themeData = Array.isArray(projet.expand?.theme) ? projet.expand.theme[0] : projet.expand?.theme;
+            const themeName = themeData?.name || 'basique';
 
             return (
               <a
@@ -134,9 +149,9 @@ const filterOptions = tags.map((tag) => tag.name);
                 <div class="grid-view-content border-2 border-[var(--bc)] bg-[var(--b1)] h-full flex flex-col group">
                   <div
                     class="w-full h-[220px] flex items-center justify-center overflow-visible relative cursor-pointer"
-                    data-theme={projet.theme}
+                    data-theme={themeName}
                   >
-                    <BackgroundComics theme={projet.theme} />
+                    <BackgroundComics theme={themeName} />
                     <img
                       src={
                         projet.hero_image

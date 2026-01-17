@@ -4,7 +4,7 @@ import Card from "../components/Card.astro";
 import Button from "../components/Button.astro";
 import Hero from "../components/Hero.astro";
 import BackgroundComics from "../components/BackgroundComics.astro";
-import { getProjets, getFileUrl } from "../utils/pb.ts";
+import { getProjets, getFileUrl, generateThemeCSS } from "../utils/pb.ts";
 import { Image } from "astro:assets";
 
 const theme = "basique";
@@ -22,9 +22,20 @@ try {
   );
   isPocketBaseDown = true;
 }
+
+// Générer le CSS pour tous les thèmes utilisés
+const allThemes = new Set<any>();
+projets.forEach(p => {
+  const theme = Array.isArray(p.expand?.theme) ? p.expand.theme[0] : p.expand?.theme;
+  if (theme) allThemes.add(theme);
+});
+let dynamicThemeCSS = "";
+allThemes.forEach(theme => {
+  dynamicThemeCSS += generateThemeCSS(theme);
+});
 ---
 
-<Layout theme={theme} title="Accueil - Portfolio Bryan Thierry">
+<Layout theme={theme} title="Accueil - Portfolio Bryan Thierry" dynamicCSS={dynamicThemeCSS}>
   <Hero />
   <section class="pt-15 pb-20">
     <div class="flex items-center justify-center mb-5">
@@ -91,6 +102,9 @@ try {
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4 place-items-center">
             {projets.map((projet) => {
               const imageUrl = getFileUrl(projet, projet.hero_image);
+              // Extraire le nom du thème depuis expand
+              const themeData = Array.isArray(projet.expand?.theme) ? projet.expand.theme[0] : projet.expand?.theme;
+              const themeName = themeData?.name || 'basique';
               return (
                 <a
                   href={`/projets/${projet.slug}`}
@@ -98,9 +112,9 @@ try {
                 >
                   <div
                     class="w-full max-w-[350px] h-[220px] flex items-center justify-center overflow-visible relative group cursor-pointer"
-                    data-theme={projet.theme}
+                    data-theme={themeName}
                   >
-                    <BackgroundComics theme={projet.theme} />
+                    <BackgroundComics theme={themeName} />
                     <img
                       src={imageUrl}
                       alt={projet.title}
