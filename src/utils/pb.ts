@@ -29,7 +29,7 @@ export async function getProjets() {
     try {
         console.log('Tentative de récupération des projets...');
         const records = await pb.collection("projets").getFullList({
-            filter: 'statut = "publié"',
+            filter: "published = true",
             sort: "-created",
             expand: "tags,technologies,theme",
         });
