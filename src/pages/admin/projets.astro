@@ -1,533 +1,347 @@
 ---
-import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
+import LayoutAdmin from '../../layouts/LayoutAdmin.astro';
+import { pb } from '../../utils/pb';
+
+let message = '';
+let messageType = 'success';
+let projets = [];
+let tags = [];
+let technologies = [];
+
+try {
+  projets = await pb.collection('projets').getFullList({
+    sort: '-created',
+    expand: 'tags,technologies'
+  });
+  tags = await pb.collection('tags').getFullList({ sort: 'nom' });
+  technologies = await pb.collection('technologies').getFullList({ sort: 'nom' });
+} catch (error) {
+  message = `Erreur: ${error.message}`;
+  messageType = 'error';
+}
+
+if (Astro.request.method === 'POST') {
+  try {
+    const formData = await Astro.request.formData();
+    const action = formData.get('action');
+    
+    if (action === 'create' || action === 'update') {
+      const data = {
+        titre: formData.get('titre'),
+        description: formData.get('description'),
+        contenu: formData.get('contenu'),
+        lien_github: formData.get('lien_github'),
+        lien_demo: formData.get('lien_demo'),
+        statut: formData.get('statut'),
+        ordre_affichage: parseInt(formData.get('ordre_affichage')) || 0,
+        tags: formData.getAll('tags'),
+        technologies: formData.getAll('technologies')
+      };
+      
+      const imageFile = formData.get('image');
+      if (imageFile && imageFile.size > 0) {
+        data.image = imageFile;
+      }
+      
+      if (action === 'create') {
+        await pb.collection('projets').create(data);
+        message = 'Projet créé avec succès!';
+      } else {
+        const id = formData.get('id');
+        await pb.collection('projets').update(id, data);
+        message = 'Projet modifié avec succès!';
+      }
+      
+      return Astro.redirect('/admin/projets');
+    }
+    
+    if (action === 'delete') {
+      const id = formData.get('id');
+      await pb.collection('projets').delete(id);
+      message = 'Projet supprimé avec succès!';
+      return Astro.redirect('/admin/projets');
+    }
+    
+  } catch (error) {
+    message = `Erreur: ${error.message}`;
+    messageType = 'error';
+  }
+}
 ---
 
-<LayoutAdmin title="Admin - Projets">
-  <div id="admin-content" class="hidden">
-    <!-- Sidebar -->
-    <aside class="fixed left-0 top-0 h-screen w-64 bg-[var(--n)] text-[var(--nc)] flex flex-col z-50">
-      <div class="p-6 border-b border-[var(--nc)]/20">
-        <h1 class="text-xl font-medium uppercase tracking-wider">Portfolio Admin</h1>
+<LayoutAdmin title="Projets">
+  <div class="min-h-screen bg-gradient-to-br from-base-100 to-base-200 p-8">
+    <div class="max-w-7xl mx-auto">
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-8">
+        <div>
+          <h1 class="text-4xl font-black uppercase tracking-wider text-base-content">Projets</h1>
+          <p class="text-base-content/60 mt-2">Gérez vos projets de manière visuelle</p>
+        </div>
+        <button 
+          onclick="openCreateModal()"
+          class="btn btn-primary btn-lg border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all uppercase font-black"
+        >
+          + Nouveau Projet
+        </button>
       </div>
-      <nav class="flex-1 p-4 space-y-1">
-        <a href="/admin/dashboard" class="block px-4 py-2 hover:bg-[var(--nc)] hover:text-[var(--n)] transition-colors uppercase text-sm">Dashboard</a>
-        <a href="/admin/projets" class="block px-4 py-2 bg-[var(--nc)] text-[var(--n)] uppercase text-sm font-medium">Projets</a>
-        <a href="/admin/themes" class="block px-4 py-2 hover:bg-[var(--nc)] hover:text-[var(--n)] transition-colors uppercase text-sm">Thèmes</a>
-        <a href="/admin/tags" class="block px-4 py-2 hover:bg-[var(--nc)] hover:text-[var(--n)] transition-colors uppercase text-sm">Tags</a>
-        <a href="/admin/technologies" class="block px-4 py-2 hover:bg-[var(--nc)] hover:text-[var(--n)] transition-colors uppercase text-sm">Technologies</a>
-      </nav>
-      <div class="p-4 border-t border-[var(--nc)]/20">
-        <button id="logout-btn" class="w-full px-4 py-2 bg-error text-error-content transition-colors uppercase text-sm">Déconnexion</button>
-      </div>
-    </aside>
 
-    <!-- Main Content -->
-    <main class="ml-64 min-h-screen bg-[var(--b1)]">
-      <div class="p-8">
-        <!-- Header -->
-        <div class="flex justify-between items-center mb-8">
-          <div>
-            <h1 class="text-4xl font-bold text-[var(--bc)] uppercase tracking-wider mb-2">Mes Projets</h1>
-            <p class="text-[var(--bc)]/70 text-lg">Gérez vos réalisations</p>
-          </div>
-          <button id="new-project-btn" class="btn btn-primary uppercase">Nouveau Projet</button>
+      {message && (
+        <div class={`alert ${messageType === 'error' ? 'alert-error' : 'alert-success'} mb-6 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`}>
+          <span class="font-bold">{message}</span>
         </div>
+      )}
 
-        <!-- Stats rapides -->
-        <div class="grid grid-cols-3 gap-6 mb-8">
-          <div class="bg-[var(--b2)] border-4 border-[var(--bc)] p-6">
-            <div class="text-3xl font-bold text-[var(--bc)] mb-1" id="stat-total">-</div>
-            <div class="text-sm text-[var(--bc)]/70 uppercase">Total</div>
-          </div>
-          <div class="bg-[var(--b2)] border-4 border-[var(--bc)] p-6">
-            <div class="text-3xl font-bold text-success mb-1" id="stat-published">-</div>
-            <div class="text-sm text-[var(--bc)]/70 uppercase">Publiés</div>
-          </div>
-          <div class="bg-[var(--b2)] border-4 border-[var(--bc)] p-6">
-            <div class="text-3xl font-bold text-warning mb-1" id="stat-drafts">-</div>
-            <div class="text-sm text-[var(--bc)]/70 uppercase">Brouillons</div>
-          </div>
-        </div>
-
-        <!-- Liste des projets -->
-        <div id="projects-list" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          <!-- Projets chargés dynamiquement -->
-        </div>
-      </div>
-    </main>
-
-    <!-- Modal Édition - Layout 2 colonnes -->
-    <div id="project-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div class="bg-[var(--b1)] border-4 border-[var(--bc)] max-w-7xl w-full h-[90vh] flex">
-        <!-- Colonne gauche - Formulaire -->
-        <div class="w-1/2 p-6 overflow-y-auto border-r-4 border-[var(--bc)]">
-          <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-[var(--bc)] uppercase" id="modal-title">Nouveau Projet</h2>
-            <button id="close-modal" class="text-[var(--bc)] text-3xl hover:text-[var(--bc)]/70">×</button>
-          </div>
-
-          <form id="project-form" class="space-y-6">
-            <input type="hidden" id="project-id" />
-
-            <!-- Titre -->
-            <div>
-              <label class="block text-sm font-medium text-[var(--bc)] mb-2 uppercase">Titre *</label>
-              <input type="text" id="project-title" required placeholder="Nom du projet"
-                class="input input-bordered w-full bg-[var(--b2)] text-[var(--bc)] border-2 border-[var(--bc)]" />
-            </div>
-
-            <!-- Slug -->
-            <div>
-              <label class="block text-sm font-medium text-[var(--bc)] mb-2 uppercase">Slug *</label>
-              <input type="text" id="project-slug" required placeholder="url-du-projet"
-                class="input input-bordered w-full bg-[var(--b2)] text-[var(--bc)] border-2 border-[var(--bc)]" />
-              <div class="text-xs text-[var(--bc)]/70 mt-1">URL : /projets/url-du-projet</div>
-            </div>
-
-            <!-- Sous-titre -->
-            <div>
-              <label class="block text-sm font-medium text-[var(--bc)] mb-2 uppercase">Sous-titre</label>
-              <input type="text" id="project-subtitle" placeholder="Description courte"
-                class="input input-bordered w-full bg-[var(--b2)] text-[var(--bc)] border-2 border-[var(--bc)]" />
-            </div>
-
-            <!-- Description -->
-            <div>
-              <label class="block text-sm font-medium text-[var(--bc)] mb-2 uppercase">Description</label>
-              <textarea id="project-description" rows="4" placeholder="Description détaillée du projet..."
-                class="textarea textarea-bordered w-full bg-[var(--b2)] text-[var(--bc)] border-2 border-[var(--bc)]"></textarea>
-            </div>
-
-            <!-- Image Hero -->
-            <div>
-              <label class="block text-sm font-medium text-[var(--bc)] mb-2 uppercase">Image principale</label>
-              <input type="file" id="project-hero-image" accept="image/*" 
-                class="file-input file-input-bordered w-full bg-[var(--b2)] border-2 border-[var(--bc)]" />
-              <div id="hero-preview" class="mt-3"></div>
-            </div>
-
-            <!-- Galerie -->
-            <div>
-              <label class="block text-sm font-medium text-[var(--bc)] mb-2 uppercase">Galerie d'images</label>
-              <input type="file" id="project-gallery" multiple accept="image/*"
-                class="file-input file-input-bordered w-full bg-[var(--b2)] border-2 border-[var(--bc)]" />
-              <div id="gallery-preview" class="mt-3"></div>
-            </div>
-
-            <!-- Thème -->
-            <div>
-              <label class="block text-sm font-medium text-[var(--bc)] mb-2 uppercase">Thème</label>
-              <select id="project-theme" class="select select-bordered w-full bg-[var(--b2)] text-[var(--bc)] border-2 border-[var(--bc)]">
-                <option>Chargement...</option>
-              </select>
-            </div>
-
-            <!-- Tags -->
-            <div>
-              <label class="block text-sm font-medium text-[var(--bc)] mb-2 uppercase">Tags</label>
-              <div id="tags-container" class="grid grid-cols-2 gap-2">
-                <!-- Tags chargés dynamiquement -->
+      <!-- Grille de projets -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {projets.map((projet) => (
+          <div class="group relative bg-base-100 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[4px] hover:translate-y-[4px] transition-all overflow-hidden">
+            {/* Image */}
+            <div class="aspect-video bg-base-300 relative overflow-hidden">
+              {projet.image ? (
+                <img 
+                  src={`/api/files/projets/${projet.id}/${projet.image}`} 
+                  alt={projet.titre}
+                  class="w-full h-full object-cover"
+                />
+              ) : (
+                <div class="w-full h-full flex items-center justify-center text-4xl font-black text-base-content/20">
+                  IMG
+                </div>
+              )}
+              <div class="absolute top-2 right-2">
+                <span class={`badge ${projet.statut === 'publié' ? 'badge-success' : 'badge-warning'} badge-lg border-2 border-black font-bold uppercase`}>
+                  {projet.statut}
+                </span>
               </div>
             </div>
-
-            <!-- Technologies -->
-            <div>
-              <label class="block text-sm font-medium text-[var(--bc)] mb-2 uppercase">Technologies</label>
-              <div id="technologies-container" class="grid grid-cols-2 gap-2">
-                <!-- Technologies chargées dynamiquement -->
+            
+            {/* Contenu */}
+            <div class="p-4">
+              <h3 class="text-xl font-black uppercase mb-2">{projet.titre}</h3>
+              <p class="text-sm text-base-content/70 mb-3 line-clamp-2">{projet.description}</p>
+              
+              {/* Tags */}
+              {projet.expand?.tags && projet.expand.tags.length > 0 && (
+                <div class="flex flex-wrap gap-1 mb-3">
+                  {projet.expand.tags.map((tag) => (
+                    <span class="badge badge-sm border-2 border-black font-bold">{tag.nom}</span>
+                  ))}
+                </div>
+              )}
+              
+              {/* Technologies */}
+              {projet.expand?.technologies && projet.expand.technologies.length > 0 && (
+                <div class="flex flex-wrap gap-1 mb-4">
+                  {projet.expand.technologies.map((tech) => (
+                    <span class="badge badge-sm badge-secondary border-2 border-black font-bold">{tech.nom}</span>
+                  ))}
+                </div>
+              )}
+              
+              {/* Actions */}
+              <div class="flex gap-2">
+                <button 
+                  onclick={`openEditModal('${projet.id}')`}
+                  class="btn btn-sm flex-1 border-2 border-black font-bold uppercase"
+                >
+                  Modifier
+                </button>
+                <button 
+                  onclick={`openPreviewModal('${projet.id}')`}
+                  class="btn btn-sm btn-info border-2 border-black font-bold"
+                >
+                  👁️
+                </button>
+                <button 
+                  onclick={`deleteProjet('${projet.id}')`}
+                  class="btn btn-sm btn-error border-2 border-black font-bold"
+                >
+                  🗑️
+                </button>
               </div>
-            </div>
-
-            <!-- Options -->
-            <div class="grid grid-cols-2 gap-6">
-              <div>
-                <label class="block text-sm font-medium text-[var(--bc)] mb-2 uppercase">Ordre d'affichage</label>
-                <input type="number" id="project-order" value="0" min="0"
-                  class="input input-bordered w-full bg-[var(--b2)] text-[var(--bc)] border-2 border-[var(--bc)]" />
-              </div>
-              <div class="flex items-center pt-8">
-                <input type="checkbox" id="project-published" class="checkbox checkbox-primary mr-2" />
-                <label for="project-published" class="text-sm font-medium text-[var(--bc)] uppercase">Publié</label>
-              </div>
-            </div>
-
-            <!-- Boutons -->
-            <div class="flex gap-4 pt-6">
-              <button type="submit" class="btn btn-primary flex-1 uppercase">Sauvegarder</button>
-              <button type="button" id="cancel-btn" class="btn btn-outline uppercase">Annuler</button>
-            </div>
-          </form>
-        </div>
-
-        <!-- Colonne droite - Aperçu -->
-        <div class="w-1/2 p-6 bg-[var(--b2)]">
-          <h3 class="text-lg font-medium text-[var(--bc)] uppercase mb-4">Aperçu du projet</h3>
-          <div id="project-preview" class="border-4 border-[var(--bc)] bg-[var(--b1)] h-full overflow-hidden">
-            <!-- Aperçu généré dynamiquement -->
-            <div class="p-6 text-center text-[var(--bc)]/50">
-              Sélectionnez un thème et ajoutez du contenu pour voir l'aperçu
             </div>
           </div>
-        </div>
+        ))}
       </div>
     </div>
   </div>
 
-  <!-- Loading -->
-  <div id="loading" class="min-h-screen flex items-center justify-center bg-[var(--b1)]">
-    <span class="loading loading-spinner loading-lg"></span>
-    <span class="ml-4 text-[var(--bc)] text-xl">Chargement...</span>
-  </div>
-</LayoutAdmin>
-
-<script>
-  import PocketBase from "pocketbase";
-
-  const pb = new PocketBase("https://portfolio.bryan-thierry.fr/");
-
-  // Variables globales
-  let themes = [];
-  let tags = [];
-  let technologies = [];
-  let projects = [];
-
-  // Vérifier l'authentification
-  if (!pb.authStore.isValid) {
-    window.location.href = "/admin";
-  } else {
-    document.getElementById("loading")?.classList.add("hidden");
-    document.getElementById("admin-content")?.classList.remove("hidden");
-    initializeAdmin();
-  }
-
-  async function initializeAdmin() {
-    await Promise.all([
-      loadThemes(),
-      loadTags(),
-      loadTechnologies(),
-      loadProjects()
-    ]);
-    
-    setupEventListeners();
-  }
-
-  async function loadThemes() {
-    try {
-      themes = await pb.collection("themes").getFullList({ sort: "name" });
-      updateThemeSelect();
-    } catch (error) {
-      console.error("Erreur chargement thèmes:", error);
-    }
-  }
-
-  async function loadTags() {
-    try {
-      tags = await pb.collection("tags").getFullList({ sort: "name" });
-      updateTagsContainer();
-    } catch (error) {
-      console.error("Erreur chargement tags:", error);
-    }
-  }
-
-  async function loadTechnologies() {
-    try {
-      technologies = await pb.collection("technologies").getFullList({ sort: "name" });
-      updateTechnologiesContainer();
-    } catch (error) {
-      console.error("Erreur chargement technologies:", error);
-    }
-  }
-
-  async function loadProjects() {
-    try {
-      projects = await pb.collection("projets").getFullList({
-        sort: "-created",
-        expand: "theme,tags,technologies",
-      });
-      renderProjects();
-      updateStats();
-    } catch (error) {
-      console.error("Erreur chargement projets:", error);
-    }
-  }
-
-  function updateThemeSelect() {
-    const select = document.getElementById("project-theme");
-    if (select) {
-      select.innerHTML = `
-        <option value="">Sélectionner un thème</option>
-        ${themes.map(theme => `<option value="${theme.id}">${theme.name}</option>`).join('')}
-      `;
-    }
-  }
-
-  function updateTagsContainer() {
-    const container = document.getElementById("tags-container");
-    if (container) {
-      container.innerHTML = tags.map(tag => `
-        <label class="flex items-center space-x-2 p-2 bg-[var(--b1)] border border-[var(--bc)]/20 rounded cursor-pointer hover:bg-[var(--b3)]">
-          <input type="checkbox" value="${tag.id}" class="checkbox checkbox-xs tag-checkbox" />
-          <span class="text-sm text-[var(--bc)]" style="color: ${tag.color || '#000'}">${tag.name}</span>
-        </label>
-      `).join('');
-    }
-  }
-
-  function updateTechnologiesContainer() {
-    const container = document.getElementById("technologies-container");
-    if (container) {
-      container.innerHTML = technologies.map(tech => `
-        <label class="flex items-center space-x-2 p-2 bg-[var(--b1)] border border-[var(--bc)]/20 rounded cursor-pointer hover:bg-[var(--b3)]">
-          <input type="checkbox" value="${tech.id}" class="checkbox checkbox-xs tech-checkbox" />
-          <span class="text-sm text-[var(--bc)]">${tech.name}</span>
-        </label>
-      `).join('');
-    }
-  }
-
-  function renderProjects() {
-    const container = document.getElementById("projects-list");
-    if (!container) return;
-
-    if (projects.length === 0) {
-      container.innerHTML = `
-        <div class="col-span-full text-center py-16">
-          <div class="text-6xl mb-4 text-[var(--bc)]/30">📱</div>
-          <h3 class="text-xl font-medium text-[var(--bc)] mb-2">Aucun projet</h3>
-          <p class="text-[var(--bc)]/70 mb-4">Créez votre premier projet pour commencer</p>
-          <button onclick="document.getElementById('new-project-btn').click()" class="btn btn-primary">
-            Créer un projet
+  <!-- Modal Création/Édition -->
+  <dialog id="edit-modal" class="modal">
+    <div class="modal-box max-w-5xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-base-100">
+      <h3 class="font-black text-3xl uppercase mb-4" id="modal-title">Nouveau Projet</h3>
+      
+      <form method="POST" enctype="multipart/form-data" id="projet-form">
+        <input type="hidden" name="action" id="form-action" value="create" />
+        <input type="hidden" name="id" id="projet-id" value="" />
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Formulaire -->
+          <div class="space-y-4">
+            <div>
+              <label class="label font-bold uppercase">Titre</label>
+              <input type="text" name="titre" id="titre" class="input input-bordered w-full border-2 border-black" required />
+            </div>
+            
+            <div>
+              <label class="label font-bold uppercase">Description</label>
+              <textarea name="description" id="description" class="textarea textarea-bordered w-full h-24 border-2 border-black"></textarea>
+            </div>
+            
+            <div>
+              <label class="label font-bold uppercase">Contenu</label>
+              <textarea name="contenu" id="contenu" class="textarea textarea-bordered w-full h-32 border-2 border-black"></textarea>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="label font-bold uppercase text-xs">GitHub</label>
+                <input type="url" name="lien_github" id="lien_github" class="input input-bordered w-full input-sm border-2 border-black" />
+              </div>
+              <div>
+                <label class="label font-bold uppercase text-xs">Démo</label>
+                <input type="url" name="lien_demo" id="lien_demo" class="input input-bordered w-full input-sm border-2 border-black" />
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="label font-bold uppercase text-xs">Statut</label>
+                <select name="statut" id="statut" class="select select-bordered w-full select-sm border-2 border-black">
+                  <option value="brouillon">Brouillon</option>
+                  <option value="publié">Publié</option>
+                </select>
+              </div>
+              <div>
+                <label class="label font-bold uppercase text-xs">Ordre</label>
+                <input type="number" name="ordre_affichage" id="ordre_affichage" class="input input-bordered w-full input-sm border-2 border-black" value="0" />
+              </div>
+            </div>
+            
+            <div>
+              <label class="label font-bold uppercase text-xs">Image</label>
+              <input type="file" name="image" id="image" accept="image/*" class="file-input file-input-bordered w-full file-input-sm border-2 border-black" />
+            </div>
+            
+            <div>
+              <label class="label font-bold uppercase text-xs">Tags</label>
+              <div class="flex flex-wrap gap-2 p-2 border-2 border-black rounded bg-base-200">
+                {tags.map((tag) => (
+                  <label class="label cursor-pointer gap-2">
+                    <input type="checkbox" name="tags" value={tag.id} class="checkbox checkbox-sm" />
+                    <span class="label-text text-xs font-bold">{tag.nom}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <label class="label font-bold uppercase text-xs">Technologies</label>
+              <div class="flex flex-wrap gap-2 p-2 border-2 border-black rounded bg-base-200">
+                {technologies.map((tech) => (
+                  <label class="label cursor-pointer gap-2">
+                    <input type="checkbox" name="technologies" value={tech.id} class="checkbox checkbox-sm checkbox-secondary" />
+                    <span class="label-text text-xs font-bold">{tech.nom}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          <!-- Aperçu -->
+          <div>
+            <label class="label font-bold uppercase">Aperçu Temps Réel</label>
+            <div class="border-4 border-black rounded overflow-hidden bg-white" style="height: 600px;">
+              <iframe id="preview-iframe" src="" class="w-full h-full"></iframe>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-action">
+          <button type="button" onclick="document.getElementById('edit-modal').close()" class="btn border-2 border-black font-bold uppercase">
+            Annuler
+          </button>
+          <button type="submit" class="btn btn-primary border-2 border-black font-bold uppercase">
+            Sauvegarder
           </button>
         </div>
-      `;
-      return;
+      </form>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
+
+  <!-- Modal Aperçu -->
+  <dialog id="preview-modal" class="modal">
+    <div class="modal-box max-w-6xl h-[90vh] border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-base-100 p-0">
+      <div class="p-4 border-b-4 border-black bg-base-200 flex justify-between items-center">
+        <h3 class="font-black text-2xl uppercase">Aperçu du Projet</h3>
+        <button onclick="document.getElementById('preview-modal').close()" class="btn btn-sm btn-circle border-2 border-black">✕</button>
+      </div>
+      <iframe id="full-preview-iframe" src="" class="w-full h-full"></iframe>
+    </div>
+  </dialog>
+
+  <script define:vars={{ projets, tags, technologies }}>
+    function openCreateModal() {
+      document.getElementById('modal-title').textContent = 'Nouveau Projet';
+      document.getElementById('form-action').value = 'create';
+      document.getElementById('projet-id').value = '';
+      document.getElementById('projet-form').reset();
+      document.getElementById('preview-iframe').src = '';
+      document.getElementById('edit-modal').showModal();
     }
 
-    container.innerHTML = projects.map(project => {
-      const imageUrl = project.hero_image 
-        ? pb.files.getUrl(project, project.hero_image, { thumb: "300x200" })
-        : null;
+    async function openEditModal(projetId) {
+      const projet = projets.find(p => p.id === projetId);
+      if (!projet) return;
+
+      document.getElementById('modal-title').textContent = 'Modifier le Projet';
+      document.getElementById('form-action').value = 'update';
+      document.getElementById('projet-id').value = projet.id;
       
-      const themeName = project.expand?.theme?.name || "Sans thème";
-      const tagsHtml = project.expand?.tags?.slice(0, 3).map(tag => 
-        `<span class="text-xs px-2 py-1 rounded text-white" style="background-color: ${tag.color || '#000'}">${tag.name}</span>`
-      ).join(' ') || '';
+      document.getElementById('titre').value = projet.titre || '';
+      document.getElementById('description').value = projet.description || '';
+      document.getElementById('contenu').value = projet.contenu || '';
+      document.getElementById('lien_github').value = projet.lien_github || '';
+      document.getElementById('lien_demo').value = projet.lien_demo || '';
+      document.getElementById('statut').value = projet.statut || 'brouillon';
+      document.getElementById('ordre_affichage').value = projet.ordre_affichage || 0;
+
+      // Cocher les tags
+      document.querySelectorAll('input[name="tags"]').forEach(checkbox => {
+        checkbox.checked = projet.expand?.tags?.some(t => t.id === checkbox.value) || false;
+      });
+
+      // Cocher les technologies
+      document.querySelectorAll('input[name="technologies"]').forEach(checkbox => {
+        checkbox.checked = projet.expand?.technologies?.some(t => t.id === checkbox.value) || false;
+      });
+
+      // Aperçu
+      document.getElementById('preview-iframe').src = `/projets/${projet.id}`;
       
-      const techsHtml = project.expand?.technologies?.slice(0, 3).map(tech => 
-        `<span class="text-xs px-2 py-1 bg-[var(--n)] text-[var(--nc)] rounded">${tech.name}</span>`
-      ).join(' ') || '';
+      document.getElementById('edit-modal').showModal();
+    }
 
-      return `
-        <div class="bg-[var(--b2)] border-4 border-[var(--bc)] hover:shadow-lg transition-all group">
-          <!-- Image -->
-          <div class="aspect-video bg-[var(--b3)] overflow-hidden relative">
-            ${imageUrl 
-              ? `<img src="${imageUrl}" alt="${project.title}" class="w-full h-full object-cover" />`
-              : `<div class="w-full h-full flex items-center justify-center text-[var(--bc)]/30">
-                   <div class="text-center">
-                     <div class="text-4xl mb-2">🖼️</div>
-                     <div class="text-sm">Aucune image</div>
-                   </div>
-                 </div>`
-            }
-            ${project.published 
-              ? `<div class="absolute top-2 right-2 badge badge-success">PUBLIÉ</div>`
-              : `<div class="absolute top-2 right-2 badge badge-warning">BROUILLON</div>`
-            }
-          </div>
-          
-          <!-- Content -->
-          <div class="p-4">
-            <h3 class="text-lg font-medium text-[var(--bc)] mb-1 group-hover:font-semibold">${project.title}</h3>
-            ${project.subtitle ? `<p class="text-sm text-[var(--bc)]/70 mb-2">${project.subtitle}</p>` : ''}
-            ${project.description ? `<p class="text-xs text-[var(--bc)]/60 mb-3 line-clamp-2">${project.description}</p>` : ''}
-            
-            <!-- Theme -->
-            <div class="mb-3">
-              <span class="text-xs uppercase text-[var(--bc)]/70">Thème:</span>
-              <span class="text-xs ml-1 px-2 py-1 bg-[var(--p)] text-[var(--pc)] rounded">${themeName}</span>
-            </div>
-            
-            <!-- Tags -->
-            ${tagsHtml ? `
-              <div class="mb-2">
-                <div class="text-xs uppercase text-[var(--bc)]/70 mb-1">Tags:</div>
-                <div class="flex flex-wrap gap-1">${tagsHtml}</div>
-              </div>
-            ` : ''}
-            
-            <!-- Technologies -->
-            ${techsHtml ? `
-              <div class="mb-4">
-                <div class="text-xs uppercase text-[var(--bc)]/70 mb-1">Technologies:</div>
-                <div class="flex flex-wrap gap-1">${techsHtml}</div>
-              </div>
-            ` : ''}
-            
-            <!-- Actions -->
-            <div class="flex gap-2">
-              <button onclick="editProject('${project.id}')" class="btn btn-primary btn-sm flex-1 uppercase">
-                Modifier
-              </button>
-              <button onclick="duplicateProject('${project.id}')" class="btn btn-outline btn-sm">
-                Dupliquer
-              </button>
-              <button onclick="deleteProject('${project.id}', '${project.title}')" class="btn btn-error btn-sm">
-                Supprimer
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-    }).join('');
-  }
+    function openPreviewModal(projetId) {
+      document.getElementById('full-preview-iframe').src = `/projets/${projetId}`;
+      document.getElementById('preview-modal').showModal();
+    }
 
-  function updateStats() {
-    const total = projects.length;
-    const published = projects.filter(p => p.published).length;
-    const drafts = total - published;
-    
-    document.getElementById("stat-total")!.textContent = total.toString();
-    document.getElementById("stat-published")!.textContent = published.toString();
-    document.getElementById("stat-drafts")!.textContent = drafts.toString();
-  }
-
-  function setupEventListeners() {
-    // Nouveau projet
-    document.getElementById("new-project-btn")?.addEventListener("click", () => {
-      openModal();
-    });
-
-    // Fermer modal
-    document.getElementById("close-modal")?.addEventListener("click", closeModal);
-    document.getElementById("cancel-btn")?.addEventListener("click", closeModal);
-
-    // Auto-slug
-    document.getElementById("project-title")?.addEventListener("input", (e) => {
-      const title = (e.target as HTMLInputElement).value;
-      const slug = title.toLowerCase()
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-z0-9\s-]/g, "")
-        .trim().replace(/\s+/g, "-");
+    async function deleteProjet(projetId) {
+      if (!confirm('Êtes-vous sûr de vouloir supprimer ce projet ?')) return;
       
-      const slugInput = document.getElementById("project-slug") as HTMLInputElement;
-      if (slugInput && !slugInput.dataset.manual) {
-        slugInput.value = slug;
-      }
-    });
-
-    document.getElementById("project-slug")?.addEventListener("input", (e) => {
-      (e.target as HTMLInputElement).dataset.manual = "true";
-    });
-
-    // Preview en temps réel
-    ["project-title", "project-subtitle", "project-description", "project-theme"].forEach(id => {
-      document.getElementById(id)?.addEventListener("input", updatePreview);
-    });
-
-    // Formulaire
-    document.getElementById("project-form")?.addEventListener("submit", handleSubmit);
-
-    // Déconnexion
-    document.getElementById("logout-btn")?.addEventListener("click", () => {
-      pb.authStore.clear();
-      window.location.href = "/admin";
-    });
-  }
-
-  function updatePreview() {
-    const title = (document.getElementById("project-title") as HTMLInputElement)?.value || "Titre du projet";
-    const subtitle = (document.getElementById("project-subtitle") as HTMLInputElement)?.value || "";
-    const description = (document.getElementById("project-description") as HTMLTextAreaElement)?.value || "";
-    const themeId = (document.getElementById("project-theme") as HTMLSelectElement)?.value;
-    
-    const theme = themes.find(t => t.id === themeId);
-    const previewContainer = document.getElementById("project-preview");
-    
-    if (previewContainer) {
-      previewContainer.innerHTML = `
-        <div class="h-full flex flex-col" ${theme ? `data-theme="${theme.name}"` : ''}>
-          <!-- Hero section simulé -->
-          <div class="bg-[var(--b2)] p-6 border-b-4 border-[var(--bc)]">
-            <div class="aspect-video bg-[var(--b3)] flex items-center justify-center mb-4 border-2 border-[var(--bc)]">
-              <span class="text-[var(--bc)]/50">Image Hero</span>
-            </div>
-            <h1 class="text-2xl font-bold text-[var(--bc)] uppercase mb-2">${title}</h1>
-            ${subtitle ? `<p class="text-[var(--bc)]/70 text-lg mb-4">${subtitle}</p>` : ''}
-          </div>
-          
-          <!-- Contenu -->
-          <div class="flex-1 p-6 bg-[var(--b1)]">
-            ${description ? `
-              <div class="mb-6">
-                <h2 class="text-lg font-medium text-[var(--bc)] uppercase mb-3">Description</h2>
-                <p class="text-[var(--bc)]/80">${description}</p>
-              </div>
-            ` : ''}
-            
-            <div class="mt-6">
-              <h2 class="text-lg font-medium text-[var(--bc)] uppercase mb-3">Galerie</h2>
-              <div class="grid grid-cols-2 gap-2">
-                ${Array(4).fill(0).map(() => `
-                  <div class="aspect-square bg-[var(--b2)] border-2 border-[var(--bc)] flex items-center justify-center">
-                    <span class="text-[var(--bc)]/50 text-xs">Image</span>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-          </div>
-          
-          <!-- Theme info -->
-          <div class="p-3 bg-[var(--b3)] border-t-4 border-[var(--bc)] text-center">
-            <span class="text-xs text-[var(--bc)]/70 uppercase">
-              Thème: ${theme?.name || 'Aucun thème sélectionné'}
-            </span>
-          </div>
-        </div>
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.innerHTML = `
+        <input type="hidden" name="action" value="delete" />
+        <input type="hidden" name="id" value="${projetId}" />
       `;
+      document.body.appendChild(form);
+      form.submit();
     }
-  }
-
-  function openModal(projectId = null) {
-    const isEdit = !!projectId;
-    document.getElementById("modal-title")!.textContent = isEdit ? "Modifier le projet" : "Nouveau Projet";
-    
-    if (isEdit) {
-      // Remplir le formulaire avec les données du projet
-      // (implémentation similaire à avant)
-    } else {
-      // Reset du formulaire
-      (document.getElementById("project-form") as HTMLFormElement).reset();
-      document.getElementById("project-id")!.value = "";
-      updatePreview();
-    }
-    
-    document.getElementById("project-modal")?.classList.remove("hidden");
-  }
-
-  function closeModal() {
-    document.getElementById("project-modal")?.classList.add("hidden");
-  }
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    // Implémentation de la soumission
-    // (similaire à avant mais avec la nouvelle structure)
-  }
-
-  // Fonctions globales pour les boutons
-  window.editProject = (id) => openModal(id);
-  window.duplicateProject = async (id) => {
-    // Implémentation duplication
-  };
-  window.deleteProject = async (id, title) => {
-    if (!confirm(`Supprimer "${title}" ?`)) return;
-    try {
-      await pb.collection("projets").delete(id);
-      await loadProjects();
-    } catch (error) {
-      alert("Erreur lors de la suppression");
-    }
-  };
-</script>
+  </script>
 </LayoutAdmin>

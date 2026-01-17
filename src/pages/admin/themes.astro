@@ -1,468 +1,124 @@
 ---
-import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
+import LayoutAdmin from '../../layouts/LayoutAdmin.astro';
+import { pb } from '../../utils/pb';
+
+let message = '';
+let messageType = 'success';
+let themes = [];
+
+try {
+  themes = await pb.collection('themes').getFullList({ sort: 'nom' });
+} catch (error) {
+  message = `Erreur: ${error.message}`;
+  messageType = 'error';
+}
+
+if (Astro.request.method === 'POST') {
+  try {
+    const formData = await Astro.request.formData();
+    const action = formData.get('action');
+    
+    if (action === 'update') {
+      const id = formData.get('id');
+      const data = {
+        primary: formData.get('primary'),
+        secondary: formData.get('secondary'),
+        accent: formData.get('accent'),
+        neutral: formData.get('neutral'),
+        base_100: formData.get('base_100'),
+        info: formData.get('info'),
+        success: formData.get('success'),
+        warning: formData.get('warning'),
+        error: formData.get('error')
+      };
+      
+      await pb.collection('themes').update(id, data);
+      message = 'Thème modifié avec succès!';
+      return Astro.redirect('/admin/themes-simple');
+    }
+    
+  } catch (error) {
+    message = `Erreur: ${error.message}`;
+    messageType = 'error';
+  }
+}
 ---
 
-<LayoutAdmin title="Admin - Thèmes">
-  <div id="admin-content" class="hidden">
-    <!-- Sidebar -->
-    <aside class="fixed left-0 top-0 h-screen w-64 bg-[var(--n)] text-[var(--nc)] flex flex-col z-50">
-      <div class="p-6 border-b border-[var(--nc)]/20">
-        <h1 class="text-xl font-medium uppercase tracking-wider">Portfolio Admin</h1>
-      </div>
-      <nav class="flex-1 p-4 space-y-1">
-        <a href="/admin/dashboard" class="block px-4 py-2 hover:bg-[var(--nc)] hover:text-[var(--n)] transition-colors uppercase text-sm">Dashboard</a>
-        <a href="/admin/projets" class="block px-4 py-2 hover:bg-[var(--nc)] hover:text-[var(--n)] transition-colors uppercase text-sm">Projets</a>
-        <a href="/admin/themes" class="block px-4 py-2 bg-[var(--nc)] text-[var(--n)] uppercase text-sm font-medium">Thèmes</a>
-        <a href="/admin/tags" class="block px-4 py-2 hover:bg-[var(--nc)] hover:text-[var(--n)] transition-colors uppercase text-sm">Tags</a>
-        <a href="/admin/technologies" class="block px-4 py-2 hover:bg-[var(--nc)] hover:text-[var(--n)] transition-colors uppercase text-sm">Technologies</a>
-      </nav>
-      <div class="p-4 border-t border-[var(--nc)]/20">
-        <button id="logout-btn" class="w-full px-4 py-2 bg-error text-error-content transition-colors uppercase text-sm">Déconnexion</button>
-      </div>
-    </aside>
+<LayoutAdmin title="Thèmes">
+  <div class="p-6">
+    <h1 class="text-2xl font-bold mb-6">Gestion des Thèmes</h1>
 
-    <!-- Layout 2 colonnes -->
-    <div class="ml-64 h-screen flex">
+    {message && (
+      <div class={`alert ${messageType === 'error' ? 'alert-error' : 'alert-success'} mb-4`}>
+        <span>{message}</span>
+      </div>
+    )}
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <!-- Colonne gauche - Liste des thèmes -->
-      <div class="w-1/2 bg-[var(--b1)] border-r-4 border-[var(--bc)] overflow-y-auto">
-        <div class="p-8">
-          <div class="flex justify-between items-center mb-8">
-            <div>
-              <h1 class="text-4xl font-bold text-[var(--bc)] uppercase tracking-wider mb-2">Thèmes</h1>
-              <p class="text-[var(--bc)]/70 text-lg">Gérez vos palettes de couleur</p>
-            </div>
-            <button id="new-theme-btn" class="btn btn-primary uppercase">Nouveau Thème</button>
-          </div>
-
-          <!-- Liste des thèmes -->
-          <div id="themes-list" class="space-y-4">
-            <!-- Thèmes chargés dynamiquement -->
-          </div>
-        </div>
-
-        <!-- Modal nouveau/edit thème -->
-        <div id="theme-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4">
-          <div class="bg-[var(--b1)] border-4 border-[var(--bc)] max-w-md w-full max-h-[80vh] overflow-y-auto">
-            <div class="p-6">
-              <h2 class="text-2xl font-bold text-[var(--bc)] uppercase mb-6" id="modal-title">Nouveau Thème</h2>
+      <div class="space-y-4">
+        {themes.map((theme) => (
+          <div class="card bg-base-100 border">
+            <div class="card-body p-4">
+              <h3 class="card-title text-lg mb-3">{theme.nom}</h3>
               
-              <form id="theme-form" class="space-y-6">
-                <input type="hidden" id="theme-id" />
+              <form method="POST" class="space-y-3" id={`form-${theme.id}`}>
+                <input type="hidden" name="action" value="update" />
+                <input type="hidden" name="id" value={theme.id} />
                 
-                <!-- Nom -->
-                <div>
-                  <label class="block text-sm font-medium text-[var(--bc)] mb-2 uppercase">Nom du thème *</label>
-                  <input type="text" id="theme-name" required placeholder="mon-theme-perso"
-                    class="input input-bordered w-full bg-[var(--b2)] text-[var(--bc)] border-2 border-[var(--bc)]" />
-                </div>
-
-                <!-- Variables CSS -->
-                <div class="space-y-4">
-                  <h3 class="text-lg font-medium text-[var(--bc)] uppercase">Couleurs CSS</h3>
-                  
-                  <div class="grid grid-cols-2 gap-4">
-                    <div>
-                      <label class="block text-xs text-[var(--bc)] mb-1">Primary</label>
-                      <input type="color" id="color-p" class="w-full h-10 border-2 border-[var(--bc)]" value="#000000" />
-                    </div>
-                    <div>
-                      <label class="block text-xs text-[var(--bc)] mb-1">Primary Content</label>
-                      <input type="color" id="color-pc" class="w-full h-10 border-2 border-[var(--bc)]" value="#ffffff" />
-                    </div>
-                    <div>
-                      <label class="block text-xs text-[var(--bc)] mb-1">Secondary</label>
-                      <input type="color" id="color-s" class="w-full h-10 border-2 border-[var(--bc)]" value="#666666" />
-                    </div>
-                    <div>
-                      <label class="block text-xs text-[var(--bc)] mb-1">Secondary Content</label>
-                      <input type="color" id="color-sc" class="w-full h-10 border-2 border-[var(--bc)]" value="#ffffff" />
-                    </div>
-                    <div>
-                      <label class="block text-xs text-[var(--bc)] mb-1">Accent</label>
-                      <input type="color" id="color-a" class="w-full h-10 border-2 border-[var(--bc)]" value="#ff0000" />
-                    </div>
-                    <div>
-                      <label class="block text-xs text-[var(--bc)] mb-1">Accent Content</label>
-                      <input type="color" id="color-ac" class="w-full h-10 border-2 border-[var(--bc)]" value="#ffffff" />
-                    </div>
-                    <div>
-                      <label class="block text-xs text-[var(--bc)] mb-1">Neutral</label>
-                      <input type="color" id="color-n" class="w-full h-10 border-2 border-[var(--bc)]" value="#000000" />
-                    </div>
-                    <div>
-                      <label class="block text-xs text-[var(--bc)] mb-1">Neutral Content</label>
-                      <input type="color" id="color-nc" class="w-full h-10 border-2 border-[var(--bc)]" value="#ffffff" />
-                    </div>
-                    <div>
-                      <label class="block text-xs text-[var(--bc)] mb-1">Base-100</label>
-                      <input type="color" id="color-b1" class="w-full h-10 border-2 border-[var(--bc)]" value="#faf9f7" />
-                    </div>
-                    <div>
-                      <label class="block text-xs text-[var(--bc)] mb-1">Base-200</label>
-                      <input type="color" id="color-b2" class="w-full h-10 border-2 border-[var(--bc)]" value="#f0f0f0" />
-                    </div>
-                    <div>
-                      <label class="block text-xs text-[var(--bc)] mb-1">Base-300</label>
-                      <input type="color" id="color-b3" class="w-full h-10 border-2 border-[var(--bc)]" value="#e0e0e0" />
-                    </div>
-                    <div>
-                      <label class="block text-xs text-[var(--bc)] mb-1">Base Content</label>
-                      <input type="color" id="color-bc" class="w-full h-10 border-2 border-[var(--bc)]" value="#000000" />
-                    </div>
+                <div class="grid grid-cols-3 gap-3">
+                  <div>
+                    <label class="text-xs font-medium block mb-1">Primary</label>
+                    <input 
+                      type="color" 
+                      name="primary" 
+                      value={theme.primary} 
+                      class="w-full h-10 border rounded cursor-pointer"
+                      onchange={`document.getElementById('preview-frame').contentWindow.postMessage({type: 'updateColor', color: 'primary', value: this.value}, '*')`}
+                    />
+                  </div>
+                  <div>
+                    <label class="text-xs font-medium block mb-1">Secondary</label>
+                    <input 
+                      type="color" 
+                      name="secondary" 
+                      value={theme.secondary} 
+                      class="w-full h-10 border rounded cursor-pointer"
+                      onchange={`document.getElementById('preview-frame').contentWindow.postMessage({type: 'updateColor', color: 'secondary', value: this.value}, '*')`}
+                    />
+                  </div>
+                  <div>
+                    <label class="text-xs font-medium block mb-1">Accent</label>
+                    <input 
+                      type="color" 
+                      name="accent" 
+                      value={theme.accent} 
+                      class="w-full h-10 border rounded cursor-pointer"
+                      onchange={`document.getElementById('preview-frame').contentWindow.postMessage({type: 'updateColor', color: 'accent', value: this.value}, '*')`}
+                    />
                   </div>
                 </div>
-
-                <!-- Boutons -->
-                <div class="flex gap-4">
-                  <button type="submit" class="btn btn-primary flex-1 uppercase">Sauvegarder</button>
-                  <button type="button" id="cancel-btn" class="btn btn-outline uppercase">Annuler</button>
-                </div>
+                
+                <button type="submit" class="btn btn-primary btn-sm w-full">Sauvegarder {theme.nom}</button>
               </form>
             </div>
           </div>
-        </div>
+        ))}
       </div>
-
-      <!-- Colonne droite - Aperçu temps réel -->
-      <div class="w-1/2 bg-[var(--b2)] overflow-y-auto">
-        <div class="p-8">
-          <h2 class="text-2xl font-bold text-[var(--bc)] uppercase mb-6">Aperçu Temps Réel</h2>
-          
-          <!-- Aperçu de la page projet -->
-          <div id="theme-preview" data-theme="basique" class="border-4 border-[var(--bc)] bg-[var(--b1)] min-h-[600px] overflow-hidden">
-            <!-- Header simulé -->
-            <header class="bg-[var(--p)] text-[var(--pc)] p-4 border-b-4 border-[var(--bc)]">
-              <div class="flex items-center justify-between">
-                <h1 class="text-xl font-bold uppercase">Bryan Thierry</h1>
-                <nav class="flex gap-4 text-sm uppercase">
-                  <a href="#" class="hover:underline">Accueil</a>
-                  <a href="#" class="hover:underline">Projets</a>
-                  <a href="#" class="hover:underline">Contact</a>
-                </nav>
-              </div>
-            </header>
-
-            <!-- Section Hero projet -->
-            <section class="bg-[var(--s)] text-[var(--sc)] p-8 border-b-4 border-[var(--bc)]">
-              <div class="max-w-4xl mx-auto text-center">
-                <h1 class="text-4xl font-bold uppercase mb-4 tracking-wider">Projet Exemple</h1>
-                <p class="text-lg mb-6">Une application web moderne et responsive</p>
-                <div class="aspect-video bg-[var(--b1)] border-4 border-[var(--bc)] flex items-center justify-center text-[var(--bc)]">
-                  <span class="text-xl">Image Hero du Projet</span>
-                </div>
-              </div>
-            </section>
-
-            <!-- Contenu principal -->
-            <section class="bg-[var(--b1)] text-[var(--bc)] p-8">
-              <div class="max-w-4xl mx-auto">
-                <!-- Description -->
-                <div class="mb-8">
-                  <h2 class="text-2xl font-bold uppercase mb-4 border-b-2 border-[var(--bc)] pb-2">Description</h2>
-                  <p class="text-lg leading-relaxed">
-                    Ce projet démontre l'utilisation de technologies modernes pour créer une expérience utilisateur 
-                    exceptionnelle. L'interface utilise votre thème personnalisé pour une cohérence visuelle parfaite.
-                  </p>
-                </div>
-
-                <!-- Technologies -->
-                <div class="mb-8">
-                  <h3 class="text-xl font-bold uppercase mb-4">Technologies utilisées</h3>
-                  <div class="flex flex-wrap gap-2">
-                    <span class="px-3 py-1 bg-[var(--a)] text-[var(--ac)] text-sm font-medium uppercase">React</span>
-                    <span class="px-3 py-1 bg-[var(--a)] text-[var(--ac)] text-sm font-medium uppercase">TypeScript</span>
-                    <span class="px-3 py-1 bg-[var(--a)] text-[var(--ac)] text-sm font-medium uppercase">Tailwind</span>
-                  </div>
-                </div>
-
-                <!-- Galerie -->
-                <div class="mb-8">
-                  <h3 class="text-xl font-bold uppercase mb-4">Galerie</h3>
-                  <div class="grid grid-cols-2 gap-4">
-                    <div class="aspect-video bg-[var(--b2)] border-2 border-[var(--bc)] flex items-center justify-center">
-                      <span class="text-sm text-[var(--bc)]/60">Screenshot 1</span>
-                    </div>
-                    <div class="aspect-video bg-[var(--b2)] border-2 border-[var(--bc)] flex items-center justify-center">
-                      <span class="text-sm text-[var(--bc)]/60">Screenshot 2</span>
-                    </div>
-                    <div class="aspect-video bg-[var(--b2)] border-2 border-[var(--bc)] flex items-center justify-center">
-                      <span class="text-sm text-[var(--bc)]/60">Screenshot 3</span>
-                    </div>
-                    <div class="aspect-video bg-[var(--b2)] border-2 border-[var(--bc)] flex items-center justify-center">
-                      <span class="text-sm text-[var(--bc)]/60">Screenshot 4</span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Boutons d'action -->
-                <div class="flex gap-4">
-                  <button class="btn btn-primary uppercase">Voir le projet</button>
-                  <button class="btn btn-outline uppercase">Code source</button>
-                </div>
-              </div>
-            </section>
-
-            <!-- Footer simulé -->
-            <footer class="bg-[var(--n)] text-[var(--nc)] p-6 border-t-4 border-[var(--bc)] text-center">
-              <p class="text-sm uppercase tracking-wide">© 2026 Bryan Thierry - Portfolio</p>
-            </footer>
-          </div>
+      
+      <!-- Colonne droite - Aperçu -->
+      <div>
+        <h2 class="text-xl font-semibold mb-4">Aperçu temps réel</h2>
+        <p class="text-sm text-gray-600 mb-4">Modifiez les couleurs pour voir l'effet en direct</p>
+        <div class="border rounded-lg overflow-hidden bg-white" style="height: 600px;">
+          <iframe 
+            id="preview-frame"
+            src="/projets" 
+            class="w-full h-full" 
+            title="Aperçu des projets"
+          ></iframe>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- Loading -->
-  <div id="loading" class="min-h-screen flex items-center justify-center bg-[var(--b1)]">
-    <span class="loading loading-spinner loading-lg"></span>
-    <span class="ml-4 text-[var(--bc)] text-xl">Chargement...</span>
-  </div>
-</LayoutAdmin>
-
-<script>
-  import PocketBase from "pocketbase";
-
-  const pb = new PocketBase("https://portfolio.bryan-thierry.fr/");
-
-  let themes = [];
-  let selectedThemeId = null;
-
-  // Vérifier l'authentification
-  if (!pb.authStore.isValid) {
-    window.location.href = "/admin";
-  } else {
-    document.getElementById("loading")?.classList.add("hidden");
-    document.getElementById("admin-content")?.classList.remove("hidden");
-    initializeThemes();
-  }
-
-  async function initializeThemes() {
-    await loadThemes();
-    setupEventListeners();
-    setupColorListeners();
-  }
-
-  async function loadThemes() {
-    try {
-      themes = await pb.collection("themes").getFullList({ sort: "name" });
-      renderThemes();
-    } catch (error) {
-      console.error("Erreur chargement thèmes:", error);
-    }
-  }
-
-  function renderThemes() {
-    const container = document.getElementById("themes-list");
-    if (!container) return;
-
-    if (themes.length === 0) {
-      container.innerHTML = `
-        <div class="text-center py-12">
-          <div class="text-6xl mb-4 text-[var(--bc)]/30">🎨</div>
-          <h3 class="text-xl font-medium text-[var(--bc)] mb-2">Aucun thème</h3>
-          <p class="text-[var(--bc)]/70 mb-4">Créez votre premier thème</p>
-          <button onclick="document.getElementById('new-theme-btn').click()" class="btn btn-primary">
-            Créer un thème
-          </button>
-        </div>
-      `;
-      return;
-    }
-
-    container.innerHTML = themes.map(theme => `
-      <div class="bg-[var(--b2)] border-4 border-[var(--bc)] p-4 cursor-pointer hover:shadow-lg transition-all ${selectedThemeId === theme.id ? 'ring-4 ring-primary' : ''}" 
-           onclick="selectTheme('${theme.id}')">
-        <div class="flex justify-between items-center mb-3">
-          <h3 class="text-lg font-bold text-[var(--bc)] uppercase">${theme.name}</h3>
-          <div class="flex gap-2">
-            <button onclick="event.stopPropagation(); editTheme('${theme.id}')" class="btn btn-primary btn-xs uppercase">
-              Modifier
-            </button>
-            <button onclick="event.stopPropagation(); deleteTheme('${theme.id}', '${theme.name}')" class="btn btn-error btn-xs">
-              Supprimer
-            </button>
-          </div>
-        </div>
-        
-        <!-- Palette de couleurs -->
-        <div class="grid grid-cols-6 gap-1">
-          ${Object.entries(JSON.parse(theme.css_variables || '{}')).slice(0, 12).map(([key, value]) => `
-            <div class="w-8 h-6 border border-[var(--bc)]/20" style="background-color: ${value}" title="${key}"></div>
-          `).join('')}
-        </div>
-        
-        <div class="mt-2 text-xs text-[var(--bc)]/60">
-          Cliquez pour prévisualiser
-        </div>
-      </div>
-    `).join('');
-
-    // Sélectionner le premier thème par défaut
-    if (themes.length > 0 && !selectedThemeId) {
-      selectTheme(themes[0].id);
-    }
-  }
-
-  function setupEventListeners() {
-    // Nouveau thème
-    document.getElementById("new-theme-btn")?.addEventListener("click", () => {
-      openModal();
-    });
-
-    // Fermer modal
-    document.getElementById("cancel-btn")?.addEventListener("click", closeModal);
-
-    // Formulaire
-    document.getElementById("theme-form")?.addEventListener("submit", handleSubmit);
-
-    // Déconnexion
-    document.getElementById("logout-btn")?.addEventListener("click", () => {
-      pb.authStore.clear();
-      window.location.href = "/admin";
-    });
-  }
-
-  function setupColorListeners() {
-    // Écouter les changements de couleur pour aperçu temps réel
-    ['p', 'pc', 's', 'sc', 'a', 'ac', 'n', 'nc', 'b1', 'b2', 'b3', 'bc'].forEach(color => {
-      document.getElementById(`color-${color}`)?.addEventListener('input', updateLivePreview);
-    });
-  }
-
-  function selectTheme(themeId) {
-    selectedThemeId = themeId;
-    const theme = themes.find(t => t.id === themeId);
-    
-    if (theme) {
-      // Appliquer le thème à l'aperçu
-      applyThemeToPreview(theme);
-      
-      // Mettre à jour la sélection visuelle
-      renderThemes();
-    }
-  }
-
-  function applyThemeToPreview(theme) {
-    const preview = document.getElementById("theme-preview");
-    if (!preview) return;
-
-    const variables = JSON.parse(theme.css_variables || '{}');
-    
-    // Appliquer les variables CSS
-    const cssVars = Object.entries(variables)
-      .map(([key, value]) => `--${key}: ${value}`)
-      .join('; ');
-    
-    preview.style.cssText = cssVars;
-    preview.setAttribute('data-theme', theme.name);
-  }
-
-  function updateLivePreview() {
-    const preview = document.getElementById("theme-preview");
-    if (!preview) return;
-
-    const colors = {
-      p: document.getElementById("color-p")?.value || "#000000",
-      pc: document.getElementById("color-pc")?.value || "#ffffff", 
-      s: document.getElementById("color-s")?.value || "#666666",
-      sc: document.getElementById("color-sc")?.value || "#ffffff",
-      a: document.getElementById("color-a")?.value || "#ff0000",
-      ac: document.getElementById("color-ac")?.value || "#ffffff",
-      n: document.getElementById("color-n")?.value || "#000000",
-      nc: document.getElementById("color-nc")?.value || "#ffffff",
-      b1: document.getElementById("color-b1")?.value || "#faf9f7",
-      b2: document.getElementById("color-b2")?.value || "#f0f0f0",
-      b3: document.getElementById("color-b3")?.value || "#e0e0e0",
-      bc: document.getElementById("color-bc")?.value || "#000000"
-    };
-
-    const cssVars = Object.entries(colors)
-      .map(([key, value]) => `--${key}: ${value}`)
-      .join('; ');
-    
-    preview.style.cssText = cssVars;
-  }
-
-  function openModal(themeId = null) {
-    const isEdit = !!themeId;
-    document.getElementById("modal-title")!.textContent = isEdit ? "Modifier le thème" : "Nouveau Thème";
-    
-    if (isEdit) {
-      const theme = themes.find(t => t.id === themeId);
-      if (theme) {
-        document.getElementById("theme-id")!.value = theme.id;
-        document.getElementById("theme-name")!.value = theme.name;
-        
-        const variables = JSON.parse(theme.css_variables || '{}');
-        Object.entries(variables).forEach(([key, value]) => {
-          const input = document.getElementById(`color-${key}`);
-          if (input) input.value = value;
-        });
-      }
-    } else {
-      // Reset
-      (document.getElementById("theme-form") as HTMLFormElement).reset();
-      document.getElementById("theme-id")!.value = "";
-    }
-    
-    document.getElementById("theme-modal")?.classList.remove("hidden");
-    updateLivePreview();
-  }
-
-  function closeModal() {
-    document.getElementById("theme-modal")?.classList.add("hidden");
-  }
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    
-    const formData = {
-      name: (document.getElementById("theme-name") as HTMLInputElement).value.trim(),
-      css_variables: JSON.stringify({
-        p: (document.getElementById("color-p") as HTMLInputElement).value,
-        pc: (document.getElementById("color-pc") as HTMLInputElement).value,
-        s: (document.getElementById("color-s") as HTMLInputElement).value,
-        sc: (document.getElementById("color-sc") as HTMLInputElement).value,
-        a: (document.getElementById("color-a") as HTMLInputElement).value,
-        ac: (document.getElementById("color-ac") as HTMLInputElement).value,
-        n: (document.getElementById("color-n") as HTMLInputElement).value,
-        nc: (document.getElementById("color-nc") as HTMLInputElement).value,
-        b1: (document.getElementById("color-b1") as HTMLInputElement).value,
-        b2: (document.getElementById("color-b2") as HTMLInputElement).value,
-        b3: (document.getElementById("color-b3") as HTMLInputElement).value,
-        bc: (document.getElementById("color-bc") as HTMLInputElement).value,
-      })
-    };
-
-    try {
-      const themeId = (document.getElementById("theme-id") as HTMLInputElement).value;
-      
-      if (themeId) {
-        await pb.collection("themes").update(themeId, formData);
-      } else {
-        await pb.collection("themes").create(formData);
-      }
-      
-      closeModal();
-      await loadThemes();
-    } catch (error) {
-      console.error("Erreur:", error);
-      alert("Erreur lors de la sauvegarde");
-    }
-  }
-
-  // Fonctions globales
-  window.selectTheme = selectTheme;
-  window.editTheme = (id) => openModal(id);
-  window.deleteTheme = async (id, name) => {
-    if (!confirm(`Supprimer le thème "${name}" ?`)) return;
-    try {
-      await pb.collection("themes").delete(id);
-      if (selectedThemeId === id) selectedThemeId = null;
-      await loadThemes();
-    } catch (error) {
-      alert("Erreur lors de la suppression");
-    }
-  };
-</script>
 </LayoutAdmin>
