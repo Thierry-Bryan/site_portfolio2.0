@@ -82,15 +82,15 @@ jobs:
           script: |
             echo "🔍 Starting PocketBase setup..."
             
-            # Stop existing PocketBase (need sudo for www-data process)
+            # Stop existing PocketBase more carefully
             echo "🛑 Stopping existing PocketBase processes..."
-            sudo pkill -f pocketbase || true
+            sudo pkill -f "pocketbase serve" || true
             sleep 3
             
-            # Verify no pocketbase is running
-            if pgrep -f pocketbase; then
-              echo "⚠️ PocketBase still running, force killing..."
-              sudo pkill -9 -f pocketbase || true
+            # Verify no pocketbase is running on port 8090
+            if lsof -ti:8090; then
+              echo "⚠️ Port 8090 still in use, killing process..."
+              sudo kill -9 $(lsof -ti:8090) || true
               sleep 2
             fi
             
@@ -111,7 +111,8 @@ jobs:
             chmod +x ~/pocketbase/pocketbase
             
             echo "🚀 Starting PocketBase as current user..."
-            nohup ~/pocketbase/pocketbase serve --http=127.0.0.1:8090 --dir=~/pocketbase/pb_data > ~/pocketbase.log 2>&1 &
+            cd ~/pocketbase
+            nohup ./pocketbase serve --http=127.0.0.1:8090 --dir=./pb_data > ../pocketbase.log 2>&1 &
             
             echo "⏳ Waiting for PocketBase to start..."
             sleep 8
@@ -120,16 +121,18 @@ jobs:
             if curl -f http://127.0.0.1:8090/_/ > /dev/null 2>&1; then
               echo "✅ PocketBase started successfully"
               echo "📋 Available collections:"
-              curl -s http://127.0.0.1:8090/api/collections | head -c 200
+              curl -s http://127.0.0.1:8090/api/collections | head -c 200 || echo "No collections yet"
               echo ""
               echo "🔍 Process status:"
-              ps aux | grep pocketbase | grep -v grep
+              ps aux | grep pocketbase | grep -v grep || echo "No pocketbase process found in ps"
             else
               echo "❌ PocketBase failed to start"
               echo "📋 Log content:"
               cat ~/pocketbase.log || echo "No log file"
               echo "🔍 Process status:"
-              ps aux | grep pocketbase | grep -v grep
+              ps aux | grep pocketbase | grep -v grep || echo "No pocketbase process found"
+              echo "🔍 Port 8090 status:"
+              lsof -i:8090 || echo "Port 8090 not in use"
               exit 1
             fi
 
