@@ -1,0 +1,132 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Admin - Tags" theme="basique">
+  <div id="admin-content" class="hidden">
+    <section class="min-h-screen bg-[var(--b1)] py-20 px-4">
+      <div class="max-w-5xl mx-auto">
+        <div class="flex justify-between items-center mb-12">
+          <div>
+            <a href="/admin/dashboard" class="text-[var(--bc)] font-secondary hover:text-[var(--p)] mb-2 inline-block">
+              ← Retour au dashboard
+            </a>
+            <h1 class="text-5xl font-primary text-[var(--bc)]">GESTION DES TAGS</h1>
+          </div>
+          <button
+            id="new-tag-btn"
+            class="px-6 py-3 bg-[var(--p)] text-[var(--b1)] font-primary border-2 border-[var(--bc)]"
+          >
+            + NOUVEAU TAG
+          </button>
+        </div>
+
+        <div id="tags-list" class="space-y-4"></div>
+
+        <!-- Modal -->
+        <div id="tag-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div class="bg-[var(--b1)] border-4 border-[var(--bc)] max-w-md w-full p-8">
+            <h2 class="text-3xl font-primary text-[var(--bc)] mb-6" id="modal-title">NOUVEAU TAG</h2>
+            <form id="tag-form" class="space-y-6">
+              <input type="hidden" id="tag-id" />
+              <div>
+                <label class="block text-[var(--bc)] font-secondary mb-2">Nom du tag *</label>
+                <input
+                  type="text"
+                  id="tag-name"
+                  required
+                  class="w-full p-3 border-2 border-[var(--bc)] bg-[var(--b1)] text-[var(--bc)] font-secondary"
+                />
+              </div>
+              <div class="flex gap-4">
+                <button type="submit" class="flex-1 p-4 bg-[var(--p)] text-[var(--b1)] font-primary border-2 border-[var(--bc)]">
+                  ENREGISTRER
+                </button>
+                <button type="button" id="cancel-btn" class="px-8 p-4 bg-[var(--b1)] text-[var(--bc)] font-primary border-2 border-[var(--bc)]">
+                  ANNULER
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div id="loading" class="min-h-screen flex items-center justify-center">
+    <div class="text-2xl font-primary text-[var(--bc)]">Chargement...</div>
+  </div>
+</Layout>
+
+<script>
+  import PocketBase from "pocketbase";
+  const pb = new PocketBase("https://portfolio.bryan-thierry.fr/");
+  
+  if (!pb.authStore.isValid) {
+    window.location.href = "/admin";
+  } else {
+    document.getElementById("loading")?.classList.add("hidden");
+    document.getElementById("admin-content")?.classList.remove("hidden");
+    loadTags();
+  }
+
+  async function loadTags() {
+    const tags = await pb.collection("tags").getFullList({ sort: "name" });
+    const container = document.getElementById("tags-list")!;
+    container.innerHTML = tags.map(tag => `
+      <div class="border-2 border-[var(--bc)] p-4 bg-[var(--b1)] flex justify-between items-center">
+        <span class="text-xl font-primary text-[var(--bc)]">${tag.name}</span>
+        <div class="flex gap-2">
+          <button onclick="editTag('${tag.id}')" class="px-4 py-2 bg-[var(--p)] text-[var(--b1)] font-primary border-2 border-[var(--bc)]">MODIFIER</button>
+          <button onclick="deleteTag('${tag.id}', '${tag.name}')" class="px-4 py-2 bg-red-500 text-white font-primary border-2 border-[var(--bc)]">🗑️</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById("new-tag-btn")?.addEventListener("click", () => {
+    (document.getElementById("tag-form") as HTMLFormElement).reset();
+    (document.getElementById("tag-id") as HTMLInputElement).value = "";
+    document.getElementById("modal-title")!.textContent = "NOUVEAU TAG";
+    document.getElementById("tag-modal")?.classList.remove("hidden");
+  });
+
+  document.getElementById("cancel-btn")?.addEventListener("click", () => {
+    document.getElementById("tag-modal")?.classList.add("hidden");
+  });
+
+  document.getElementById("tag-form")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = (document.getElementById("tag-id") as HTMLInputElement).value;
+    const name = (document.getElementById("tag-name") as HTMLInputElement).value;
+    
+    try {
+      if (id) {
+        await pb.collection("tags").update(id, { name });
+      } else {
+        await pb.collection("tags").create({ name });
+      }
+      document.getElementById("tag-modal")?.classList.add("hidden");
+      loadTags();
+      alert("Tag enregistré !");
+    } catch (error) {
+      console.error(error);
+      alert("Erreur lors de l'enregistrement");
+    }
+  });
+
+  (window as any).editTag = async (id: string) => {
+    const tag = await pb.collection("tags").getOne(id);
+    (document.getElementById("tag-id") as HTMLInputElement).value = id;
+    (document.getElementById("tag-name") as HTMLInputElement).value = tag.name;
+    document.getElementById("modal-title")!.textContent = `MODIFIER ${tag.name.toUpperCase()}`;
+    document.getElementById("tag-modal")?.classList.remove("hidden");
+  };
+
+  (window as any).deleteTag = async (id: string, name: string) => {
+    if (!confirm(`Supprimer "${name}" ?`)) return;
+    await pb.collection("tags").delete(id);
+    loadTags();
+    alert("Tag supprimé !");
+  };
+</script>
+</Layout>

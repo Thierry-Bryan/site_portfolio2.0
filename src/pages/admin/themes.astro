@@ -1,0 +1,424 @@
+---
+// Gestion des thèmes avec color picker
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Admin - Thèmes" theme="basique">
+  <div id="admin-content" class="hidden">
+    <section class="min-h-screen bg-[var(--b1)] py-20 px-4">
+      <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-12">
+          <div>
+            <a href="/admin/dashboard" class="text-[var(--bc)] font-secondary hover:text-[var(--p)] mb-2 inline-block">
+              ← Retour au dashboard
+            </a>
+            <h1 class="text-5xl font-primary text-[var(--bc)]">
+              GESTION DES THÈMES
+            </h1>
+          </div>
+          <button
+            id="new-theme-btn"
+            class="px-6 py-3 bg-[var(--p)] text-[var(--b1)] font-primary border-2 border-[var(--bc)] hover:shadow-[4px_4px_0px_var(--bc)] transition-all"
+          >
+            + NOUVEAU THÈME
+          </button>
+        </div>
+
+        <!-- Liste des thèmes -->
+        <div id="themes-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Thèmes chargés dynamiquement -->
+        </div>
+
+        <!-- Modal création/édition -->
+        <div id="theme-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div class="bg-[var(--b1)] border-4 border-[var(--bc)] max-w-4xl w-full max-h-[90vh] overflow-y-auto p-8">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-3xl font-primary text-[var(--bc)]" id="modal-title">NOUVEAU THÈME</h2>
+              <button id="close-modal" class="text-3xl text-[var(--bc)] hover:text-[var(--p)]">×</button>
+            </div>
+
+            <form id="theme-form" class="space-y-6">
+              <input type="hidden" id="theme-id" />
+
+              <!-- Nom du thème -->
+              <div>
+                <label class="block text-[var(--bc)] font-secondary mb-2">
+                  Nom du thème (slug) *
+                </label>
+                <input
+                  type="text"
+                  id="theme-name"
+                  required
+                  placeholder="ex: mon-theme"
+                  class="w-full p-3 border-2 border-[var(--bc)] bg-[var(--b1)] text-[var(--bc)] font-secondary focus:outline-none focus:border-[var(--p)]"
+                />
+              </div>
+
+              <h3 class="text-2xl font-primary text-[var(--bc)] mt-8 mb-4">COULEURS MODE CLAIR</h3>
+
+              <!-- Couleur Primaire -->
+              <div>
+                <label class="block text-[var(--bc)] font-secondary mb-2">
+                  Couleur Primaire (p) *
+                </label>
+                <div class="flex gap-4">
+                  <input
+                    type="color"
+                    id="color-p"
+                    class="h-16 w-24 border-2 border-[var(--bc)] cursor-pointer"
+                  />
+                  <input
+                    type="text"
+                    id="color-p-text"
+                    placeholder="#ff0000"
+                    class="flex-1 p-3 border-2 border-[var(--bc)] bg-[var(--b1)] text-[var(--bc)] font-mono focus:outline-none focus:border-[var(--p)]"
+                  />
+                </div>
+              </div>
+
+              <!-- Couleur Secondaire -->
+              <div>
+                <label class="block text-[var(--bc)] font-secondary mb-2">
+                  Couleur Secondaire (s) *
+                </label>
+                <div class="flex gap-4">
+                  <input
+                    type="color"
+                    id="color-s"
+                    class="h-16 w-24 border-2 border-[var(--bc)] cursor-pointer"
+                  />
+                  <input
+                    type="text"
+                    id="color-s-text"
+                    placeholder="#00ff00"
+                    class="flex-1 p-3 border-2 border-[var(--bc)] bg-[var(--b1)] text-[var(--bc)] font-mono focus:outline-none focus:border-[var(--p)]"
+                  />
+                </div>
+              </div>
+
+              <!-- Couleur Accent -->
+              <div>
+                <label class="block text-[var(--bc)] font-secondary mb-2">
+                  Couleur Accent (a) *
+                </label>
+                <div class="flex gap-4">
+                  <input
+                    type="color"
+                    id="color-a"
+                    class="h-16 w-24 border-2 border-[var(--bc)] cursor-pointer"
+                  />
+                  <input
+                    type="text"
+                    id="color-a-text"
+                    placeholder="#0000ff"
+                    class="flex-1 p-3 border-2 border-[var(--bc)] bg-[var(--b1)] text-[var(--bc)] font-mono focus:outline-none focus:border-[var(--p)]"
+                  />
+                </div>
+              </div>
+
+              <!-- Fond Base -->
+              <div>
+                <label class="block text-[var(--bc)] font-secondary mb-2">
+                  Fond Base (b1) *
+                </label>
+                <div class="flex gap-4">
+                  <input
+                    type="color"
+                    id="color-b1"
+                    class="h-16 w-24 border-2 border-[var(--bc)] cursor-pointer"
+                  />
+                  <input
+                    type="text"
+                    id="color-b1-text"
+                    placeholder="#ffffff"
+                    class="flex-1 p-3 border-2 border-[var(--bc)] bg-[var(--b1)] text-[var(--bc)] font-mono focus:outline-none focus:border-[var(--p)]"
+                  />
+                </div>
+              </div>
+
+              <!-- Couleur Texte Base -->
+              <div>
+                <label class="block text-[var(--bc)] font-secondary mb-2">
+                  Couleur Texte Base (bc) *
+                </label>
+                <div class="flex gap-4">
+                  <input
+                    type="color"
+                    id="color-bc"
+                    class="h-16 w-24 border-2 border-[var(--bc)] cursor-pointer"
+                  />
+                  <input
+                    type="text"
+                    id="color-bc-text"
+                    placeholder="#000000"
+                    class="flex-1 p-3 border-2 border-[var(--bc)] bg-[var(--b1)] text-[var(--bc)] font-mono focus:outline-none focus:border-[var(--p)]"
+                  />
+                </div>
+              </div>
+
+              <h3 class="text-2xl font-primary text-[var(--bc)] mt-8 mb-4">COULEURS MODE SOMBRE (optionnel)</h3>
+
+              <!-- Dark Mode Colors -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[var(--bc)] font-secondary mb-2 text-sm">Primaire Dark</label>
+                  <input type="color" id="color-p-dark" class="h-12 w-full border-2 border-[var(--bc)] cursor-pointer" />
+                </div>
+                <div>
+                  <label class="block text-[var(--bc)] font-secondary mb-2 text-sm">Secondaire Dark</label>
+                  <input type="color" id="color-s-dark" class="h-12 w-full border-2 border-[var(--bc)] cursor-pointer" />
+                </div>
+                <div>
+                  <label class="block text-[var(--bc)] font-secondary mb-2 text-sm">Accent Dark</label>
+                  <input type="color" id="color-a-dark" class="h-12 w-full border-2 border-[var(--bc)] cursor-pointer" />
+                </div>
+                <div>
+                  <label class="block text-[var(--bc)] font-secondary mb-2 text-sm">Fond Dark</label>
+                  <input type="color" id="color-b1-dark" class="h-12 w-full border-2 border-[var(--bc)] cursor-pointer" />
+                </div>
+                <div>
+                  <label class="block text-[var(--bc)] font-secondary mb-2 text-sm">Texte Dark</label>
+                  <input type="color" id="color-bc-dark" class="h-12 w-full border-2 border-[var(--bc)] cursor-pointer" />
+                </div>
+              </div>
+
+              <!-- Aperçu -->
+              <div class="mt-8">
+                <h3 class="text-2xl font-primary text-[var(--bc)] mb-4">APERÇU</h3>
+                <div id="theme-preview" class="border-4 border-[var(--bc)] p-8 space-y-4">
+                  <div id="preview-box" class="p-6 border-2 border-black">
+                    <h4 class="text-2xl font-primary mb-2">Titre du projet</h4>
+                    <p class="font-secondary mb-4">Description du projet avec du texte</p>
+                    <button class="px-6 py-2 font-primary">BOUTON</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Boutons -->
+              <div class="flex gap-4">
+                <button
+                  type="submit"
+                  class="flex-1 p-4 bg-[var(--p)] text-[var(--b1)] font-primary border-2 border-[var(--bc)] hover:shadow-[4px_4px_0px_var(--bc)] transition-all"
+                >
+                  ENREGISTRER
+                </button>
+                <button
+                  type="button"
+                  id="cancel-btn"
+                  class="px-8 p-4 bg-[var(--b1)] text-[var(--bc)] font-primary border-2 border-[var(--bc)] hover:bg-[var(--bc)] hover:text-[var(--b1)] transition-all"
+                >
+                  ANNULER
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="loading" class="min-h-screen flex items-center justify-center">
+    <div class="text-2xl font-primary text-[var(--bc)]">Chargement...</div>
+  </div>
+</Layout>
+
+<script>
+  import PocketBase from "pocketbase";
+  
+  const pb = new PocketBase("https://portfolio.bryan-thierry.fr/");
+  
+  if (!pb.authStore.isValid) {
+    window.location.href = "/admin";
+  } else {
+    document.getElementById("loading")?.classList.add("hidden");
+    document.getElementById("admin-content")?.classList.remove("hidden");
+    loadThemes();
+  }
+
+  // Sync color picker avec input text
+  function syncColorInputs(colorId: string, textId: string) {
+    const colorInput = document.getElementById(colorId) as HTMLInputElement;
+    const textInput = document.getElementById(textId) as HTMLInputElement;
+    
+    colorInput.addEventListener("input", () => {
+      textInput.value = colorInput.value;
+      updatePreview();
+    });
+    
+    textInput.addEventListener("input", () => {
+      if (/^#[0-9A-Fa-f]{6}$/.test(textInput.value)) {
+        colorInput.value = textInput.value;
+        updatePreview();
+      }
+    });
+  }
+
+  syncColorInputs("color-p", "color-p-text");
+  syncColorInputs("color-s", "color-s-text");
+  syncColorInputs("color-a", "color-a-text");
+  syncColorInputs("color-b1", "color-b1-text");
+  syncColorInputs("color-bc", "color-bc-text");
+
+  // Mise à jour preview en temps réel
+  function updatePreview() {
+    const previewBox = document.getElementById("preview-box")!;
+    const p = (document.getElementById("color-p-text") as HTMLInputElement).value || "#8b5cf6";
+    const b1 = (document.getElementById("color-b1-text") as HTMLInputElement).value || "#faf9f7";
+    const bc = (document.getElementById("color-bc-text") as HTMLInputElement).value || "#000000";
+    
+    previewBox.style.background = b1;
+    previewBox.style.color = bc;
+    previewBox.style.borderColor = bc;
+    
+    const button = previewBox.querySelector("button")!;
+    button.style.background = p;
+    button.style.color = b1;
+    button.style.borderColor = bc;
+    button.style.border = `2px solid ${bc}`;
+  }
+
+  // Charger la liste des thèmes
+  async function loadThemes() {
+    try {
+      const themes = await pb.collection("themes").getFullList({ sort: "name" });
+      const container = document.getElementById("themes-list")!;
+      
+      container.innerHTML = themes.map(theme => `
+        <div class="border-4 border-[var(--bc)] p-6 bg-[var(--b1)]">
+          <h3 class="text-2xl font-primary text-[var(--bc)] mb-4">${theme.name}</h3>
+          <div class="flex gap-2 mb-4">
+            ${Object.entries(theme.css_variables).slice(0, 5).map(([key, val]: [string, any]) => 
+              `<div class="w-12 h-12 border-2 border-[var(--bc)]" style="background: ${val}"></div>`
+            ).join('')}
+          </div>
+          <div class="flex gap-2">
+            <button onclick="editTheme('${theme.id}')" class="flex-1 px-4 py-2 bg-[var(--p)] text-[var(--b1)] font-primary border-2 border-[var(--bc)]">
+              MODIFIER
+            </button>
+            <button onclick="deleteTheme('${theme.id}', '${theme.name}')" class="px-4 py-2 bg-red-500 text-white font-primary border-2 border-[var(--bc)]">
+              🗑️
+            </button>
+          </div>
+        </div>
+      `).join('');
+    } catch (error) {
+      console.error("Erreur chargement thèmes:", error);
+    }
+  }
+
+  // Nouveau thème
+  document.getElementById("new-theme-btn")?.addEventListener("click", () => {
+    (document.getElementById("theme-form") as HTMLFormElement).reset();
+    document.getElementById("theme-id")!.setAttribute("value", "");
+    document.getElementById("modal-title")!.textContent = "NOUVEAU THÈME";
+    document.getElementById("theme-modal")?.classList.remove("hidden");
+    updatePreview();
+  });
+
+  // Fermer modal
+  document.getElementById("close-modal")?.addEventListener("click", closeModal);
+  document.getElementById("cancel-btn")?.addEventListener("click", closeModal);
+  
+  function closeModal() {
+    document.getElementById("theme-modal")?.classList.add("hidden");
+  }
+
+  // Sauvegarder thème
+  document.getElementById("theme-form")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    
+    const themeId = (document.getElementById("theme-id") as HTMLInputElement).value;
+    const name = (document.getElementById("theme-name") as HTMLInputElement).value;
+    
+    const data = {
+      name,
+      css_variables: {
+        p: (document.getElementById("color-p-text") as HTMLInputElement).value,
+        s: (document.getElementById("color-s-text") as HTMLInputElement).value,
+        a: (document.getElementById("color-a-text") as HTMLInputElement).value,
+        b1: (document.getElementById("color-b1-text") as HTMLInputElement).value,
+        bc: (document.getElementById("color-bc-text") as HTMLInputElement).value,
+        "b1-rgb": hexToRgb((document.getElementById("color-b1-text") as HTMLInputElement).value)
+      },
+      dark_mode_colors: {
+        p: (document.getElementById("color-p-dark") as HTMLInputElement).value || null,
+        s: (document.getElementById("color-s-dark") as HTMLInputElement).value || null,
+        a: (document.getElementById("color-a-dark") as HTMLInputElement).value || null,
+        b1: (document.getElementById("color-b1-dark") as HTMLInputElement).value || null,
+        bc: (document.getElementById("color-bc-dark") as HTMLInputElement).value || null,
+      }
+    };
+    
+    try {
+      if (themeId) {
+        await pb.collection("themes").update(themeId, data);
+      } else {
+        await pb.collection("themes").create(data);
+      }
+      
+      closeModal();
+      loadThemes();
+      alert("Thème enregistré avec succès !");
+    } catch (error) {
+      console.error("Erreur sauvegarde:", error);
+      alert("Erreur lors de la sauvegarde");
+    }
+  });
+
+  // Éditer un thème
+  (window as any).editTheme = async (id: string) => {
+    try {
+      const theme = await pb.collection("themes").getOne(id);
+      
+      (document.getElementById("theme-id") as HTMLInputElement).value = id;
+      (document.getElementById("theme-name") as HTMLInputElement).value = theme.name;
+      (document.getElementById("color-p") as HTMLInputElement).value = theme.css_variables.p;
+      (document.getElementById("color-p-text") as HTMLInputElement).value = theme.css_variables.p;
+      (document.getElementById("color-s") as HTMLInputElement).value = theme.css_variables.s;
+      (document.getElementById("color-s-text") as HTMLInputElement).value = theme.css_variables.s;
+      (document.getElementById("color-a") as HTMLInputElement).value = theme.css_variables.a;
+      (document.getElementById("color-a-text") as HTMLInputElement).value = theme.css_variables.a;
+      (document.getElementById("color-b1") as HTMLInputElement).value = theme.css_variables.b1;
+      (document.getElementById("color-b1-text") as HTMLInputElement).value = theme.css_variables.b1;
+      (document.getElementById("color-bc") as HTMLInputElement).value = theme.css_variables.bc;
+      (document.getElementById("color-bc-text") as HTMLInputElement).value = theme.css_variables.bc;
+      
+      if (theme.dark_mode_colors) {
+        (document.getElementById("color-p-dark") as HTMLInputElement).value = theme.dark_mode_colors.p || "";
+        (document.getElementById("color-s-dark") as HTMLInputElement).value = theme.dark_mode_colors.s || "";
+        (document.getElementById("color-a-dark") as HTMLInputElement).value = theme.dark_mode_colors.a || "";
+        (document.getElementById("color-b1-dark") as HTMLInputElement).value = theme.dark_mode_colors.b1 || "";
+        (document.getElementById("color-bc-dark") as HTMLInputElement).value = theme.dark_mode_colors.bc || "";
+      }
+      
+      document.getElementById("modal-title")!.textContent = `MODIFIER ${theme.name.toUpperCase()}`;
+      document.getElementById("theme-modal")?.classList.remove("hidden");
+      updatePreview();
+    } catch (error) {
+      console.error("Erreur chargement thème:", error);
+    }
+  };
+
+  // Supprimer un thème
+  (window as any).deleteTheme = async (id: string, name: string) => {
+    if (!confirm(`Supprimer le thème "${name}" ?`)) return;
+    
+    try {
+      await pb.collection("themes").delete(id);
+      loadThemes();
+      alert("Thème supprimé !");
+    } catch (error) {
+      console.error("Erreur suppression:", error);
+      alert("Erreur lors de la suppression");
+    }
+  };
+
+  function hexToRgb(hex: string): string {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `${r}, ${g}, ${b}`;
+  }
+</script>
+</Layout>
