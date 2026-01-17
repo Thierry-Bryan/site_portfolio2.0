@@ -63,104 +63,6 @@ jobs:
           source: "package.json,package-lock.json,.env"
           target: "/var/www/portfolio"
 
-      - name: 📤 Upload Backend folder
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "Backend/*"
-          target: "/var/www/portfolio"
-          strip_components: 0
-
-      - name: �️ Setup PocketBase
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            echo "🔍 Setting up PocketBase..."
-            
-            echo "📁 Creating pocketbase directory..."
-            mkdir -p ~/pocketbase
-            
-            echo "📋 Copying Backend files..."
-            if [ -d "/var/www/portfolio/Backend/pocketbase" ]; then
-              cp -r /var/www/portfolio/Backend/pocketbase/* ~/pocketbase/ 2>/dev/null || true
-              echo "✅ Files copied successfully"
-            else
-              echo "❌ Backend directory not found!"
-              ls -la /var/www/portfolio/
-              exit 1
-            fi
-            
-            chmod +x ~/pocketbase/pocketbase
-            
-            echo "🚀 Starting PocketBase on port 8091 (temporary)..."
-            cd ~/pocketbase
-            nohup ./pocketbase serve --http=127.0.0.1:8091 --dir=./pb_data > ../pocketbase.log 2>&1 &
-            
-            echo "⏳ Waiting for PocketBase to start..."
-            sleep 5
-            
-            if curl -f http://127.0.0.1:8091/_/ > /dev/null 2>&1; then
-              echo "✅ PocketBase started successfully on port 8091"
-            else
-              echo "❌ PocketBase failed to start"
-              cat ~/pocketbase.log 2>/dev/null || echo "No log file"
-              exit 1
-            fi
-
-      - name: 🔧 Configure Nginx
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            # Create nginx config file
-            sudo tee /etc/nginx/sites-available/portfolio > /dev/null << 'NGINX_EOF'
-            server {
-                listen 80;
-                server_name portfolio.bryan-thierry.fr 87.106.23.57;
-                
-                location / {
-                    proxy_pass http://127.0.0.1:3000;
-                    proxy_http_version 1.1;
-                    proxy_set_header Upgrade $http_upgrade;
-                    proxy_set_header Connection 'upgrade';
-                    proxy_set_header Host $host;
-                    proxy_set_header X-Real-IP $remote_addr;
-                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                    proxy_set_header X-Forwarded-Proto $scheme;
-                    proxy_cache_bypass $http_upgrade;
-                }
-
-                location /_/ {
-                    rewrite ^/_/(.*)$ /$1 break;
-                    
-                    proxy_set_header Connection '';
-                    proxy_http_version 1.1;
-                    proxy_buffering off;
-                    proxy_cache off;
-
-                    proxy_set_header Host $host;
-                    proxy_set_header X-Real-IP $remote_addr;
-                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                    proxy_set_header X-Forwarded-Proto $scheme;
-
-                    proxy_pass http://127.0.0.1:8091/;
-                }
-            }
-            NGINX_EOF
-
-            # Enable nginx site and reload
-            sudo ln -sf /etc/nginx/sites-available/portfolio /etc/nginx/sites-enabled/
-            sudo rm -f /etc/nginx/sites-enabled/default
-            sudo nginx -t && sudo systemctl reload nginx
-            echo "✅ Nginx configured successfully"
-
       - name: 🔄 Install dependencies and restart
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -170,15 +72,15 @@ jobs:
           script: |
             cd /var/www/portfolio
             npm ci --omit=dev
-
+            
             cd /var/www/portfolio/server
             pm2 delete portfolio || true
             pm2 start entry.mjs --name "portfolio"
             pm2 save
-
+            
             sleep 2
             pm2 list
-
+            
             echo "✅ Deployment completed!"
 
       - name: ✅ Deploy completed
