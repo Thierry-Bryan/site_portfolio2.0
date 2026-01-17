@@ -5,7 +5,10 @@ import PocketBase from "pocketbase";
 // ----------------------------------------------------
 
 // Utiliser la variable d'environnement ou fallback
-const POCKETBASE_URL = import.meta.env.POCKETBASE_URL || process.env.POCKETBASE_URL || 'https://pocketbase-portfolio-production.up.railway.app';
+const POCKETBASE_URL =
+  import.meta.env.POCKETBASE_URL ||
+  process.env.POCKETBASE_URL ||
+  'https://portfolio.bryan-thierry.fr';
 
 console.log('PocketBase URL:', POCKETBASE_URL);
 
