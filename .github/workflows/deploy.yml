@@ -73,38 +73,40 @@ jobs:
           target: "/var/www/portfolio"
           strip_components: 0
 
-      - name: �️ Setup PocketBase
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Setup PocketBase
+        uses: appleboy/ssh-aion@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Stop existing PocketBase
-            sudo pkill -f pocketbase || true
-
-            # Create pocketbase directory and set permissions
-            sudo mkdir -p /var/www/pocketbase
-            sudo cp -r /var/www/portfolio/Backend/pocketbase/* /var/www/pocketbase/
-            sudo chown -R www-data:www-data /var/www/pocketbase
-            sudo chmod +x /var/www/pocketbase/pocketbase
-
-            # Start PocketBase in background
-            sudo -u www-data nohup /var/www/pocketbase/pocketbase serve --http=127.0.0.1:8090 --dir=/var/www/pocketbase/pb_data > /var/log/pocketbase.log 2>&1 &
-
+            # Stop existing PocketBase (with sudo if needed)
+            pkill -f pocketbase || true
+            
+            # Create pocketbase directory without sudo
+            mkdir -p ~/pocketbase
+            cp -r /var/www/portfolio/Backend/pocketbase/* ~/pocketbase/ 2>/dev/null || true
+            chmod +x ~/pocketbase/pocketbase
+            
+            # Start PocketBase as current user
+            nohup ~/pocketbase/pocketbase serve --http=127.0.0.1:8090 --dir=~/pocketbase/pb_data > ~/pocketbase.log 2>&1 &
+            
             # Wait for PocketBase to start
-            sleep 3
-
+            sleep 5
+            
             # Check if PocketBase is running
             if curl -f http://127.0.0.1:8090/_/ > /dev/null 2>&1; then
               echo "✅ PocketBase started successfully"
+              echo "📋 Available collections:"
+              curl -s http://127.0.0.1:8090/api/collections | head -c 200
             else
               echo "❌ PocketBase failed to start"
-              cat /var/log/pocketbase.log
+              echo "📋 Log content:"
+              cat ~/pocketbase.log || echo "No log file"
               exit 1
             fi
 
-      - name: ���🔧 Configure Nginx
+      - name: 🔧 Configure Nginx
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}

@@ -12,9 +12,9 @@ restart_server() {
     # Arrêter tous les processus node
     pkill -f "node" 2>/dev/null || echo "Pas de Node"
     
-    # Variables env
-    echo "POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" > .env
-    echo "PUBLIC_POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" >> .env
+    # Variables env pour PocketBase local
+    echo "POCKETBASE_URL=https://portfolio.bryan-thierry.fr" > .env
+    echo "PUBLIC_POCKETBASE_URL=https://portfolio.bryan-thierry.fr" >> .env
     
     # Attendre un peu
     sleep 2
