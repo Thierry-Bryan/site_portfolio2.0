@@ -68,16 +68,27 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
 // Récupérer les technologies du projet depuis expand
 const projetTechnologies = projet.expand?.technologies || [];
 
+// DEBUG : Voir ce qu'on récupère
+console.log('Projet récupéré:', projet.title);
+console.log('Expand:', projet.expand);
+console.log('Theme dans expand:', projet.expand?.theme);
+console.log('Theme direct:', projet.theme);
+
 // Récupérer le thème du projet et générer le CSS
-const projetTheme = projet.expand?.theme;
+const projetTheme = projet.expand?.theme || null;
 let dynamicThemeCSS = "";
 
 if (projetTheme) {
+  console.log('Thème trouvé:', projetTheme.name);
   dynamicThemeCSS = generateThemeCSS(projetTheme);
+  console.log('CSS généré:', dynamicThemeCSS ? 'OUI' : 'NON');
+} else {
+  console.log('Aucun thème trouvé, fallback sur basique');
 }
 
 // Utiliser le nom du thème pour Layout, avec fallback sur "basique"
 const themeForLayout = projetTheme?.name || "basique";
+console.log('Thème final pour Layout:', themeForLayout);
 ---
 
 <Layout
