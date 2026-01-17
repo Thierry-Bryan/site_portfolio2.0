@@ -4,16 +4,19 @@ import { pb } from "../../utils/pb";
 
 let message = "";
 let messageType = "success";
+let themes = [];
 let projets = [];
-let selectedProjetId = "";
+let selectedThemeId = "";
 
 try {
+  themes = await pb.collection("themes").getFullList({ sort: "nom" });
   projets = await pb.collection("projets").getFullList({ 
     sort: "-created",
-    filter: 'statut = "publié"'
+    expand: "theme"
   });
-  if (projets.length > 0) {
-    selectedProjetId = projets[0].id;
+  
+  if (themes.length > 0) {
+    selectedThemeId = themes[0].id;
   }
 } catch (error) {
   console.error("Erreur chargement:", error);
@@ -26,20 +29,24 @@ if (Astro.request.method === "POST") {
     const formData = await Astro.request.formData();
     const action = formData.get("action");
 
-    if (action === "update_theme") {
-      const projetId = formData.get("projet_id");
-      const themeNom = formData.get("theme_nom");
-      
-      // Mettre à jour le thème du projet
-      await pb.collection("projets").update(projetId, {
-        theme: themeNom,
+    if (action === "update") {
+      const id = formData.get("id");
+      await pb.collection("themes").update(id, {
+        primary: formData.get("primary"),
+        secondary: formData.get("secondary"),
+        accent: formData.get("accent"),
+        neutral: formData.get("neutral"),
+        base_100: formData.get("base_100"),
+        info: formData.get("info"),
+        success: formData.get("success"),
+        warning: formData.get("warning"),
+        error: formData.get("error"),
       });
-      
-      message = `Thème "${themeNom}" appliqué au projet !`;
-      selectedProjetId = projetId;
+      message = "Thème mis à jour !";
+      selectedThemeId = id;
     }
 
-    return Astro.redirect(`/admin/themes?selected=${selectedProjetId}`);
+    return Astro.redirect(`/admin/themes?selected=${selectedThemeId}`);
   } catch (error) {
     console.error("Erreur POST:", error);
     message = `Erreur: ${error.message}`;
@@ -47,20 +54,22 @@ if (Astro.request.method === "POST") {
   }
 }
 
-// Récupérer le projet sélectionné depuis l'URL
 const urlParams = Astro.url.searchParams;
 const selectedFromUrl = urlParams.get("selected");
 if (selectedFromUrl) {
-  selectedProjetId = selectedFromUrl;
+  selectedThemeId = selectedFromUrl;
 }
+
+const selectedTheme = themes.find(t => t.id === selectedThemeId) || themes[0];
+const projetAvecTheme = projets.find(p => p.theme === selectedTheme?.nom);
 ---
 
 <LayoutAdmin title="Thèmes">
   <div class="min-h-screen bg-gradient-to-br from-base-100 to-base-200 p-8">
     <div class="max-w-7xl mx-auto">
       <div class="mb-8">
-        <h1 class="text-4xl font-black uppercase tracking-wider text-base-content">Thèmes</h1>
-        <p class="text-base-content/60 mt-2">Modifiez le thème visuel de vos projets</p>
+        <h1 class="text-4xl font-black uppercase tracking-wider text-base-content">Éditeur de Thèmes</h1>
+        <p class="text-base-content/60 mt-2">Modifiez les couleurs de vos thèmes avec aperçu en temps réel</p>
       </div>
 
       {message && (
@@ -70,71 +79,201 @@ if (selectedFromUrl) {
       )}
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Liste des projets -->
-        <div class="lg:col-span-1">
-          <h2 class="text-2xl font-black uppercase mb-4">Projets</h2>
-          <div class="space-y-3">
-            {projets.map((projet) => (
-              <button
-                onclick={`selectProjet('${projet.id}')`}
-                class={`w-full text-left p-4 border-4 border-black transition-all ${
-                  selectedProjetId === projet.id
-                    ? 'bg-primary text-primary-content shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]'
-                    : 'bg-base-100 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]'
-                }`}
-              >
-                <h3 class="font-black uppercase text-sm">{projet.titre}</h3>
-                <p class="text-xs opacity-70 mt-1">Thème: {projet.theme || 'omnisphere'}</p>
-              </button>
-            ))}
+        <!-- Sélecteur de thème + Éditeur de couleurs -->
+        <div class="lg:col-span-1 space-y-6">
+          <!-- Sélecteur de thème -->
+          <div class="bg-base-100 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-4">
+            <h2 class="text-xl font-black uppercase mb-4">Choisir un thème</h2>
+            <div class="space-y-2">
+              {themes.map((theme) => (
+                <button
+                  type="button"
+                  onclick={`window.location.href='/admin/themes?selected=${theme.id}'`}
+                  class={`w-full text-left p-3 border-2 border-black transition-all font-bold uppercase text-sm ${
+                    selectedThemeId === theme.id
+                      ? 'bg-primary text-primary-content'
+                      : 'bg-base-100 hover:bg-base-200'
+                  }`}
+                >
+                  {theme.nom}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <!-- Thèmes disponibles -->
-          <div class="mt-8">
-            <h2 class="text-2xl font-black uppercase mb-4">Thèmes Disponibles</h2>
-            <form method="POST" id="theme-form">
-              <input type="hidden" name="action" value="update_theme" />
-              <input type="hidden" name="projet_id" id="selected-projet-id" value={selectedProjetId} />
+          <!-- Éditeur de couleurs -->
+          {selectedTheme && (
+            <div class="bg-base-100 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-4">
+              <h2 class="text-xl font-black uppercase mb-4">Couleurs du thème</h2>
               
-              <div class="space-y-2">
-                {['omnisphere', 'rba', 'ca-va-trailer', 'les-12-fragments', 'echo-safe'].map((theme) => (
-                  <button
-                    type="button"
-                    onclick={`applyTheme('${theme}')`}
-                    class="w-full text-left p-3 border-2 border-black bg-base-100 hover:bg-secondary hover:text-secondary-content transition-all font-bold uppercase text-sm"
-                  >
-                    {theme}
-                  </button>
-                ))}
-              </div>
-            </form>
-          </div>
+              <form method="POST" id="theme-form">
+                <input type="hidden" name="action" value="update" />
+                <input type="hidden" name="id" value={selectedTheme.id} />
+                
+                <div class="space-y-3">
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text font-bold uppercase text-xs">Primary</span>
+                    </label>
+                    <div class="flex gap-2">
+                      <input 
+                        type="color" 
+                        name="primary" 
+                        id="color-primary"
+                        value={selectedTheme.primary}
+                        class="w-16 h-12 border-2 border-black cursor-pointer rounded"
+                        onchange="updatePreview()"
+                      />
+                      <input 
+                        type="text" 
+                        value={selectedTheme.primary}
+                        id="text-primary"
+                        class="input input-sm input-bordered flex-1 border-2 border-black font-mono"
+                        onchange="document.getElementById('color-primary').value = this.value; updatePreview()"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text font-bold uppercase text-xs">Secondary</span>
+                    </label>
+                    <div class="flex gap-2">
+                      <input 
+                        type="color" 
+                        name="secondary" 
+                        id="color-secondary"
+                        value={selectedTheme.secondary}
+                        class="w-16 h-12 border-2 border-black cursor-pointer rounded"
+                        onchange="updatePreview()"
+                      />
+                      <input 
+                        type="text" 
+                        value={selectedTheme.secondary}
+                        id="text-secondary"
+                        class="input input-sm input-bordered flex-1 border-2 border-black font-mono"
+                        onchange="document.getElementById('color-secondary').value = this.value; updatePreview()"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text font-bold uppercase text-xs">Accent</span>
+                    </label>
+                    <div class="flex gap-2">
+                      <input 
+                        type="color" 
+                        name="accent" 
+                        id="color-accent"
+                        value={selectedTheme.accent}
+                        class="w-16 h-12 border-2 border-black cursor-pointer rounded"
+                        onchange="updatePreview()"
+                      />
+                      <input 
+                        type="text" 
+                        value={selectedTheme.accent}
+                        id="text-accent"
+                        class="input input-sm input-bordered flex-1 border-2 border-black font-mono"
+                        onchange="document.getElementById('color-accent').value = this.value; updatePreview()"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text font-bold uppercase text-xs">Neutral</span>
+                    </label>
+                    <div class="flex gap-2">
+                      <input 
+                        type="color" 
+                        name="neutral" 
+                        id="color-neutral"
+                        value={selectedTheme.neutral}
+                        class="w-16 h-12 border-2 border-black cursor-pointer rounded"
+                        onchange="updatePreview()"
+                      />
+                      <input 
+                        type="text" 
+                        value={selectedTheme.neutral}
+                        id="text-neutral"
+                        class="input input-sm input-bordered flex-1 border-2 border-black font-mono"
+                        onchange="document.getElementById('color-neutral').value = this.value; updatePreview()"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text font-bold uppercase text-xs">Base 100</span>
+                    </label>
+                    <div class="flex gap-2">
+                      <input 
+                        type="color" 
+                        name="base_100" 
+                        id="color-base_100"
+                        value={selectedTheme.base_100}
+                        class="w-16 h-12 border-2 border-black cursor-pointer rounded"
+                        onchange="updatePreview()"
+                      />
+                      <input 
+                        type="text" 
+                        value={selectedTheme.base_100}
+                        id="text-base_100"
+                        class="input input-sm input-bordered flex-1 border-2 border-black font-mono"
+                        onchange="document.getElementById('color-base_100').value = this.value; updatePreview()"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <button 
+                  type="submit" 
+                  class="btn btn-primary w-full mt-6 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all uppercase font-black"
+                >
+                  💾 Sauvegarder
+                </button>
+              </form>
+            </div>
+          )}
         </div>
 
-        <!-- Aperçu du projet -->
+        <!-- Aperçu -->
         <div class="lg:col-span-2">
           <div class="sticky top-4">
             <div class="flex justify-between items-center mb-4">
               <h2 class="text-2xl font-black uppercase">Aperçu Temps Réel</h2>
-              <a 
-                href={`/projets/${selectedProjetId}`}
-                target="_blank"
-                class="btn btn-sm border-2 border-black font-bold uppercase"
-              >
-                Ouvrir dans un nouvel onglet
-              </a>
+              {projetAvecTheme && (
+                <a 
+                  href={`/projets/${projetAvecTheme.id}`}
+                  target="_blank"
+                  class="btn btn-sm border-2 border-black font-bold uppercase"
+                >
+                  Ouvrir dans un nouvel onglet
+                </a>
+              )}
             </div>
-            <div class="border-4 border-black rounded-lg overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-white" style="height: 700px;">
-              {selectedProjetId ? (
+            
+            <div class="border-4 border-black rounded-lg overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-white" style="height: 800px;">
+              {projetAvecTheme ? (
                 <iframe 
                   id="preview-iframe"
-                  src={`/projets/${selectedProjetId}`}
+                  src={`/projets/${projetAvecTheme.id}`}
                   class="w-full h-full"
                   title="Aperçu du projet"
                 ></iframe>
               ) : (
-                <div class="flex items-center justify-center h-full">
-                  <p class="text-xl font-bold text-gray-400">Sélectionnez un projet</p>
+                <div class="flex flex-col items-center justify-center h-full text-center p-8">
+                  <div class="text-6xl mb-4">🎨</div>
+                  <p class="text-2xl font-bold text-gray-400 mb-2">Aucun projet avec ce thème</p>
+                  <p class="text-sm text-gray-500">Assignez ce thème à un projet pour voir l'aperçu</p>
+                  
+                  <div class="mt-8 space-y-2">
+                    <p class="font-bold text-sm">Projets disponibles :</p>
+                    {projets.slice(0, 3).map((projet) => (
+                      <div class="badge badge-outline">{projet.titre}</div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -144,19 +283,34 @@ if (selectedFromUrl) {
     </div>
   </div>
 
-  <script define:vars={{ selectedProjetId }}>
-    function selectProjet(projetId) {
-      window.location.href = `/admin/themes?selected=${projetId}`;
-    }
+  <script>
+    function updatePreview() {
+      // Mettre à jour les valeurs texte depuis les color pickers
+      const colorInputs = ['primary', 'secondary', 'accent', 'neutral', 'base_100'];
+      colorInputs.forEach(name => {
+        const colorInput = document.getElementById(`color-${name}`);
+        const textInput = document.getElementById(`text-${name}`);
+        if (colorInput && textInput) {
+          textInput.value = colorInput.value;
+        }
+      });
 
-    function applyTheme(themeName) {
-      const form = document.getElementById('theme-form');
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = 'theme_nom';
-      input.value = themeName;
-      form.appendChild(input);
-      form.submit();
+      // Envoyer les nouvelles couleurs à l'iframe pour preview temps réel
+      const iframe = document.getElementById('preview-iframe');
+      if (iframe && iframe.contentWindow) {
+        const colors = {};
+        colorInputs.forEach(name => {
+          const colorInput = document.getElementById(`color-${name}`);
+          if (colorInput) {
+            colors[name] = colorInput.value;
+          }
+        });
+        
+        iframe.contentWindow.postMessage({
+          type: 'updateTheme',
+          colors: colors
+        }, '*');
+      }
     }
   </script>
 </LayoutAdmin>
