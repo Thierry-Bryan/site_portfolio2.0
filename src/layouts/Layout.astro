@@ -167,9 +167,11 @@ const { title = "Portfolio", theme = "ca-va-trailer", firstSectionTheme } = Astr
           }
 
           if (footer) {
-            // Le footer prend toujours le thème de la page (pageTheme), pas celui du header
+            // Le footer prend le thème actuel de la page, pas un thème fixe
+            const currentPageTheme = document.documentElement.getAttribute("data-theme") || pageTheme;
+            const basePageTheme = currentPageTheme.replace("-dark", "");
             const isDarkForFooter = newTheme.includes("-dark");
-            const footerTheme = isDarkForFooter ? pageTheme + "-dark" : pageTheme;
+            const footerTheme = isDarkForFooter ? basePageTheme + "-dark" : basePageTheme;
             footer.setAttribute("data-theme", footerTheme);
           }
 
@@ -247,8 +249,10 @@ const { title = "Portfolio", theme = "ca-va-trailer", firstSectionTheme } = Astr
             }
           }
 
-          // Le footer prend toujours le thème de la page, pas celui du header
-          const themeForFooter = isDarkMode ? pageTheme + "-dark" : pageTheme;
+          // Le footer prend le thème actuel de la page, pas un thème fixe
+          const currentPageTheme = document.documentElement.getAttribute("data-theme") || pageTheme;
+          const basePageTheme = currentPageTheme.replace("-dark", "");
+          const themeForFooter = isDarkMode ? basePageTheme + "-dark" : basePageTheme;
           if (footer) footer.setAttribute("data-theme", themeForFooter);
 
           // Initialiser les icônes
