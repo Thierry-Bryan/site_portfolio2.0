@@ -138,7 +138,7 @@ const projetTechnologies = projet.expand?.technologies || [];
           class="absolute inset-0 w-full h-full overflow-visible transition-all duration-700"
           id="background-comics"
         >
-          <BackgroundComics theme={projet.theme as any} />
+          <BackgroundComics theme={themeName as any} />
         </div>
       </div>
 
@@ -147,7 +147,7 @@ const projetTechnologies = projet.expand?.technologies || [];
         class="md:hidden absolute inset-0 w-full h-full overflow-visible transition-all duration-700 z-10"
         id="background-comics-mobile"
       >
-        <BackgroundComics theme={projet.theme as any} />
+        <BackgroundComics theme={themeName as any} />
       </div>
 
       <!-- Titre mobile en blanc, positionné en haut -->
@@ -186,7 +186,7 @@ const projetTechnologies = projet.expand?.technologies || [];
         <ArrowButton
           direction="prev"
           dataAttribute={previousProjet?.slug || ""}
-          theme={projet.theme as any}
+          theme={themeName as any}
         />
       </div>
       <div
@@ -197,14 +197,14 @@ const projetTechnologies = projet.expand?.technologies || [];
         <ArrowButton
           direction="next"
           dataAttribute={nextProjet?.slug || ""}
-          theme={projet.theme as any}
+          theme={themeName as any}
         />
       </div>
     </div>
   </section>
 
   <!-- Bandeau de défilement du nom du projet -->
-  <ProjetBanner title={projet.title} theme={projet.theme as any} />
+  <ProjetBanner title={projet.title} theme={themeName as any} />
 
   <style>
     /* Style pour les flèches désactivées */
