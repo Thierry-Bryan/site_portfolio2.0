@@ -4,202 +4,415 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
 
 <LayoutAdmin title="Admin - Technologies">
   <div id="admin-content" class="hidden">
-    <aside
-      class="fixed left-0 top-0 h-screen w-64 bg-black text-white flex flex-col z-50"
-    >
+    <!-- Sidebar -->
+    <aside class="fixed left-0 top-0 h-screen w-64 bg-black text-white flex flex-col z-50">
       <div class="p-6 border-b-2 border-white">
-        <h1 class="text-xl font-bold uppercase">Portfolio Admin</h1>
+        <h1 class="text-xl font-medium uppercase tracking-wider">Portfolio Admin</h1>
       </div>
       <nav class="flex-1 p-4 space-y-1">
-        <a
-          href="/admin/dashboard"
-          class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm"
-          >Dashboard</a
-        >
-        <a
-          href="/admin/projets"
-          class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm"
-          >Projets</a
-        >
-        <a
-          href="/admin/themes"
-          class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm"
-          >Thèmes</a
-        >
-        <a
-          href="/admin/tags"
-          class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm"
-          >Tags</a
-        >
-        <a
-          href="/admin/technologies"
-          class="block px-4 py-2 bg-white text-black uppercase text-sm font-bold"
-          >Technologies</a
-        >
+        <a href="/admin/dashboard" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">Dashboard</a>
+        <a href="/admin/projets" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">Projets</a>
+        <a href="/admin/themes" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">Thèmes</a>
+        <a href="/admin/tags" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">Tags</a>
+        <a href="/admin/technologies" class="block px-4 py-2 bg-white text-black uppercase text-sm font-medium">Technologies</a>
       </nav>
       <div class="p-4 border-t-2 border-white">
-        <button
-          id="logout-btn"
-          class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white transition-colors uppercase text-sm font-bold"
-          >Déconnexion</button
-        >
+        <button id="logout-btn" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white transition-colors uppercase text-sm">Déconnexion</button>
       </div>
     </aside>
 
+    <!-- Main Content -->
     <main class="ml-64 min-h-screen bg-[#faf9f7]">
       <div class="p-8">
+        <!-- Header -->
         <div class="flex justify-between items-center mb-8">
           <div>
-            <h2 class="text-4xl font-bold text-black uppercase mb-2">
-              Gestion des technologies
-            </h2>
-            <p class="text-gray-700">
-              Créer et gérer les technologies et outils
-            </p>
+            <h2 class="text-4xl font-black text-black uppercase mb-2 tracking-wider">Technologies</h2>
+            <p class="text-gray-600 text-lg">Gérez votre stack technique avec logos et catégories</p>
           </div>
-          <button
-            id="new-tech-btn"
-            class="px-6 py-3 bg-black text-white font-bold uppercase hover:bg-gray-800 transition-colors border-4 border-black"
-          >
-            Nouvelle technologie
+          <button id="new-tech-btn" class="px-6 py-3 bg-black text-white font-medium uppercase hover:bg-gray-800 transition-colors border-2 border-black">
+            ➕ Nouvelle technologie
           </button>
         </div>
 
-        <div id="techs-list" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <!-- Filters -->
+        <div class="mb-6 flex gap-4 flex-wrap">
+          <select id="category-filter" class="px-4 py-2 border-2 border-black bg-white text-black font-medium">
+            <option value="">Toutes les catégories</option>
+            <option value="frontend">Frontend</option>
+            <option value="backend">Backend</option>
+            <option value="database">Base de données</option>
+            <option value="tool">Outils</option>
+            <option value="framework">Frameworks</option>
+          </select>
         </div>
 
-        <div
-          id="tech-modal"
-          class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-        >
-          <div class="bg-white rounded-lg max-w-md w-full p-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6" id="modal-title">
-              Nouvelle technologie
-            </h2>
-            <form id="tech-form" class="space-y-6">
-              <input type="hidden" id="tech-id" />
+        <!-- Technologies Grid -->
+        <div id="techs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+      </div>
+    </main>
+
+    <!-- Modal -->
+    <div id="tech-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div class="bg-white border-4 border-black max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <!-- Modal Header -->
+        <div class="flex justify-between items-center p-6 border-b-4 border-black">
+          <h2 class="text-2xl font-black text-black uppercase tracking-wider" id="modal-title">Nouvelle technologie</h2>
+          <button id="close-modal" class="text-black text-4xl leading-none hover:text-gray-600">×</button>
+        </div>
+
+        <!-- Modal Content -->
+        <div class="p-6">
+          <form id="tech-form" class="space-y-6">
+            <input type="hidden" id="tech-id" />
+
+            <div class="grid md:grid-cols-2 gap-6">
+              <!-- Nom -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Nom <span class="text-red-500">*</span></label
-                >
+                <label class="block text-sm font-medium text-black mb-2 uppercase tracking-wide">
+                  Nom de la technologie <span class="text-red-600">*</span>
+                </label>
                 <input
                   type="text"
                   id="tech-name"
                   required
-                  placeholder="Ex: React"
-                  class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  placeholder="React, PHP, PostgreSQL..."
+                  class="w-full px-4 py-3 border-2 border-black bg-white text-black focus:outline-none focus:border-4"
                 />
               </div>
-              <div class="flex justify-end gap-3">
-                <button
-                  type="button"
-                  id="cancel-btn"
-                  class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-100"
+
+              <!-- Catégorie -->
+              <div>
+                <label class="block text-sm font-medium text-black mb-2 uppercase tracking-wide">
+                  Catégorie <span class="text-red-600">*</span>
+                </label>
+                <select
+                  id="tech-category"
+                  required
+                  class="w-full px-4 py-3 border-2 border-black bg-white text-black focus:outline-none focus:border-4"
                 >
-                  Annuler
-                </button>
-                <button
-                  type="submit"
-                  class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                >
-                  Enregistrer
-                </button>
+                  <option value="">Sélectionner une catégorie</option>
+                  <option value="frontend">Frontend</option>
+                  <option value="backend">Backend</option>
+                  <option value="database">Base de données</option>
+                  <option value="tool">Outils</option>
+                  <option value="framework">Frameworks</option>
+                </select>
               </div>
-            </form>
-          </div>
+            </div>
+
+            <!-- Logo URL -->
+            <div>
+              <label class="block text-sm font-medium text-black mb-2 uppercase tracking-wide">
+                URL du logo
+              </label>
+              <input
+                type="url"
+                id="tech-logo"
+                placeholder="https://example.com/logo.svg"
+                class="w-full px-4 py-3 border-2 border-black bg-white text-black focus:outline-none focus:border-4"
+              />
+              <p class="text-xs text-gray-600 mt-1">Conseillé : format SVG, 64x64px minimum</p>
+            </div>
+
+            <!-- Description -->
+            <div>
+              <label class="block text-sm font-medium text-black mb-2 uppercase tracking-wide">
+                Description courte
+              </label>
+              <textarea
+                id="tech-description"
+                rows="3"
+                placeholder="Framework JavaScript pour créer des interfaces utilisateur..."
+                class="w-full px-4 py-3 border-2 border-black bg-white text-black focus:outline-none focus:border-4"
+              ></textarea>
+            </div>
+
+            <!-- Niveau -->
+            <div>
+              <label class="block text-sm font-medium text-black mb-2 uppercase tracking-wide">
+                Niveau de maîtrise
+              </label>
+              <div class="flex gap-4 items-center">
+                <input type="range" id="tech-level" min="1" max="5" value="3" class="flex-1" />
+                <span id="level-display" class="font-medium text-black min-w-[80px]">3/5</span>
+              </div>
+              <div class="flex justify-between text-xs text-gray-600 mt-1">
+                <span>Débutant</span>
+                <span>Expert</span>
+              </div>
+            </div>
+
+            <!-- Couleur -->
+            <div>
+              <label class="block text-sm font-medium text-black mb-2 uppercase tracking-wide">
+                Couleur d'accent
+              </label>
+              <div class="flex gap-4 items-center">
+                <input
+                  type="color"
+                  id="tech-color"
+                  value="#000000"
+                  class="w-12 h-12 border-2 border-black"
+                />
+                <input
+                  type="text"
+                  id="tech-color-hex"
+                  placeholder="#000000"
+                  class="flex-1 px-4 py-3 border-2 border-black bg-white text-black focus:outline-none focus:border-4"
+                />
+              </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex gap-4 pt-6 border-t-2 border-black">
+              <button
+                type="submit"
+                class="flex-1 px-6 py-3 bg-black text-white font-medium uppercase hover:bg-gray-800 transition-colors"
+              >
+                💾 Sauvegarder
+              </button>
+              <button
+                type="button"
+                id="cancel-btn"
+                class="px-6 py-3 border-2 border-black text-black font-medium uppercase hover:bg-gray-100 transition-colors"
+              >
+                Annuler
+              </button>
+            </div>
+          </form>
         </div>
       </div>
-    </main>
+    </div>
   </div>
-  <div id="loading" class="min-h-screen flex items-center justify-center">
-    <div class="text-2xl font-primary text-[var(--bc)]">Chargement...</div>
+
+  <!-- Loading -->
+  <div id="loading" class="min-h-screen flex items-center justify-center bg-[#faf9f7]">
+    <div class="text-2xl font-medium text-black">Chargement des technologies...</div>
   </div>
 </LayoutAdmin>
 
 <script>
   import PocketBase from "pocketbase";
+
   const pb = new PocketBase("https://portfolio.bryan-thierry.fr/");
 
+  // Vérifier l'authentification
   if (!pb.authStore.isValid) {
     window.location.href = "/admin";
   } else {
     document.getElementById("loading")?.classList.add("hidden");
     document.getElementById("admin-content")?.classList.remove("hidden");
-    loadTechs();
+    loadTechnologies();
   }
 
-  async function loadTechs() {
-    const techs = await pb
-      .collection("technologies")
-      .getFullList({ sort: "name" });
-    const container = document.getElementById("techs-list")!;
-    container.innerHTML = techs
+  let technologies = [];
+  let currentFilter = "";
+
+  // Éléments DOM
+  const modal = document.getElementById("tech-modal");
+  const form = document.getElementById("tech-form");
+  const categoryFilter = document.getElementById("category-filter");
+  const levelSlider = document.getElementById("tech-level");
+  const levelDisplay = document.getElementById("level-display");
+  const colorPicker = document.getElementById("tech-color");
+  const colorHex = document.getElementById("tech-color-hex");
+
+  // Event Listeners
+  document.getElementById("new-tech-btn")?.addEventListener("click", () => openModal());
+  document.getElementById("close-modal")?.addEventListener("click", closeModal);
+  document.getElementById("cancel-btn")?.addEventListener("click", closeModal);
+  form?.addEventListener("submit", handleSubmit);
+  categoryFilter?.addEventListener("change", (e) => {
+    currentFilter = e.target.value;
+    renderTechnologies();
+  });
+
+  // Sync color picker and hex input
+  levelSlider?.addEventListener("input", (e) => {
+    levelDisplay.textContent = `${e.target.value}/5`;
+  });
+
+  colorPicker?.addEventListener("input", (e) => {
+    colorHex.value = e.target.value;
+  });
+
+  colorHex?.addEventListener("input", (e) => {
+    if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+      colorPicker.value = e.target.value;
+    }
+  });
+
+  // Functions
+  async function loadTechnologies() {
+    try {
+      technologies = await pb.collection("technologies").getFullList({
+        sort: "category,name"
+      });
+      renderTechnologies();
+    } catch (error) {
+      console.error("Erreur:", error);
+      alert("Erreur lors du chargement des technologies");
+    }
+  }
+
+  function renderTechnologies() {
+    const grid = document.getElementById("techs-grid");
+    if (!grid) return;
+
+    const filtered = currentFilter
+      ? technologies.filter(tech => tech.category === currentFilter)
+      : technologies;
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `
+        <div class="col-span-full text-center py-12">
+          <div class="text-6xl mb-4">🔧</div>
+          <h3 class="text-xl font-medium text-gray-600 mb-2">Aucune technologie</h3>
+          <p class="text-gray-500">Commencez par ajouter votre première technologie</p>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = filtered
       .map(
         (tech) => `
-      <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow flex justify-between items-center">
-        <span class="text-lg font-semibold text-gray-900">${tech.name}</span>
-        <div class="flex gap-2">
-          <button onclick="editTech('${tech.id}')" class="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">Modifier</button>
-          <button onclick="deleteTech('${tech.id}', '${tech.name}')" class="px-4 py-2 bg-red-600 text-white text-sm rounded hover:bg-red-700">Supprimer</button>
+        <div class="bg-white border-2 border-black hover:border-4 transition-all group">
+          <!-- Tech Header -->
+          <div class="p-6 border-b-2 border-black" style="background: linear-gradient(135deg, ${tech.color || '#000'}, ${tech.color || '#000'}20);">
+            <div class="flex items-center gap-4">
+              ${tech.logo_url
+                ? `<img src="${tech.logo_url}" alt="${tech.name}" class="w-12 h-12 object-contain bg-white rounded p-2 border border-gray-300" />`
+                : `<div class="w-12 h-12 bg-white border-2 border-black flex items-center justify-center font-bold text-lg">${tech.name.charAt(0)}</div>`
+              }
+              <div>
+                <h3 class="font-medium text-white text-lg">${tech.name}</h3>
+                <span class="text-xs uppercase tracking-wide text-white/80">${tech.category || 'Non catégorisé'}</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Tech Body -->
+          <div class="p-4">
+            ${tech.description ? `<p class="text-sm text-gray-600 mb-3">${tech.description}</p>` : ''}
+            
+            <!-- Level Bar -->
+            <div class="mb-4">
+              <div class="flex justify-between text-xs text-gray-600 mb-1">
+                <span>Niveau</span>
+                <span>${tech.level || 3}/5</span>
+              </div>
+              <div class="w-full bg-gray-200 h-2 border border-gray-300">
+                <div 
+                  class="h-full transition-all" 
+                  style="width: ${((tech.level || 3) / 5) * 100}%; background-color: ${tech.color || '#000'};"
+                ></div>
+              </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="flex gap-2">
+              <button 
+                onclick="editTechnology('${tech.id}')"
+                class="flex-1 px-3 py-2 text-xs border-2 border-black text-black hover:bg-black hover:text-white transition-all uppercase font-medium"
+              >
+                ✏️ Modifier
+              </button>
+              <button 
+                onclick="deleteTechnology('${tech.id}')"
+                class="px-3 py-2 text-xs border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white transition-all uppercase font-medium"
+              >
+                🗑️
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-    `,
+      `
       )
       .join("");
   }
 
-  document.getElementById("new-tech-btn")?.addEventListener("click", () => {
-    (document.getElementById("tech-form") as HTMLFormElement).reset();
-    (document.getElementById("tech-id") as HTMLInputElement).value = "";
-    document.getElementById("modal-title")!.textContent = "NOUVELLE TECHNO";
-    document.getElementById("tech-modal")?.classList.remove("hidden");
-  });
-
-  document.getElementById("cancel-btn")?.addEventListener("click", () => {
-    document.getElementById("tech-modal")?.classList.add("hidden");
-  });
-
-  document
-    .getElementById("tech-form")
-    ?.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const id = (document.getElementById("tech-id") as HTMLInputElement).value;
-      const name = (document.getElementById("tech-name") as HTMLInputElement)
-        .value;
-
-      try {
-        if (id) {
-          await pb.collection("technologies").update(id, { name });
-        } else {
-          await pb.collection("technologies").create({ name });
-        }
-        document.getElementById("tech-modal")?.classList.add("hidden");
-        loadTechs();
-        alert("Technologie enregistrée !");
-      } catch (error) {
-        console.error(error);
-        alert("Erreur lors de l'enregistrement");
+  function openModal(techId = null) {
+    const isEdit = !!techId;
+    document.getElementById("modal-title").textContent = isEdit ? "Modifier la technologie" : "Nouvelle technologie";
+    
+    if (isEdit) {
+      const tech = technologies.find(t => t.id === techId);
+      if (tech) {
+        document.getElementById("tech-id").value = tech.id;
+        document.getElementById("tech-name").value = tech.name || "";
+        document.getElementById("tech-category").value = tech.category || "";
+        document.getElementById("tech-logo").value = tech.logo_url || "";
+        document.getElementById("tech-description").value = tech.description || "";
+        document.getElementById("tech-level").value = tech.level || 3;
+        document.getElementById("tech-color").value = tech.color || "#000000";
+        document.getElementById("tech-color-hex").value = tech.color || "#000000";
+        levelDisplay.textContent = `${tech.level || 3}/5`;
       }
-    });
+    } else {
+      form.reset();
+      document.getElementById("tech-id").value = "";
+      levelDisplay.textContent = "3/5";
+    }
+    
+    modal?.classList.remove("hidden");
+  }
 
-  (window as any).editTech = async (id: string) => {
-    const tech = await pb.collection("technologies").getOne(id);
-    (document.getElementById("tech-id") as HTMLInputElement).value = id;
-    (document.getElementById("tech-name") as HTMLInputElement).value =
-      tech.name;
-    document.getElementById("modal-title")!.textContent =
-      `MODIFIER ${tech.name.toUpperCase()}`;
-    document.getElementById("tech-modal")?.classList.remove("hidden");
+  function closeModal() {
+    modal?.classList.add("hidden");
+    form?.reset();
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    
+    const formData = {
+      name: document.getElementById("tech-name").value.trim(),
+      category: document.getElementById("tech-category").value,
+      logo_url: document.getElementById("tech-logo").value.trim() || null,
+      description: document.getElementById("tech-description").value.trim() || null,
+      level: parseInt(document.getElementById("tech-level").value),
+      color: document.getElementById("tech-color").value,
+    };
+
+    try {
+      const techId = document.getElementById("tech-id").value;
+      
+      if (techId) {
+        await pb.collection("technologies").update(techId, formData);
+      } else {
+        await pb.collection("technologies").create(formData);
+      }
+      
+      closeModal();
+      await loadTechnologies();
+    } catch (error) {
+      console.error("Erreur:", error);
+      alert("Erreur lors de la sauvegarde");
+    }
+  }
+
+  // Global functions for buttons
+  window.editTechnology = (id) => openModal(id);
+
+  window.deleteTechnology = async (id) => {
+    const tech = technologies.find(t => t.id === id);
+    if (confirm(`Supprimer "${tech?.name}" ?`)) {
+      try {
+        await pb.collection("technologies").delete(id);
+        await loadTechnologies();
+      } catch (error) {
+        console.error("Erreur:", error);
+        alert("Erreur lors de la suppression");
+      }
+    }
   };
 
-  (window as any).deleteTech = async (id: string, name: string) => {
-    if (!confirm(`Supprimer "${name}" ?`)) return;
-    await pb.collection("technologies").delete(id);
-    loadTechs();
-  };
-
+  // Déconnexion
   document.getElementById("logout-btn")?.addEventListener("click", () => {
     pb.authStore.clear();
     window.location.href = "/admin";
   });
 </script>
+</LayoutAdmin>

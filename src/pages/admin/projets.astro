@@ -61,16 +61,16 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
       <div class="p-8">
         <div class="flex justify-between items-center mb-8">
           <div>
-            <h2 class="text-4xl font-bold text-black uppercase mb-2">
-              Gestion des projets
+            <h2 class="text-4xl font-black text-black uppercase mb-2 tracking-wider">
+              Mes Projets
             </h2>
-            <p class="text-gray-700">Créer, modifier et gérer vos projets</p>
+            <p class="text-gray-600 text-lg">Créez et gérez vos réalisations avec images et détails</p>
           </div>
           <button
             id="new-project-btn"
-            class="px-6 py-3 bg-black text-white font-bold uppercase border-4 border-black hover:bg-white hover:text-black transition-all"
+            class="px-6 py-3 bg-black text-white font-medium uppercase border-2 border-black hover:bg-white hover:text-black transition-all"
           >
-            Nouveau projet
+            📱 Nouveau projet
           </button>
         </div>
 
@@ -405,35 +405,94 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
     try {
       const projects = await pb.collection("projets").getFullList({
         sort: "-created",
-        expand: "theme",
+        expand: "theme,tags,technologies",
       });
       const container = document.getElementById("projects-list")!;
+
+      if (projects.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full text-center py-12">
+            <div class="text-6xl mb-4">📱</div>
+            <h3 class="text-xl font-medium text-gray-600 mb-2">Aucun projet</h3>
+            <p class="text-gray-500 mb-4">Commencez par créer votre premier projet</p>
+            <button onclick="document.getElementById('new-project-btn').click()" 
+                    class="px-6 py-3 bg-black text-white font-medium uppercase hover:bg-gray-800 transition-colors">
+              ✨ Créer mon premier projet
+            </button>
+          </div>
+        `;
+        return;
+      }
 
       container.innerHTML = projects
         .map((project) => {
           const imageUrl = project.hero_image
             ? pb.files.getUrl(project, project.hero_image, { thumb: "300x200" })
-            : "/images/placeholder.webp";
+            : null;
           const themeName = project.expand?.theme?.name || "basique";
+          const galleryCount = project.gallery ? project.gallery.length : 0;
 
           return `
-          <div class="bg-white border-4 border-black hover:shadow-[8px_8px_0px_black] transition-all">
-            <div class="aspect-video bg-gray-200 overflow-hidden">
-              <img src="${imageUrl}" alt="${project.title}" class="w-full h-full object-cover" />
+          <div class="bg-white border-2 border-black hover:border-4 hover:shadow-lg transition-all group">
+            <!-- Image Header -->
+            <div class="aspect-video bg-gray-100 overflow-hidden relative">
+              ${imageUrl 
+                ? `<img src="${imageUrl}" alt="${project.title}" class="w-full h-full object-cover" />`
+                : `<div class="w-full h-full flex items-center justify-center text-gray-400">
+                     <div class="text-center">
+                       <div class="text-4xl mb-2">📷</div>
+                       <div class="text-sm">Aucune image</div>
+                     </div>
+                   </div>`
+              }
+              ${project.published 
+                ? `<span class="absolute top-2 right-2 bg-green-600 text-white text-xs px-2 py-1 font-medium">PUBLIÉ</span>`
+                : `<span class="absolute top-2 right-2 bg-orange-600 text-white text-xs px-2 py-1 font-medium">BROUILLON</span>`
+              }
+              ${galleryCount > 0 
+                ? `<span class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1">📷 ${galleryCount}</span>`
+                : ''
+              }
             </div>
-            <div class="p-4">
-              <h3 class="text-xl font-bold text-black uppercase mb-2">${project.title}</h3>
-              <p class="text-sm text-gray-700 mb-3">${project.subtitle || ""}</p>
-              <div class="flex items-center justify-between text-xs text-gray-600 mb-4">
-                <span class="px-2 py-1 bg-black text-white">${themeName}</span>
-                <span>${project.published ? "Publié" : "Brouillon"}</span>
+            
+            <!-- Content -->
+            <div class="p-6">
+              <div class="mb-4">
+                <h3 class="text-xl font-medium text-black mb-1 group-hover:font-semibold transition-all">${project.title}</h3>
+                ${project.subtitle ? `<p class="text-sm text-gray-600">${project.subtitle}</p>` : ''}
               </div>
+              
+              <!-- Meta info -->
+              <div class="flex items-center justify-between text-xs text-gray-500 mb-4">
+                <span class="px-2 py-1 bg-black text-white uppercase tracking-wide">🎨 ${themeName}</span>
+                <span>/projets/${project.slug}</span>
+              </div>
+              
+              <!-- Tags preview -->
+              ${project.expand?.tags ? `
+                <div class="mb-4">
+                  <div class="flex flex-wrap gap-1">
+                    ${project.expand.tags.slice(0, 3).map(tag => `
+                      <span class="text-xs px-2 py-1 text-white" style="background-color: ${tag.color || '#000'}">${tag.name}</span>
+                    `).join('')}
+                    ${project.expand.tags.length > 3 ? `<span class="text-xs text-gray-400">+${project.expand.tags.length - 3}</span>` : ''}
+                  </div>
+                </div>
+              ` : ''}
+              
+              <!-- Actions -->
               <div class="flex gap-2">
-                <button onclick="editProject('${project.id}')" class="flex-1 px-4 py-2 bg-black text-white text-sm uppercase font-bold hover:bg-white hover:text-black hover:border-2 hover:border-black transition-all">
-                  Modifier
+                <button onclick="editProject('${project.id}')" 
+                        class="flex-1 px-4 py-2 bg-black text-white text-sm uppercase font-medium hover:bg-gray-800 transition-all">
+                  ✏️ Modifier
                 </button>
-                <button onclick="deleteProject('${project.id}', '${project.title}')" class="px-4 py-2 bg-red-600 text-white text-sm uppercase font-bold hover:bg-red-700 transition-all">
-                  Supprimer
+                <button onclick="duplicateProject('${project.id}')" 
+                        class="px-4 py-2 border-2 border-black text-black text-sm uppercase font-medium hover:bg-black hover:text-white transition-all">
+                  📄
+                </button>
+                <button onclick="deleteProject('${project.id}', '${project.title}')" 
+                        class="px-4 py-2 bg-red-600 text-white text-sm uppercase font-medium hover:bg-red-700 transition-all">
+                  🗑️
                 </button>
               </div>
             </div>
@@ -580,6 +639,7 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
         .collection("projets")
         .getOne(id, { expand: "tags,technologies,theme" });
 
+      // Remplir les champs basiques
       (document.getElementById("project-id") as HTMLInputElement).value = id;
       (document.getElementById("project-title") as HTMLInputElement).value =
         project.title;
@@ -593,10 +653,60 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
       (document.getElementById("project-theme") as HTMLSelectElement).value =
         project.theme;
       (document.getElementById("project-order") as HTMLInputElement).value =
-        project.order || "0";
+        project.order?.toString() || "0";
       (
         document.getElementById("project-published") as HTMLInputElement
       ).checked = project.published;
+
+      // Afficher l'image hero existante
+      const heroPreview = document.getElementById("hero-preview");
+      if (heroPreview) {
+        if (project.hero_image) {
+          const imageUrl = pb.files.getUrl(project, project.hero_image);
+          heroPreview.innerHTML = `
+            <div class="relative">
+              <img src="${imageUrl}" class="w-full h-32 object-cover border-2 border-black" />
+              <button type="button" onclick="removeCurrentHeroImage()" 
+                      class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-700">
+                ×
+              </button>
+            </div>
+            <p class="text-xs text-gray-600 mt-1">Image actuelle (sera conservée si aucune nouvelle image n'est sélectionnée)</p>
+          `;
+        } else {
+          heroPreview.innerHTML = "";
+        }
+      }
+
+      // Afficher les images de galerie existantes
+      const galleryPreview = document.getElementById("gallery-preview");
+      if (galleryPreview && project.gallery?.length > 0) {
+        galleryPreview.innerHTML = `
+          <div class="grid grid-cols-3 gap-2 mt-3">
+            ${project.gallery.map((image: string, index: number) => {
+              const imageUrl = pb.files.getUrl(project, image);
+              return `
+                <div class="relative group">
+                  <img src="${imageUrl}" class="w-full h-20 object-cover border border-gray-300" />
+                  <button type="button" onclick="removeGalleryImage('${image}', ${index})"
+                          class="absolute -top-1 -right-1 bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                    ×
+                  </button>
+                </div>
+              `;
+            }).join('')}
+          </div>
+          <p class="text-xs text-gray-600 mt-1">Images actuelles de la galerie</p>
+        `;
+      } else {
+        if (galleryPreview) galleryPreview.innerHTML = "";
+      }
+
+      // Stocker les données originales pour comparaison
+      (window as any).originalProjectData = {
+        hero_image: project.hero_image,
+        gallery: project.gallery || []
+      };
 
       // Cocher les tags
       document.querySelectorAll(".tag-checkbox").forEach((cb: any) => {
@@ -628,6 +738,73 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
     } catch (error) {
       console.error("Erreur:", error);
       alert("Erreur lors de la suppression");
+    }
+  };
+
+  // Dupliquer un projet
+  (window as any).duplicateProject = async (id: string) => {
+    try {
+      const project = await pb.collection("projets").getOne(id);
+      
+      const duplicatedData = {
+        title: `${project.title} (Copie)`,
+        slug: `${project.slug}-copie-${Date.now()}`,
+        subtitle: project.subtitle,
+        description: project.description,
+        theme: project.theme,
+        tags: project.tags,
+        technologies: project.technologies,
+        published: false,
+        order: project.order,
+      };
+      
+      await pb.collection("projets").create(duplicatedData);
+      loadProjects();
+      alert("Projet dupliqué avec succès !");
+    } catch (error) {
+      console.error("Erreur:", error);
+      alert("Erreur lors de la duplication");
+    }
+  };
+
+  // Fonctions pour gérer les images existantes
+  (window as any).removeCurrentHeroImage = () => {
+    if (confirm("Supprimer l'image hero actuelle ?")) {
+      (window as any).removeHeroImageFlag = true;
+      document.getElementById("hero-preview")!.innerHTML = `
+        <p class="text-red-600 text-sm font-medium">⚠️ L'image hero sera supprimée lors de la sauvegarde</p>
+      `;
+    }
+  };
+
+  (window as any).removeGalleryImage = (imageName: string, index: number) => {
+    if (confirm("Supprimer cette image de la galerie ?")) {
+      if (!(window as any).removeGalleryImages) {
+        (window as any).removeGalleryImages = [];
+      }
+      (window as any).removeGalleryImages.push(imageName);
+      
+      // Mettre à jour l'affichage
+      const galleryPreview = document.getElementById("gallery-preview");
+      if (galleryPreview && (window as any).originalProjectData?.gallery) {
+        const remainingImages = (window as any).originalProjectData.gallery.filter(
+          (img: string) => !(window as any).removeGalleryImages.includes(img)
+        );
+        
+        if (remainingImages.length === 0) {
+          galleryPreview.innerHTML = `<p class="text-red-600 text-sm font-medium">⚠️ Toutes les images de galerie seront supprimées</p>`;
+        } else {
+          galleryPreview.innerHTML = `
+            <div class="grid grid-cols-3 gap-2 mt-3">
+              ${remainingImages.map((image: string) => {
+                const imageUrl = pb.files.getUrl((window as any).originalProjectData, image);
+                return `<img src="${imageUrl}" class="w-full h-20 object-cover border border-gray-300" />`;
+              }).join('')}
+            </div>
+            <p class="text-xs text-red-600 mt-1">⚠️ Certaines images seront supprimées lors de la sauvegarde</p>
+          `;
+        }
+      }
     }
   };
 
