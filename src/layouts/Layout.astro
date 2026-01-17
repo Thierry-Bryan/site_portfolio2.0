@@ -9,9 +9,10 @@ interface Props {
   title?: string;
   theme?: ThemeName;
   firstSectionTheme?: ThemeName;
+  dynamicCSS?: string;
 }
 
-const { title = "Portfolio", theme = "basique", firstSectionTheme } = Astro.props;
+const { title = "Portfolio", theme = "basique", firstSectionTheme, dynamicCSS } = Astro.props;
 ---
 
 <!doctype html>
@@ -29,6 +30,9 @@ const { title = "Portfolio", theme = "basique", firstSectionTheme } = Astro.prop
     
     <!-- Préchargement des assets critiques -->
     <link rel="preload" as="image" href="/avatar/footer.webp" fetchpriority="high" />
+    
+    <!-- CSS Dynamique injecté pour les thèmes personnalisés -->
+    {dynamicCSS && <style set:html={dynamicCSS} />}
     
     <!-- Script CRITIQUE EN PREMIER pour éviter tout flash -->
     <script is:inline define:vars={{ pageTheme: theme, initialHeaderTheme: firstSectionTheme }}>

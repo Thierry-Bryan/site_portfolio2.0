@@ -90,8 +90,8 @@ const projetTechnologies = projet.expand?.technologies || [];
 <Layout
   theme={themeName as any}
   title={`${projet.title} - Portfolio Bryan Thierry`}
+  dynamicCSS={dynamicThemeCSS}
 >
-  {dynamicThemeCSS && <style set:html={dynamicThemeCSS} />}
 
   <!-- Hero Section -->
   <section
