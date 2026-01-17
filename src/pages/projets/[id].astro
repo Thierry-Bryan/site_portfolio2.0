@@ -241,30 +241,102 @@ const projetTechnologies = projet.expand?.technologies || [];
       // Générer projetsData avec navigation circulaire
       const projetsData = generateProjetsData(allProjetsData);
 
-      // Configuration des flèches de navigation
-      const prevButton = document.querySelector(".arrow-prev");
-      const nextButton = document.querySelector(".arrow-next");
-      
-      if (prevButton && nextButton) {
-        const currentSlug = window.location.pathname.split("/").pop();
-        const currentProjet = projetsData[currentSlug];
+      // Fonction pour naviguer entre projets sans rechargement
+      function navigateToProject(projectSlug) {
+        const project = projetsData[projectSlug];
+        if (!project) return;
         
-        if (currentProjet) {
-          prevButton.addEventListener("click", (e) => {
-            e.preventDefault();
-            if (currentProjet.prevId) {
-              window.location.href = `/projets/${currentProjet.prevId}`;
+        // Sauvegarder la position de scroll
+        const scrollPosition = window.scrollY;
+        
+        // Fetch du nouveau projet
+        fetch(`/projets/${projectSlug}`)
+          .then(response => response.text())
+          .then(html => {
+            // Parser le HTML reçu
+            const parser = new DOMParser();
+            const newDoc = parser.parseFromString(html, 'text/html');
+            
+            // Extraire les nouvelles données du projet
+            const newTitle = newDoc.querySelector('title')?.textContent;
+            const newHeroSection = newDoc.querySelector('section:first-of-type');
+            const newContentSection = newDoc.querySelector('#contenu');
+            
+            if (newHeroSection && newContentSection) {
+              // Mettre à jour le titre de la page
+              document.title = newTitle || document.title;
+              
+              // Remplacer les sections
+              const currentHero = document.querySelector('section:first-of-type');
+              const currentContent = document.querySelector('#contenu');
+              
+              if (currentHero) currentHero.replaceWith(newHeroSection);
+              if (currentContent) currentContent.replaceWith(newContentSection);
+              
+              // Mettre à jour l'URL sans recharger
+              history.pushState({ projectSlug }, newTitle, `/projets/${projectSlug}`);
+              
+              // Restaurer la position de scroll
+              window.scrollTo(0, scrollPosition);
+              
+              // Re-initialiser les event listeners pour les nouvelles flèches
+              initNavigationListeners();
             }
+          })
+          .catch(error => {
+            console.error('Erreur lors de la navigation:', error);
+            // Fallback vers navigation classique
+            window.location.href = `/projets/${projectSlug}`;
           });
+      }
+
+      // Fonction pour initialiser les listeners de navigation
+      function initNavigationListeners() {
+        const prevButton = document.querySelector(".arrow-prev");
+        const nextButton = document.querySelector(".arrow-next");
+        
+        if (prevButton && nextButton) {
+          const currentSlug = window.location.pathname.split("/").pop();
+          const currentProjet = projetsData[currentSlug];
           
-          nextButton.addEventListener("click", (e) => {
-            e.preventDefault();
-            if (currentProjet.nextId) {
-              window.location.href = `/projets/${currentProjet.nextId}`;
-            }
-          });
+          if (currentProjet) {
+            // Supprimer les anciens listeners
+            prevButton.replaceWith(prevButton.cloneNode(true));
+            nextButton.replaceWith(nextButton.cloneNode(true));
+            
+            // Récupérer les nouveaux éléments après clonage
+            const newPrevButton = document.querySelector(".arrow-prev");
+            const newNextButton = document.querySelector(".arrow-next");
+            
+            newPrevButton.addEventListener("click", (e) => {
+              e.preventDefault();
+              if (currentProjet.prevId) {
+                navigateToProject(currentProjet.prevId);
+              }
+            });
+            
+            newNextButton.addEventListener("click", (e) => {
+              e.preventDefault();
+              if (currentProjet.nextId) {
+                navigateToProject(currentProjet.nextId);
+              }
+            });
+          }
         }
       }
+
+      // Gérer le bouton retour du navigateur
+      window.addEventListener('popstate', (event) => {
+        if (event.state && event.state.projectSlug) {
+          navigateToProject(event.state.projectSlug);
+        } else {
+          // Recharger la page si pas d'état
+          window.location.reload();
+        }
+      });
+
+      // Initialiser les listeners
+      initNavigationListeners();
     });
   </script>
   <script
