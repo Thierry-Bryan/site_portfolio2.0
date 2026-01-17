@@ -67,23 +67,28 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
 // Récupérer les technologies du projet depuis expand
 const projetTechnologies = projet.expand?.technologies || [];
 
-// DEBUG - Voir EXACTEMENT ce qu'on reçoit
-console.log('=== DEBUG THEME ===');
-console.log('Projet:', projet.title);
-console.log('projet.theme:', projet.theme);
-console.log('projet.expand:', JSON.stringify(projet.expand, null, 2));
+// DYNAMIQUE : Récupérer le thème depuis l'expand ou fallback sur "basique"
+let themeForLayout = "basique"; // fallback sécurisé
 
-// Récupérer le thème - essayer d'abord la relation, puis l'ancien champ
-let themeForLayout = "basique"; // fallback
+// Debug pour voir ce qu'on reçoit
+console.log('=== THEME DEBUG ===');
+console.log('Projet:', projet.title);
+console.log('projet.theme (raw):', projet.theme);
+console.log('projet.expand:', projet.expand);
 
 if (projet.expand?.theme?.name) {
+  // Si l'expand fonctionne et qu'on a le nom du thème
   themeForLayout = projet.expand.theme.name;
-  console.log('✅ Thème via expand.theme.name:', themeForLayout);
-} else if (projet.theme && typeof projet.theme === 'string') {
-  themeForLayout = projet.theme;
-  console.log('⚠️ Thème via ancien champ string:', themeForLayout);
+  console.log('✅ Thème trouvé via expand.theme.name:', themeForLayout);
+} else if (projet.expand?.theme) {
+  // Si on a l'objet theme mais pas de name, regarder s'il y a une autre propriété
+  console.log('⚠️ Objet theme trouvé sans .name:', projet.expand.theme);
+  // Essayer d'autres propriétés possibles
+  if (projet.expand.theme.id) {
+    console.log('Theme ID trouvé:', projet.expand.theme.id);
+  }
 } else {
-  console.log('❌ Aucun thème trouvé, utilisation de basique');
+  console.log('❌ Pas d\'expand.theme, utilisation du fallback basique');
 }
 
 console.log('Thème final utilisé:', themeForLayout);
