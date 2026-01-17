@@ -5,19 +5,45 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
 <LayoutAdmin title="Admin - Tags">
   <div id="admin-content" class="hidden">
     <!-- Sidebar -->
-    <aside class="fixed left-0 top-0 h-screen w-64 bg-black text-white flex flex-col z-50">
+    <aside
+      class="fixed left-0 top-0 h-screen w-64 bg-black text-white flex flex-col z-50"
+    >
       <div class="p-6 border-b-2 border-white">
         <h1 class="text-xl font-bold uppercase">Portfolio Admin</h1>
       </div>
       <nav class="flex-1 p-4 space-y-1">
-        <a href="/admin/dashboard" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">Dashboard</a>
-        <a href="/admin/projets" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">Projets</a>
-        <a href="/admin/themes" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">Thèmes</a>
-        <a href="/admin/tags" class="block px-4 py-2 bg-white text-black uppercase text-sm font-bold">Tags</a>
-        <a href="/admin/technologies" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">Technologies</a>
+        <a
+          href="/admin/dashboard"
+          class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm"
+          >Dashboard</a
+        >
+        <a
+          href="/admin/projets"
+          class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm"
+          >Projets</a
+        >
+        <a
+          href="/admin/themes"
+          class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm"
+          >Thèmes</a
+        >
+        <a
+          href="/admin/tags"
+          class="block px-4 py-2 bg-white text-black uppercase text-sm font-bold"
+          >Tags</a
+        >
+        <a
+          href="/admin/technologies"
+          class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm"
+          >Technologies</a
+        >
       </nav>
       <div class="p-4 border-t-2 border-white">
-        <button id="logout-btn" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white transition-colors uppercase text-sm font-bold">Déconnexion</button>
+        <button
+          id="logout-btn"
+          class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white transition-colors uppercase text-sm font-bold"
+          >Déconnexion</button
+        >
       </div>
     </aside>
 
@@ -25,10 +51,17 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
       <div class="p-8">
         <div class="flex justify-between items-center mb-8">
           <div>
-            <h2 class="text-4xl font-bold text-black uppercase mb-2">Gestion des tags</h2>
-            <p class="text-gray-700">Créer et gérer les catégories de projets</p>
+            <h2 class="text-4xl font-bold text-black uppercase mb-2">
+              Gestion des tags
+            </h2>
+            <p class="text-gray-700">
+              Créer et gérer les catégories de projets
+            </p>
           </div>
-          <button id="new-tag-btn" class="px-6 py-3 bg-black text-white font-bold uppercase hover:bg-gray-800 transition-colors border-4 border-black">
+          <button
+            id="new-tag-btn"
+            class="px-6 py-3 bg-black text-white font-bold uppercase hover:bg-gray-800 transition-colors border-4 border-black"
+          >
             Nouveau tag
           </button>
         </div>
@@ -36,13 +69,20 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
         <div id="tags-list" class="space-y-3"></div>
 
         <!-- Modal -->
-        <div id="tag-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div
+          id="tag-modal"
+          class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+        >
           <div class="bg-white rounded-lg max-w-md w-full p-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6" id="modal-title">Nouveau tag</h2>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6" id="modal-title">
+              Nouveau tag
+            </h2>
             <form id="tag-form" class="space-y-6">
               <input type="hidden" id="tag-id" />
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Nom du tag <span class="text-red-500">*</span></label>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Nom du tag <span class="text-red-500">*</span></label
+                >
                 <input
                   type="text"
                   id="tag-name"
@@ -52,10 +92,17 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
                 />
               </div>
               <div class="flex justify-end gap-3">
-                <button type="button" id="cancel-btn" class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-100">
+                <button
+                  type="button"
+                  id="cancel-btn"
+                  class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-100"
+                >
                   Annuler
                 </button>
-                <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                <button
+                  type="submit"
+                  class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
                   Enregistrer
                 </button>
               </div>
@@ -68,12 +115,12 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
   <div id="loading" class="min-h-screen flex items-center justify-center">
     <div class="text-2xl font-primary text-[var(--bc)]">Chargement...</div>
   </div>
-</Layout>
+</LayoutAdmin>
 
 <script>
   import PocketBase from "pocketbase";
   const pb = new PocketBase("https://portfolio.bryan-thierry.fr/");
-  
+
   if (!pb.authStore.isValid) {
     window.location.href = "/admin";
   } else {
@@ -85,7 +132,9 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
   async function loadTags() {
     const tags = await pb.collection("tags").getFullList({ sort: "name" });
     const container = document.getElementById("tags-list")!;
-    container.innerHTML = tags.map(tag => `
+    container.innerHTML = tags
+      .map(
+        (tag) => `
       <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow flex justify-between items-center">
         <span class="text-lg font-semibold text-gray-900">${tag.name}</span>
         <div class="flex gap-2">
@@ -93,7 +142,9 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
           <button onclick="deleteTag('${tag.id}', '${tag.name}')" class="px-4 py-2 bg-red-600 text-white text-sm rounded hover:bg-red-700">Supprimer</button>
         </div>
       </div>
-    `).join('');
+    `,
+      )
+      .join("");
   }
 
   document.getElementById("new-tag-btn")?.addEventListener("click", () => {
@@ -110,8 +161,9 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
   document.getElementById("tag-form")?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const id = (document.getElementById("tag-id") as HTMLInputElement).value;
-    const name = (document.getElementById("tag-name") as HTMLInputElement).value;
-    
+    const name = (document.getElementById("tag-name") as HTMLInputElement)
+      .value;
+
     try {
       if (id) {
         await pb.collection("tags").update(id, { name });
@@ -131,7 +183,8 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
     const tag = await pb.collection("tags").getOne(id);
     (document.getElementById("tag-id") as HTMLInputElement).value = id;
     (document.getElementById("tag-name") as HTMLInputElement).value = tag.name;
-    document.getElementById("modal-title")!.textContent = `MODIFIER ${tag.name.toUpperCase()}`;
+    document.getElementById("modal-title")!.textContent =
+      `MODIFIER ${tag.name.toUpperCase()}`;
     document.getElementById("tag-modal")?.classList.remove("hidden");
   };
 
@@ -146,4 +199,3 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
     window.location.href = "/admin";
   });
 </script>
-</Layout>

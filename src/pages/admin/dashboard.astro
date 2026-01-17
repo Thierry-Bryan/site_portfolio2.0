@@ -6,25 +6,42 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
 <LayoutAdmin title="Admin - Dashboard">
   <div id="admin-content" class="hidden">
     <!-- Sidebar -->
-    <aside class="fixed left-0 top-0 h-screen w-64 bg-black text-white flex flex-col z-50">
+    <aside
+      class="fixed left-0 top-0 h-screen w-64 bg-black text-white flex flex-col z-50"
+    >
       <div class="p-6 border-b-2 border-white">
         <h1 class="text-xl font-bold uppercase">Portfolio Admin</h1>
       </div>
-      
+
       <nav class="flex-1 p-4 space-y-1">
-        <a href="/admin/dashboard" class="block px-4 py-2 bg-white text-black uppercase text-sm font-bold">
+        <a
+          href="/admin/dashboard"
+          class="block px-4 py-2 bg-white text-black uppercase text-sm font-bold"
+        >
           Dashboard
         </a>
-        <a href="/admin/projets" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">
+        <a
+          href="/admin/projets"
+          class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm"
+        >
           Projets
         </a>
-        <a href="/admin/themes" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">
+        <a
+          href="/admin/themes"
+          class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm"
+        >
           Thèmes
         </a>
-        <a href="/admin/tags" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">
+        <a
+          href="/admin/tags"
+          class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm"
+        >
           Tags
         </a>
-        <a href="/admin/technologies" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">
+        <a
+          href="/admin/technologies"
+          class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm"
+        >
           Technologies
         </a>
       </nav>
@@ -43,55 +60,85 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
     <main class="ml-64 min-h-screen bg-[#faf9f7]">
       <div class="p-8">
         <div class="mb-8">
-          <h2 class="text-4xl font-bold text-black uppercase mb-2">Dashboard</h2>
+          <h2 class="text-4xl font-bold text-black uppercase mb-2">
+            Dashboard
+          </h2>
           <p class="text-gray-700">Vue d'ensemble de votre portfolio</p>
         </div>
 
         <!-- Stats rapides -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div class="bg-white p-6 border-4 border-black">
-            <div class="text-4xl font-bold text-black mb-1" id="stat-projets">-</div>
+            <div class="text-4xl font-bold text-black mb-1" id="stat-projets">
+              -
+            </div>
             <div class="text-sm text-gray-700 uppercase">Projets</div>
           </div>
           <div class="bg-white p-6 border-4 border-black">
-            <div class="text-4xl font-bold text-black mb-1" id="stat-themes">-</div>
+            <div class="text-4xl font-bold text-black mb-1" id="stat-themes">
+              -
+            </div>
             <div class="text-sm text-gray-700 uppercase">Thèmes</div>
           </div>
           <div class="bg-white p-6 border-4 border-black">
-            <div class="text-4xl font-bold text-black mb-1" id="stat-tags">-</div>
+            <div class="text-4xl font-bold text-black mb-1" id="stat-tags">
+              -
+            </div>
             <div class="text-sm text-gray-700 uppercase">Tags</div>
           </div>
           <div class="bg-white p-6 border-4 border-black">
-            <div class="text-4xl font-bold text-black mb-1" id="stat-techs">-</div>
+            <div class="text-4xl font-bold text-black mb-1" id="stat-techs">
+              -
+            </div>
             <div class="text-sm text-gray-700 uppercase">Technologies</div>
           </div>
         </div>
 
         <!-- Actions rapides -->
         <div class="bg-white border-4 border-black p-6">
-          <h3 class="text-2xl font-bold text-black mb-6 uppercase">Actions rapides</h3>
+          <h3 class="text-2xl font-bold text-black mb-6 uppercase">
+            Actions rapides
+          </h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <a
               href="/admin/projets"
               class="p-6 border-4 border-black hover:bg-black hover:text-white transition-all group"
             >
-              <h4 class="font-bold text-black mb-2 uppercase group-hover:text-white">Gérer les projets</h4>
-              <p class="text-sm text-gray-700 group-hover:text-white">Créer et modifier vos projets</p>
+              <h4
+                class="font-bold text-black mb-2 uppercase group-hover:text-white"
+              >
+                Gérer les projets
+              </h4>
+              <p class="text-sm text-gray-700 group-hover:text-white">
+                Créer et modifier vos projets
+              </p>
             </a>
             <a
               href="/admin/themes"
               class="p-6 border-4 border-black hover:bg-black hover:text-white transition-all group"
             >
-              <h4 class="font-bold text-black mb-2 uppercase group-hover:text-white">Gérer les thèmes</h4>
-              <p class="text-sm text-gray-700 group-hover:text-white">Créer et modifier les couleurs</p>
+              <h4
+                class="font-bold text-black mb-2 uppercase group-hover:text-white"
+              >
+                Gérer les thèmes
+              </h4>
+              <p class="text-sm text-gray-700 group-hover:text-white">
+                Créer et modifier les couleurs
+              </p>
             </a>
             <a
               href="https://portfolio.bryan-thierry.fr/_/"
               target="_blank"
               class="p-6 border-4 border-black hover:bg-black hover:text-white transition-all group"
             >
-              <h4 class="font-bold text-black mb-2 uppercase group-hover:text-white">PocketBase</h4>
-              <p class="text-sm text-gray-700 group-hover:text-white">Administration avancée</p>
+              <h4
+                class="font-bold text-black mb-2 uppercase group-hover:text-white"
+              >
+                PocketBase
+              </h4>
+              <p class="text-sm text-gray-700 group-hover:text-white">
+                Administration avancée
+              </p>
             </a>
           </div>
         </div>
@@ -103,20 +150,20 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
   <div id="loading" class="min-h-screen flex items-center justify-center">
     <div class="text-2xl font-primary text-[var(--bc)]">Chargement...</div>
   </div>
-</Layout>
+</LayoutAdmin>
 
 <script>
   import PocketBase from "pocketbase";
-  
+
   const pb = new PocketBase("https://portfolio.bryan-thierry.fr/");
-  
+
   // Vérifier l'authentification
   if (!pb.authStore.isValid) {
     window.location.href = "/admin";
   } else {
     document.getElementById("loading")?.classList.add("hidden");
     document.getElementById("admin-content")?.classList.remove("hidden");
-    
+
     // Charger les stats
     loadStats();
   }
@@ -130,10 +177,14 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
         pb.collection("technologies").getFullList(),
       ]);
 
-      document.getElementById("stat-projets")!.textContent = projets.length.toString();
-      document.getElementById("stat-themes")!.textContent = themes.length.toString();
-      document.getElementById("stat-tags")!.textContent = tags.length.toString();
-      document.getElementById("stat-techs")!.textContent = techs.length.toString();
+      document.getElementById("stat-projets")!.textContent =
+        projets.length.toString();
+      document.getElementById("stat-themes")!.textContent =
+        themes.length.toString();
+      document.getElementById("stat-tags")!.textContent =
+        tags.length.toString();
+      document.getElementById("stat-techs")!.textContent =
+        techs.length.toString();
     } catch (error) {
       console.error("Erreur chargement stats:", error);
     }
@@ -145,4 +196,3 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
     window.location.href = "/admin";
   });
 </script>
-</Layout>

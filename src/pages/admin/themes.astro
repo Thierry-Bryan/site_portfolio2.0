@@ -6,25 +6,42 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
 <LayoutAdmin title="Admin - Thèmes">
   <div id="admin-content" class="hidden">
     <!-- Sidebar -->
-    <aside class="fixed left-0 top-0 h-screen w-64 bg-black text-white flex flex-col z-50">
+    <aside
+      class="fixed left-0 top-0 h-screen w-64 bg-black text-white flex flex-col z-50"
+    >
       <div class="p-6 border-b-2 border-white">
         <h1 class="text-xl font-bold uppercase">Portfolio Admin</h1>
       </div>
-      
+
       <nav class="flex-1 p-4 space-y-1">
-        <a href="/admin/dashboard" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">
+        <a
+          href="/admin/dashboard"
+          class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm"
+        >
           Dashboard
         </a>
-        <a href="/admin/projets" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">
+        <a
+          href="/admin/projets"
+          class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm"
+        >
           Projets
         </a>
-        <a href="/admin/themes" class="block px-4 py-2 bg-white text-black uppercase text-sm font-bold">
+        <a
+          href="/admin/themes"
+          class="block px-4 py-2 bg-white text-black uppercase text-sm font-bold"
+        >
           Thèmes
         </a>
-        <a href="/admin/tags" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">
+        <a
+          href="/admin/tags"
+          class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm"
+        >
           Tags
         </a>
-        <a href="/admin/technologies" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">
+        <a
+          href="/admin/technologies"
+          class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm"
+        >
           Technologies
         </a>
       </nav>
@@ -44,8 +61,12 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
       <div class="p-8">
         <div class="flex justify-between items-center mb-8">
           <div>
-            <h2 class="text-4xl font-bold text-black uppercase mb-2">Gestion des thèmes</h2>
-            <p class="text-gray-700">Créer et modifier les palettes de couleurs</p>
+            <h2 class="text-4xl font-bold text-black uppercase mb-2">
+              Gestion des thèmes
+            </h2>
+            <p class="text-gray-700">
+              Créer et modifier les palettes de couleurs
+            </p>
           </div>
           <button
             id="new-theme-btn"
@@ -56,20 +77,36 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
         </div>
 
         <!-- Liste des thèmes -->
-        <div id="themes-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div
+          id="themes-list"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+        >
           <!-- Thèmes chargés dynamiquement -->
         </div>
 
         <!-- Modal création/édition -->
-        <div id="theme-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div class="bg-white rounded-lg max-w-7xl w-full max-h-[95vh] overflow-hidden flex flex-col">
+        <div
+          id="theme-modal"
+          class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+        >
+          <div
+            class="bg-white rounded-lg max-w-7xl w-full max-h-[95vh] overflow-hidden flex flex-col"
+          >
             <!-- Header Modal -->
             <div class="flex justify-between items-center p-6 border-b">
               <div>
-                <h2 class="text-2xl font-bold text-gray-900" id="modal-title">Nouveau thème</h2>
-                <p class="text-sm text-gray-600 mt-1">Définissez les couleurs et visualisez le rendu en temps réel</p>
+                <h2 class="text-2xl font-bold text-gray-900" id="modal-title">
+                  Nouveau thème
+                </h2>
+                <p class="text-sm text-gray-600 mt-1">
+                  Définissez les couleurs et visualisez le rendu en temps réel
+                </p>
               </div>
-              <button id="close-modal" class="text-gray-400 hover:text-gray-600 text-3xl leading-none">×</button>
+              <button
+                id="close-modal"
+                class="text-gray-400 hover:text-gray-600 text-3xl leading-none"
+                >×</button
+              >
             </div>
 
             <!-- Content en 2 colonnes -->
@@ -91,13 +128,17 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
                       placeholder="ex: mon-theme"
                       class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
-                    <p class="text-xs text-gray-500 mt-1">Utilisez uniquement des lettres minuscules et des tirets</p>
+                    <p class="text-xs text-gray-500 mt-1">
+                      Utilisez uniquement des lettres minuscules et des tirets
+                    </p>
                   </div>
 
                   <!-- Section Mode Clair -->
                   <div class="pt-4 border-t">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Mode Clair</h3>
-                    
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                      Mode Clair
+                    </h3>
+
                     <div class="space-y-4">
                       <!-- Primaire -->
                       <div class="flex items-center gap-4">
@@ -107,7 +148,10 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
                           class="h-10 w-16 rounded border border-gray-300 cursor-pointer"
                         />
                         <div class="flex-1">
-                          <label class="block text-sm font-medium text-gray-700 mb-1">Primaire</label>
+                          <label
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                            >Primaire</label
+                          >
                           <input
                             type="text"
                             id="color-p-text"
@@ -125,7 +169,10 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
                           class="h-10 w-16 rounded border border-gray-300 cursor-pointer"
                         />
                         <div class="flex-1">
-                          <label class="block text-sm font-medium text-gray-700 mb-1">Secondaire</label>
+                          <label
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                            >Secondaire</label
+                          >
                           <input
                             type="text"
                             id="color-s-text"
@@ -143,7 +190,10 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
                           class="h-10 w-16 rounded border border-gray-300 cursor-pointer"
                         />
                         <div class="flex-1">
-                          <label class="block text-sm font-medium text-gray-700 mb-1">Accent</label>
+                          <label
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                            >Accent</label
+                          >
                           <input
                             type="text"
                             id="color-a-text"
@@ -161,7 +211,10 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
                           class="h-10 w-16 rounded border border-gray-300 cursor-pointer"
                         />
                         <div class="flex-1">
-                          <label class="block text-sm font-medium text-gray-700 mb-1">Fond Base</label>
+                          <label
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                            >Fond Base</label
+                          >
                           <input
                             type="text"
                             id="color-b1-text"
@@ -179,7 +232,10 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
                           class="h-10 w-16 rounded border border-gray-300 cursor-pointer"
                         />
                         <div class="flex-1">
-                          <label class="block text-sm font-medium text-gray-700 mb-1">Texte Base</label>
+                          <label
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                            >Texte Base</label
+                          >
                           <input
                             type="text"
                             id="color-bc-text"
@@ -193,29 +249,68 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
 
                   <!-- Section Mode Sombre (optionnel) -->
                   <div class="pt-4 border-t">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Mode Sombre (optionnel)</h3>
-                    <p class="text-xs text-gray-500 mb-4">Si non défini, les couleurs du mode clair seront utilisées</p>
-                    
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                      Mode Sombre (optionnel)
+                    </h3>
+                    <p class="text-xs text-gray-500 mb-4">
+                      Si non défini, les couleurs du mode clair seront utilisées
+                    </p>
+
                     <div class="grid grid-cols-2 gap-4">
                       <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Primaire Dark</label>
-                        <input type="color" id="color-p-dark" class="h-10 w-full rounded border border-gray-300" />
+                        <label
+                          class="block text-xs font-medium text-gray-700 mb-1"
+                          >Primaire Dark</label
+                        >
+                        <input
+                          type="color"
+                          id="color-p-dark"
+                          class="h-10 w-full rounded border border-gray-300"
+                        />
                       </div>
                       <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Secondaire Dark</label>
-                        <input type="color" id="color-s-dark" class="h-10 w-full rounded border border-gray-300" />
+                        <label
+                          class="block text-xs font-medium text-gray-700 mb-1"
+                          >Secondaire Dark</label
+                        >
+                        <input
+                          type="color"
+                          id="color-s-dark"
+                          class="h-10 w-full rounded border border-gray-300"
+                        />
                       </div>
                       <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Accent Dark</label>
-                        <input type="color" id="color-a-dark" class="h-10 w-full rounded border border-gray-300" />
+                        <label
+                          class="block text-xs font-medium text-gray-700 mb-1"
+                          >Accent Dark</label
+                        >
+                        <input
+                          type="color"
+                          id="color-a-dark"
+                          class="h-10 w-full rounded border border-gray-300"
+                        />
                       </div>
                       <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Fond Dark</label>
-                        <input type="color" id="color-b1-dark" class="h-10 w-full rounded border border-gray-300" />
+                        <label
+                          class="block text-xs font-medium text-gray-700 mb-1"
+                          >Fond Dark</label
+                        >
+                        <input
+                          type="color"
+                          id="color-b1-dark"
+                          class="h-10 w-full rounded border border-gray-300"
+                        />
                       </div>
                       <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Texte Dark</label>
-                        <input type="color" id="color-bc-dark" class="h-10 w-full rounded border border-gray-300" />
+                        <label
+                          class="block text-xs font-medium text-gray-700 mb-1"
+                          >Texte Dark</label
+                        >
+                        <input
+                          type="color"
+                          id="color-bc-dark"
+                          class="h-10 w-full rounded border border-gray-300"
+                        />
                       </div>
                     </div>
                   </div>
@@ -225,8 +320,12 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
               <!-- Colonne droite : Preview -->
               <div class="w-1/2 p-6 bg-gray-100 overflow-y-auto">
                 <div class="mb-4">
-                  <h3 class="text-lg font-semibold text-gray-900 mb-2">Aperçu en temps réel</h3>
-                  <p class="text-xs text-gray-600 mb-4">Visualisez comment votre thème apparaîtra</p>
+                  <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                    Aperçu en temps réel
+                  </h3>
+                  <p class="text-xs text-gray-600 mb-4">
+                    Visualisez comment votre thème apparaîtra
+                  </p>
                 </div>
 
                 <!-- Preview simple avec composants stylés -->
@@ -234,21 +333,49 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
                   <!-- Carte preview -->
                   <div id="preview-card" class="border-2 p-6 rounded">
                     <h4 class="text-2xl font-bold mb-3">Titre du Projet</h4>
-                    <p class="mb-4">Ceci est un exemple de texte sur votre thème. Vous pouvez voir comment les couleurs s'harmonisent ensemble.</p>
-                    <button id="preview-button" class="px-6 py-3 font-semibold rounded border-2">
+                    <p class="mb-4">
+                      Ceci est un exemple de texte sur votre thème. Vous pouvez
+                      voir comment les couleurs s'harmonisent ensemble.
+                    </p>
+                    <button
+                      id="preview-button"
+                      class="px-6 py-3 font-semibold rounded border-2"
+                    >
                       Voir le projet
                     </button>
                   </div>
 
                   <!-- Palette de couleurs -->
                   <div class="bg-white p-4 rounded shadow">
-                    <p class="text-sm font-medium text-gray-700 mb-3">Palette de couleurs</p>
+                    <p class="text-sm font-medium text-gray-700 mb-3">
+                      Palette de couleurs
+                    </p>
                     <div class="flex gap-2">
-                      <div id="palette-p" class="w-12 h-12 rounded border border-gray-300"></div>
-                      <div id="palette-s" class="w-12 h-12 rounded border border-gray-300"></div>
-                      <div id="palette-a" class="w-12 h-12 rounded border border-gray-300"></div>
-                      <div id="palette-b1" class="w-12 h-12 rounded border border-gray-300"></div>
-                      <div id="palette-bc" class="w-12 h-12 rounded border border-gray-300"></div>
+                      <div
+                        id="palette-p"
+                        class="w-12 h-12 rounded border border-gray-300"
+                      >
+                      </div>
+                      <div
+                        id="palette-s"
+                        class="w-12 h-12 rounded border border-gray-300"
+                      >
+                      </div>
+                      <div
+                        id="palette-a"
+                        class="w-12 h-12 rounded border border-gray-300"
+                      >
+                      </div>
+                      <div
+                        id="palette-b1"
+                        class="w-12 h-12 rounded border border-gray-300"
+                      >
+                      </div>
+                      <div
+                        id="palette-bc"
+                        class="w-12 h-12 rounded border border-gray-300"
+                      >
+                      </div>
                     </div>
                     <div class="flex gap-2 text-xs text-gray-600 mt-2">
                       <div class="w-12 text-center">P</div>
@@ -288,13 +415,13 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
   <div id="loading" class="min-h-screen flex items-center justify-center">
     <div class="text-lg text-gray-600">Chargement...</div>
   </div>
-</Layout>
+</LayoutAdmin>
 
 <script>
   import PocketBase from "pocketbase";
-  
+
   const pb = new PocketBase("https://portfolio.bryan-thierry.fr/");
-  
+
   if (!pb.authStore.isValid) {
     window.location.href = "/admin";
   } else {
@@ -307,12 +434,12 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
   function syncColorInputs(colorId: string, textId: string) {
     const colorInput = document.getElementById(colorId) as HTMLInputElement;
     const textInput = document.getElementById(textId) as HTMLInputElement;
-    
+
     colorInput.addEventListener("input", () => {
       textInput.value = colorInput.value;
       updatePreview();
     });
-    
+
     textInput.addEventListener("input", () => {
       if (/^#[0-9A-Fa-f]{6}$/.test(textInput.value)) {
         colorInput.value = textInput.value;
@@ -329,44 +456,64 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
 
   // Mise à jour preview
   function updatePreview() {
-    const p = (document.getElementById("color-p-text") as HTMLInputElement).value || "#8b5cf6";
-    const s = (document.getElementById("color-s-text") as HTMLInputElement).value || "#a855f7";
-    const a = (document.getElementById("color-a-text") as HTMLInputElement).value || "#c084fc";
-    const b1 = (document.getElementById("color-b1-text") as HTMLInputElement).value || "#faf9f7";
-    const bc = (document.getElementById("color-bc-text") as HTMLInputElement).value || "#000000";
-    
+    const p =
+      (document.getElementById("color-p-text") as HTMLInputElement).value ||
+      "#8b5cf6";
+    const s =
+      (document.getElementById("color-s-text") as HTMLInputElement).value ||
+      "#a855f7";
+    const a =
+      (document.getElementById("color-a-text") as HTMLInputElement).value ||
+      "#c084fc";
+    const b1 =
+      (document.getElementById("color-b1-text") as HTMLInputElement).value ||
+      "#faf9f7";
+    const bc =
+      (document.getElementById("color-bc-text") as HTMLInputElement).value ||
+      "#000000";
+
     // Preview card
     const card = document.getElementById("preview-card")!;
     card.style.background = b1;
     card.style.color = bc;
     card.style.borderColor = bc;
-    
+
     const button = document.getElementById("preview-button")!;
     button.style.background = p;
     button.style.color = b1;
     button.style.borderColor = bc;
-    
+
     // Palette
     (document.getElementById("palette-p")! as HTMLElement).style.background = p;
     (document.getElementById("palette-s")! as HTMLElement).style.background = s;
     (document.getElementById("palette-a")! as HTMLElement).style.background = a;
-    (document.getElementById("palette-b1")! as HTMLElement).style.background = b1;
-    (document.getElementById("palette-bc")! as HTMLElement).style.background = bc;
+    (document.getElementById("palette-b1")! as HTMLElement).style.background =
+      b1;
+    (document.getElementById("palette-bc")! as HTMLElement).style.background =
+      bc;
   }
 
   // Charger les thèmes
   async function loadThemes() {
     try {
-      const themes = await pb.collection("themes").getFullList({ sort: "name" });
+      const themes = await pb
+        .collection("themes")
+        .getFullList({ sort: "name" });
       const container = document.getElementById("themes-list")!;
-      
-      container.innerHTML = themes.map(theme => `
+
+      container.innerHTML = themes
+        .map(
+          (theme) => `
         <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6">
           <h3 class="text-lg font-semibold text-gray-900 mb-3">${theme.name}</h3>
           <div class="flex gap-2 mb-4">
-            ${Object.entries(theme.css_variables).slice(0, 5).map(([key, val]: [string, any]) => 
-              `<div class="w-10 h-10 rounded border border-gray-200" style="background: ${val}"></div>`
-            ).join('')}
+            ${Object.entries(theme.css_variables)
+              .slice(0, 5)
+              .map(
+                ([key, val]: [string, any]) =>
+                  `<div class="w-10 h-10 rounded border border-gray-200" style="background: ${val}"></div>`,
+              )
+              .join("")}
           </div>
           <div class="flex gap-2">
             <button onclick="editTheme('${theme.id}')" class="flex-1 px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
@@ -377,7 +524,9 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
             </button>
           </div>
         </div>
-      `).join('');
+      `,
+        )
+        .join("");
     } catch (error) {
       console.error("Erreur chargement thèmes:", error);
     }
@@ -389,99 +538,143 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
     document.getElementById("theme-id")!.setAttribute("value", "");
     document.getElementById("modal-title")!.textContent = "Nouveau thème";
     document.getElementById("theme-modal")?.classList.remove("hidden");
-    
+
     // Valeurs par défaut
     (document.getElementById("color-p") as HTMLInputElement).value = "#8b5cf6";
-    (document.getElementById("color-p-text") as HTMLInputElement).value = "#8b5cf6";
+    (document.getElementById("color-p-text") as HTMLInputElement).value =
+      "#8b5cf6";
     (document.getElementById("color-s") as HTMLInputElement).value = "#a855f7";
-    (document.getElementById("color-s-text") as HTMLInputElement).value = "#a855f7";
+    (document.getElementById("color-s-text") as HTMLInputElement).value =
+      "#a855f7";
     (document.getElementById("color-a") as HTMLInputElement).value = "#c084fc";
-    (document.getElementById("color-a-text") as HTMLInputElement).value = "#c084fc";
+    (document.getElementById("color-a-text") as HTMLInputElement).value =
+      "#c084fc";
     (document.getElementById("color-b1") as HTMLInputElement).value = "#faf9f7";
-    (document.getElementById("color-b1-text") as HTMLInputElement).value = "#faf9f7";
+    (document.getElementById("color-b1-text") as HTMLInputElement).value =
+      "#faf9f7";
     (document.getElementById("color-bc") as HTMLInputElement).value = "#000000";
-    (document.getElementById("color-bc-text") as HTMLInputElement).value = "#000000";
-    
+    (document.getElementById("color-bc-text") as HTMLInputElement).value =
+      "#000000";
+
     updatePreview();
   });
 
   // Fermer modal
   document.getElementById("close-modal")?.addEventListener("click", closeModal);
   document.getElementById("cancel-btn")?.addEventListener("click", closeModal);
-  
+
   function closeModal() {
     document.getElementById("theme-modal")?.classList.add("hidden");
   }
 
   // Sauvegarder
-  document.getElementById("theme-form")?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    
-    const themeId = (document.getElementById("theme-id") as HTMLInputElement).value;
-    const name = (document.getElementById("theme-name") as HTMLInputElement).value;
-    
-    const data = {
-      name,
-      css_variables: {
-        p: (document.getElementById("color-p-text") as HTMLInputElement).value,
-        s: (document.getElementById("color-s-text") as HTMLInputElement).value,
-        a: (document.getElementById("color-a-text") as HTMLInputElement).value,
-        b1: (document.getElementById("color-b1-text") as HTMLInputElement).value,
-        bc: (document.getElementById("color-bc-text") as HTMLInputElement).value,
-        "b1-rgb": hexToRgb((document.getElementById("color-b1-text") as HTMLInputElement).value)
-      },
-      dark_mode_colors: {
-        p: (document.getElementById("color-p-dark") as HTMLInputElement).value || null,
-        s: (document.getElementById("color-s-dark") as HTMLInputElement).value || null,
-        a: (document.getElementById("color-a-dark") as HTMLInputElement).value || null,
-        b1: (document.getElementById("color-b1-dark") as HTMLInputElement).value || null,
-        bc: (document.getElementById("color-bc-dark") as HTMLInputElement).value || null,
+  document
+    .getElementById("theme-form")
+    ?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const themeId = (document.getElementById("theme-id") as HTMLInputElement)
+        .value;
+      const name = (document.getElementById("theme-name") as HTMLInputElement)
+        .value;
+
+      const data = {
+        name,
+        css_variables: {
+          p: (document.getElementById("color-p-text") as HTMLInputElement)
+            .value,
+          s: (document.getElementById("color-s-text") as HTMLInputElement)
+            .value,
+          a: (document.getElementById("color-a-text") as HTMLInputElement)
+            .value,
+          b1: (document.getElementById("color-b1-text") as HTMLInputElement)
+            .value,
+          bc: (document.getElementById("color-bc-text") as HTMLInputElement)
+            .value,
+          "b1-rgb": hexToRgb(
+            (document.getElementById("color-b1-text") as HTMLInputElement)
+              .value,
+          ),
+        },
+        dark_mode_colors: {
+          p:
+            (document.getElementById("color-p-dark") as HTMLInputElement)
+              .value || null,
+          s:
+            (document.getElementById("color-s-dark") as HTMLInputElement)
+              .value || null,
+          a:
+            (document.getElementById("color-a-dark") as HTMLInputElement)
+              .value || null,
+          b1:
+            (document.getElementById("color-b1-dark") as HTMLInputElement)
+              .value || null,
+          bc:
+            (document.getElementById("color-bc-dark") as HTMLInputElement)
+              .value || null,
+        },
+      };
+
+      try {
+        if (themeId) {
+          await pb.collection("themes").update(themeId, data);
+        } else {
+          await pb.collection("themes").create(data);
+        }
+
+        closeModal();
+        loadThemes();
+        alert("Thème enregistré avec succès !");
+      } catch (error) {
+        console.error("Erreur sauvegarde:", error);
+        alert("Erreur lors de la sauvegarde");
       }
-    };
-    
-    try {
-      if (themeId) {
-        await pb.collection("themes").update(themeId, data);
-      } else {
-        await pb.collection("themes").create(data);
-      }
-      
-      closeModal();
-      loadThemes();
-      alert("Thème enregistré avec succès !");
-    } catch (error) {
-      console.error("Erreur sauvegarde:", error);
-      alert("Erreur lors de la sauvegarde");
-    }
-  });
+    });
 
   // Éditer
   (window as any).editTheme = async (id: string) => {
     try {
       const theme = await pb.collection("themes").getOne(id);
-      
+
       (document.getElementById("theme-id") as HTMLInputElement).value = id;
-      (document.getElementById("theme-name") as HTMLInputElement).value = theme.name;
-      (document.getElementById("color-p") as HTMLInputElement).value = theme.css_variables.p;
-      (document.getElementById("color-p-text") as HTMLInputElement).value = theme.css_variables.p;
-      (document.getElementById("color-s") as HTMLInputElement).value = theme.css_variables.s;
-      (document.getElementById("color-s-text") as HTMLInputElement).value = theme.css_variables.s;
-      (document.getElementById("color-a") as HTMLInputElement).value = theme.css_variables.a;
-      (document.getElementById("color-a-text") as HTMLInputElement).value = theme.css_variables.a;
-      (document.getElementById("color-b1") as HTMLInputElement).value = theme.css_variables.b1;
-      (document.getElementById("color-b1-text") as HTMLInputElement).value = theme.css_variables.b1;
-      (document.getElementById("color-bc") as HTMLInputElement).value = theme.css_variables.bc;
-      (document.getElementById("color-bc-text") as HTMLInputElement).value = theme.css_variables.bc;
-      
+      (document.getElementById("theme-name") as HTMLInputElement).value =
+        theme.name;
+      (document.getElementById("color-p") as HTMLInputElement).value =
+        theme.css_variables.p;
+      (document.getElementById("color-p-text") as HTMLInputElement).value =
+        theme.css_variables.p;
+      (document.getElementById("color-s") as HTMLInputElement).value =
+        theme.css_variables.s;
+      (document.getElementById("color-s-text") as HTMLInputElement).value =
+        theme.css_variables.s;
+      (document.getElementById("color-a") as HTMLInputElement).value =
+        theme.css_variables.a;
+      (document.getElementById("color-a-text") as HTMLInputElement).value =
+        theme.css_variables.a;
+      (document.getElementById("color-b1") as HTMLInputElement).value =
+        theme.css_variables.b1;
+      (document.getElementById("color-b1-text") as HTMLInputElement).value =
+        theme.css_variables.b1;
+      (document.getElementById("color-bc") as HTMLInputElement).value =
+        theme.css_variables.bc;
+      (document.getElementById("color-bc-text") as HTMLInputElement).value =
+        theme.css_variables.bc;
+
       if (theme.dark_mode_colors) {
-        (document.getElementById("color-p-dark") as HTMLInputElement).value = theme.dark_mode_colors.p || "";
-        (document.getElementById("color-s-dark") as HTMLInputElement).value = theme.dark_mode_colors.s || "";
-        (document.getElementById("color-a-dark") as HTMLInputElement).value = theme.dark_mode_colors.a || "";
-        (document.getElementById("color-b1-dark") as HTMLInputElement).value = theme.dark_mode_colors.b1 || "";
-        (document.getElementById("color-bc-dark") as HTMLInputElement).value = theme.dark_mode_colors.bc || "";
+        (document.getElementById("color-p-dark") as HTMLInputElement).value =
+          theme.dark_mode_colors.p || "";
+        (document.getElementById("color-s-dark") as HTMLInputElement).value =
+          theme.dark_mode_colors.s || "";
+        (document.getElementById("color-a-dark") as HTMLInputElement).value =
+          theme.dark_mode_colors.a || "";
+        (document.getElementById("color-b1-dark") as HTMLInputElement).value =
+          theme.dark_mode_colors.b1 || "";
+        (document.getElementById("color-bc-dark") as HTMLInputElement).value =
+          theme.dark_mode_colors.bc || "";
       }
-      
-      document.getElementById("modal-title")!.textContent = `Modifier : ${theme.name}`;
+
+      document.getElementById("modal-title")!.textContent =
+        `Modifier : ${theme.name}`;
       document.getElementById("theme-modal")?.classList.remove("hidden");
       updatePreview();
     } catch (error) {
@@ -491,8 +684,9 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
 
   // Supprimer
   (window as any).deleteTheme = async (id: string, name: string) => {
-    if (!confirm(`Êtes-vous sûr de vouloir supprimer le thème "${name}" ?`)) return;
-    
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer le thème "${name}" ?`))
+      return;
+
     try {
       await pb.collection("themes").delete(id);
       loadThemes();
@@ -515,4 +709,3 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
     return `${r}, ${g}, ${b}`;
   }
 </script>
-</LayoutAdmin>
