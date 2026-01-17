@@ -73,26 +73,30 @@ jobs:
           target: "/var/www/portfolio"
           strip_components: 0
 
-      - name: Setup PocketBase
+      - name: 🛑 Stop existing PocketBase
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            echo "🔍 Starting PocketBase setup..."
-            
-            # Stop existing PocketBase more carefully
-            echo "🛑 Stopping existing PocketBase processes..."
-            sudo pkill -f "pocketbase serve" || true
-            sleep 3
-            
-            # Verify no pocketbase is running on port 8090
-            if lsof -ti:8090; then
-              echo "⚠️ Port 8090 still in use, killing process..."
-              sudo kill -9 $(lsof -ti:8090) || true
-              sleep 2
+            echo "🛑 Stopping any existing PocketBase..."
+            sudo systemctl stop pocketbase 2>/dev/null || true
+            sudo pkill -f "/var/www/pocketbase/pocketbase" 2>/dev/null || true
+            if lsof -ti:8090 2>/dev/null; then
+              sudo kill -9 $(lsof -ti:8090) 2>/dev/null || true
             fi
+            sleep 2
+            echo "✅ PocketBase stopped"
+
+      - name: 🗄️ Setup PocketBase
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "🔍 Setting up PocketBase..."
             
             echo "📁 Creating pocketbase directory..."
             mkdir -p ~/pocketbase
@@ -101,7 +105,6 @@ jobs:
             if [ -d "/var/www/portfolio/Backend/pocketbase" ]; then
               cp -r /var/www/portfolio/Backend/pocketbase/* ~/pocketbase/ 2>/dev/null || true
               echo "✅ Files copied successfully"
-              ls -la ~/pocketbase/
             else
               echo "❌ Backend directory not found!"
               ls -la /var/www/portfolio/
@@ -110,29 +113,18 @@ jobs:
             
             chmod +x ~/pocketbase/pocketbase
             
-            echo "🚀 Starting PocketBase as current user..."
+            echo "🚀 Starting PocketBase..."
             cd ~/pocketbase
             nohup ./pocketbase serve --http=127.0.0.1:8090 --dir=./pb_data > ../pocketbase.log 2>&1 &
             
             echo "⏳ Waiting for PocketBase to start..."
             sleep 8
             
-            echo "🔍 Checking if PocketBase is running..."
             if curl -f http://127.0.0.1:8090/_/ > /dev/null 2>&1; then
               echo "✅ PocketBase started successfully"
-              echo "📋 Available collections:"
-              curl -s http://127.0.0.1:8090/api/collections | head -c 200 || echo "No collections yet"
-              echo ""
-              echo "🔍 Process status:"
-              ps aux | grep pocketbase | grep -v grep || echo "No pocketbase process found in ps"
             else
               echo "❌ PocketBase failed to start"
-              echo "📋 Log content:"
-              cat ~/pocketbase.log || echo "No log file"
-              echo "🔍 Process status:"
-              ps aux | grep pocketbase | grep -v grep || echo "No pocketbase process found"
-              echo "🔍 Port 8090 status:"
-              lsof -i:8090 || echo "Port 8090 not in use"
+              cat ~/pocketbase.log 2>/dev/null || echo "No log file"
               exit 1
             fi
 
