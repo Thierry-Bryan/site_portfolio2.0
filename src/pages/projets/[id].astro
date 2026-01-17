@@ -40,15 +40,17 @@ const currentTags = projet.expand?.tags || [];
 const primaryTag = currentTags[0]?.name || null;
 
 // Filtrer les projets par même tag
-const projetsInSameCategory = primaryTag 
-  ? allProjets.filter(p => {
+const projetsInSameCategory = primaryTag
+  ? allProjets.filter((p) => {
       const pTags = p.expand?.tags || [];
-      return pTags.some(tag => tag.name === primaryTag);
+      return pTags.some((tag) => tag.name === primaryTag);
     })
   : allProjets;
 
 // Trouver l'index dans la catégorie
-const categoryIndex = projetsInSameCategory.findIndex(p => p.slug === projet.slug);
+const categoryIndex = projetsInSameCategory.findIndex(
+  (p) => p.slug === projet.slug,
+);
 const totalInCategory = projetsInSameCategory.length;
 
 // Navigation circulaire dans la catégorie
@@ -75,16 +77,18 @@ const projetTechnologies = projet.expand?.technologies || [];
     class="relative h-[calc(120vh-7rem)] flex items-stretch overflow-hidden"
   >
     <!-- Indicateur de catégorie -->
-    {primaryTag && totalInCategory > 1 && (
-      <div class="category-navigation absolute top-20 right-4 md:top-8 md:right-8 z-40">
-        <div class="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-lg shadow-lg">
-          <span class="text-xs md:text-sm font-semibold text-white/90 tracking-wide">
-            {primaryTag.toUpperCase()} ({categoryIndex + 1}/{totalInCategory})
-          </span>
+    {
+      primaryTag && totalInCategory > 1 && (
+        <div class="category-navigation absolute top-20 right-4 md:top-8 md:right-8 z-40">
+          <div class="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-lg shadow-lg">
+            <span class="text-xs md:text-sm font-semibold text-white/90 tracking-wide">
+              {primaryTag.toUpperCase()} ({categoryIndex + 1}/{totalInCategory})
+            </span>
+          </div>
         </div>
-      </div>
-    )}
-    
+      )
+    }
+
     <div class="w-full h-full relative">
       <!-- Zone gauche : Texte sur fond avec angle prononcé (desktop uniquement) -->
       <div
@@ -188,11 +192,11 @@ const projetTechnologies = projet.expand?.technologies || [];
       pointer-events: none !important;
       cursor: not-allowed !important;
     }
-    
+
     .arrow-wrapper-disabled button {
       opacity: 0.5 !important;
     }
-    
+
     .arrow-wrapper-disabled svg {
       opacity: 0.6 !important;
     }
@@ -203,30 +207,35 @@ const projetTechnologies = projet.expand?.technologies || [];
       const currentTheme =
         document.documentElement.dataset.currentTheme || "ca-va-trailer";
       const allProjetsData = JSON.parse(
-        document.documentElement.dataset.allProjets || "[]"
+        document.documentElement.dataset.allProjets || "[]",
       );
 
       // Fonction pour générer la map de projets avec navigation circulaire
       function generateProjetsData(allProjets) {
         const projetsData = {};
-        
+
         allProjets.forEach((p, index) => {
           const currentTags = p.tags || [];
-          const primaryTag = currentTags.length > 0 ? currentTags[0].name : null;
-          
-          const projetsInSameCategory = primaryTag 
-            ? allProjets.filter(proj => {
+          const primaryTag =
+            currentTags.length > 0 ? currentTags[0].name : null;
+
+          const projetsInSameCategory = primaryTag
+            ? allProjets.filter((proj) => {
                 const pTags = proj.tags || [];
-                return pTags.some(tag => tag.name === primaryTag);
+                return pTags.some((tag) => tag.name === primaryTag);
               })
             : allProjets;
 
-          const categoryIndex = projetsInSameCategory.findIndex(proj => proj.slug === p.slug);
+          const categoryIndex = projetsInSameCategory.findIndex(
+            (proj) => proj.slug === p.slug,
+          );
           const categoryTotal = projetsInSameCategory.length;
-          
-          const prevIndex = categoryIndex > 0 ? categoryIndex - 1 : categoryTotal - 1;
-          const nextIndex = categoryIndex < categoryTotal - 1 ? categoryIndex + 1 : 0;
-          
+
+          const prevIndex =
+            categoryIndex > 0 ? categoryIndex - 1 : categoryTotal - 1;
+          const nextIndex =
+            categoryIndex < categoryTotal - 1 ? categoryIndex + 1 : 0;
+
           projetsData[p.slug] = {
             ...p,
             primaryTag: primaryTag,
@@ -234,7 +243,7 @@ const projetTechnologies = projet.expand?.technologies || [];
             nextId: projetsInSameCategory[nextIndex]?.slug,
           };
         });
-        
+
         return projetsData;
       }
 
@@ -254,24 +263,27 @@ const projetTechnologies = projet.expand?.technologies || [];
         // Mettre à jour le data-theme du header et footer avec le thème du projet
         const header = document.getElementById("header");
         const footer = document.querySelector("footer");
-        
+
         if (header) {
           header.setAttribute("data-theme", themeToApply);
           // Forcer la mise à jour immédiate du background du header
           setTimeout(() => {
             try {
               const headerComputedStyle = getComputedStyle(header);
-              const bgColor = headerComputedStyle.getPropertyValue("--b1").trim();
+              const bgColor = headerComputedStyle
+                .getPropertyValue("--b1")
+                .trim();
               if (bgColor) header.style.backgroundColor = `${bgColor}f5`;
-            } catch(e) {}
+            } catch (e) {}
           }, 10);
         }
-        
+
         if (footer) footer.setAttribute("data-theme", themeToApply);
 
         // Mettre à jour la section contenu
         const contenuSection = document.getElementById("contenu");
-        if (contenuSection) contenuSection.setAttribute("data-theme", themeToApply);
+        if (contenuSection)
+          contenuSection.setAttribute("data-theme", themeToApply);
 
         // Mettre à jour le bandeau défilant
         const projetBanner = document.getElementById("projet-banner");
@@ -285,12 +297,12 @@ const projetTechnologies = projet.expand?.technologies || [];
       function updateArrowsTheme(themeToApply) {
         const prevArrowWrapper = document.getElementById("prev-arrow-wrapper");
         const nextArrowWrapper = document.getElementById("next-arrow-wrapper");
-        
+
         if (prevArrowWrapper) {
           const prevButton = prevArrowWrapper.querySelector("button");
           if (prevButton) prevButton.setAttribute("data-theme", themeToApply);
         }
-        
+
         if (nextArrowWrapper) {
           const nextButton = nextArrowWrapper.querySelector("button");
           if (nextButton) nextButton.setAttribute("data-theme", themeToApply);
@@ -301,7 +313,7 @@ const projetTechnologies = projet.expand?.technologies || [];
       async function navigateToProject(projectSlug) {
         const project = projetsData[projectSlug];
         if (!project) return;
-        
+
         const heroDevice = document.getElementById("hero-device");
         if (!heroDevice) {
           // Fallback vers navigation classique si pas d'éléments hero
@@ -316,7 +328,9 @@ const projetTechnologies = projet.expand?.technologies || [];
 
         // Gérer le mode sombre
         const isDarkMode = localStorage.getItem("darkMode") === "true";
-        const themeToApply = isDarkMode ? project.theme + "-dark" : project.theme;
+        const themeToApply = isDarkMode
+          ? project.theme + "-dark"
+          : project.theme;
 
         // Mise à jour du thème global
         const htmlElement = document.documentElement;
@@ -325,7 +339,7 @@ const projetTechnologies = projet.expand?.technologies || [];
         // Mettre à jour header et footer
         const header = document.getElementById("header");
         const footer = document.querySelector("footer");
-        
+
         if (header) header.setAttribute("data-theme", themeToApply);
         if (footer) footer.setAttribute("data-theme", themeToApply);
 
@@ -346,7 +360,8 @@ const projetTechnologies = projet.expand?.technologies || [];
 
         // Mettre à jour la section contenu
         const contenuSection = document.getElementById("contenu");
-        if (contenuSection) contenuSection.setAttribute("data-theme", themeToApply);
+        if (contenuSection)
+          contenuSection.setAttribute("data-theme", themeToApply);
 
         // Mettre à jour le bandeau défilant
         const projetBanner = document.getElementById("projet-banner");
@@ -379,49 +394,56 @@ const projetTechnologies = projet.expand?.technologies || [];
         }
 
         // Mettre à jour les technologies
-        const projetTechnologies = document.getElementById("projet-technologies");
+        const projetTechnologies = document.getElementById(
+          "projet-technologies",
+        );
         if (projetTechnologies && project.technologies) {
-          projetTechnologies.innerHTML = '';
-          project.technologies.forEach(tech => {
-            const span = document.createElement('span');
-            span.className = 'px-2 py-1 text-xs font-secondary border border-(--bc) text-(--bc)';
+          projetTechnologies.innerHTML = "";
+          project.technologies.forEach((tech) => {
+            const span = document.createElement("span");
+            span.className =
+              "px-2 py-1 text-xs font-secondary border border-(--bc) text-(--bc)";
             span.textContent = tech.name;
             projetTechnologies.appendChild(span);
           });
         }
 
         // Mettre à jour les images du projet
-        const projetImagesContainer = document.getElementById("projet-images-container");
+        const projetImagesContainer = document.getElementById(
+          "projet-images-container",
+        );
         if (projetImagesContainer && project.images) {
-          projetImagesContainer.innerHTML = '';
+          projetImagesContainer.innerHTML = "";
           project.images.forEach((image, index) => {
-            const div = document.createElement('div');
-            const img = document.createElement('img');
+            const div = document.createElement("div");
+            const img = document.createElement("img");
             img.src = image;
             img.alt = `${project.title} - Mockup ${index + 1}`;
-            img.className = 'w-full h-auto object-cover';
+            img.className = "w-full h-auto object-cover";
             div.appendChild(img);
             projetImagesContainer.appendChild(div);
           });
         }
 
         // Mettre à jour le bouton "VOIR LE SITE FINAL"
-        const projetButtonContainer = document.getElementById("projet-button-container");
+        const projetButtonContainer = document.getElementById(
+          "projet-button-container",
+        );
         if (project.siteUrl && project.siteUrl.trim()) {
           if (!projetButtonContainer) {
             // Créer le container du bouton s'il n'existe pas
-            const buttonContainer = document.createElement('div');
-            buttonContainer.id = 'projet-button-container';
-            buttonContainer.className = 'text-center pt-8';
-            
-            const button = document.createElement('a');
+            const buttonContainer = document.createElement("div");
+            buttonContainer.id = "projet-button-container";
+            buttonContainer.className = "text-center pt-8";
+
+            const button = document.createElement("a");
             button.href = project.siteUrl;
-            button.target = '_blank';
-            button.className = 'btn font-primary text-lg px-8 py-4';
-            button.textContent = 'VOIR LE SITE FINAL';
-            
+            button.target = "_blank";
+            button.className = "btn font-primary text-lg px-8 py-4";
+            button.textContent = "VOIR LE SITE FINAL";
+
             buttonContainer.appendChild(button);
-            
+
             // Ajouter après la description
             const descriptionParent = projetDescription?.parentNode;
             if (descriptionParent) {
@@ -429,16 +451,16 @@ const projetTechnologies = projet.expand?.technologies || [];
             }
           } else {
             // Mettre à jour le lien existant
-            const link = projetButtonContainer.querySelector('a');
+            const link = projetButtonContainer.querySelector("a");
             if (link) {
               link.href = project.siteUrl;
             }
-            projetButtonContainer.style.display = 'block';
+            projetButtonContainer.style.display = "block";
           }
         } else {
           // Cacher le bouton s'il n'y a pas d'URL
           if (projetButtonContainer) {
-            projetButtonContainer.style.display = 'none';
+            projetButtonContainer.style.display = "none";
           }
         }
       }
@@ -447,27 +469,27 @@ const projetTechnologies = projet.expand?.technologies || [];
       function initNavigationListeners() {
         const prevButton = document.querySelector(".arrow-prev");
         const nextButton = document.querySelector(".arrow-next");
-        
+
         if (prevButton && nextButton) {
           const currentSlug = window.location.pathname.split("/").pop();
           const currentProjet = projetsData[currentSlug];
-          
+
           if (currentProjet) {
             // Supprimer les anciens listeners
             prevButton.replaceWith(prevButton.cloneNode(true));
             nextButton.replaceWith(nextButton.cloneNode(true));
-            
+
             // Récupérer les nouveaux éléments après clonage
             const newPrevButton = document.querySelector(".arrow-prev");
             const newNextButton = document.querySelector(".arrow-next");
-            
+
             newPrevButton.addEventListener("click", async (e) => {
               e.preventDefault();
               if (currentProjet.prevId) {
                 await navigateToProject(currentProjet.prevId);
               }
             });
-            
+
             newNextButton.addEventListener("click", async (e) => {
               e.preventDefault();
               if (currentProjet.nextId) {
@@ -479,13 +501,46 @@ const projetTechnologies = projet.expand?.technologies || [];
       }
 
       // Gérer le bouton retour du navigateur
-      window.addEventListener('popstate', (event) => {
+      window.addEventListener("popstate", (event) => {
         if (event.state && event.state.projectSlug) {
           navigateToProject(event.state.projectSlug);
         } else {
           // Recharger la page si pas d'état
           window.location.reload();
         }
+      });
+
+      // Écouter les changements de mode sombre/clair pour mettre à jour les flèches
+      function handleThemeChange() {
+        const currentSlug = window.location.pathname.split("/").pop();
+        if (projetsData[currentSlug]) {
+          const isDarkMode = localStorage.getItem("darkMode") === "true";
+          const themeToApply = isDarkMode 
+            ? projetsData[currentSlug].theme + "-dark" 
+            : projetsData[currentSlug].theme;
+          updateArrowsTheme(themeToApply);
+        }
+      }
+
+      // Observer les changements de localStorage pour le mode sombre
+      window.addEventListener("storage", (e) => {
+        if (e.key === "darkMode") {
+          handleThemeChange();
+        }
+      });
+
+      // Observer les changements d'attribut data-theme sur documentElement  
+      const themeObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+            handleThemeChange();
+          }
+        });
+      });
+      
+      themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme']
       });
 
       // Initialiser les listeners

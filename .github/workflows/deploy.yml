@@ -72,34 +72,34 @@ jobs:
           script: |
             cd /var/www/portfolio
             npm ci --omit=dev
-            
+
             # Arrêter complètement PM2 (en tant que bryan et root si nécessaire)
             pm2 delete portfolio || true
             sudo pm2 delete portfolio || true
             pm2 kill || true
             sudo pm2 kill || true
-            
+
             # Tuer tous les processus node qui pourraient bloquer le port
             sudo pkill -f "node.*portfolio\|node.*entry.mjs" || true
-            
+
             # Attendre que tout soit arrêté
             sleep 3
-            
+
             # Redémarrer avec les bonnes variables d'environnement
             cd /var/www/portfolio
             HOST=0.0.0.0 PORT=3001 pm2 start server/entry.mjs --name "portfolio"
             pm2 save
-            
+
             # Vérifier que ça marche
             sleep 5
             pm2 logs portfolio --lines 5 --nostream
-            
+
             # Test de santé
             curl -f http://localhost:3001 || echo "❌ Health check failed"
-            
+
             sleep 2
             pm2 list
-            
+
             echo "✅ Deployment completed!"
 
       - name: ✅ Deploy completed
