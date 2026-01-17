@@ -29,8 +29,8 @@ export async function getProjets() {
     try {
         console.log('Tentative de récupération des projets...');
         const records = await pb.collection("projets").getFullList({
-            filter: "published = true",
-            sort: "order",
+            filter: 'statut = "publié"',
+            sort: "-created",
             expand: "tags,technologies,theme",
         });
         console.log('Projets récupérés:', records.length);
