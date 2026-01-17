@@ -80,30 +80,56 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Stop existing PocketBase (need sudo for www-data process)
-            sudo pkill -f pocketbase || true
-            sleep 2
+            echo "🔍 Starting PocketBase setup..."
             
-            # Create pocketbase directory without sudo
+            # Stop existing PocketBase (need sudo for www-data process)
+            echo "🛑 Stopping existing PocketBase processes..."
+            sudo pkill -f pocketbase || true
+            sleep 3
+            
+            # Verify no pocketbase is running
+            if pgrep -f pocketbase; then
+              echo "⚠️ PocketBase still running, force killing..."
+              sudo pkill -9 -f pocketbase || true
+              sleep 2
+            fi
+            
+            echo "📁 Creating pocketbase directory..."
             mkdir -p ~/pocketbase
-            cp -r /var/www/portfolio/Backend/pocketbase/* ~/pocketbase/ 2>/dev/null || true
+            
+            echo "📋 Copying Backend files..."
+            if [ -d "/var/www/portfolio/Backend/pocketbase" ]; then
+              cp -r /var/www/portfolio/Backend/pocketbase/* ~/pocketbase/ 2>/dev/null || true
+              echo "✅ Files copied successfully"
+              ls -la ~/pocketbase/
+            else
+              echo "❌ Backend directory not found!"
+              ls -la /var/www/portfolio/
+              exit 1
+            fi
+            
             chmod +x ~/pocketbase/pocketbase
             
-            # Start PocketBase as current user
+            echo "🚀 Starting PocketBase as current user..."
             nohup ~/pocketbase/pocketbase serve --http=127.0.0.1:8090 --dir=~/pocketbase/pb_data > ~/pocketbase.log 2>&1 &
             
-            # Wait for PocketBase to start
-            sleep 5
+            echo "⏳ Waiting for PocketBase to start..."
+            sleep 8
             
-            # Check if PocketBase is running
+            echo "🔍 Checking if PocketBase is running..."
             if curl -f http://127.0.0.1:8090/_/ > /dev/null 2>&1; then
               echo "✅ PocketBase started successfully"
               echo "📋 Available collections:"
               curl -s http://127.0.0.1:8090/api/collections | head -c 200
+              echo ""
+              echo "🔍 Process status:"
+              ps aux | grep pocketbase | grep -v grep
             else
               echo "❌ PocketBase failed to start"
               echo "📋 Log content:"
               cat ~/pocketbase.log || echo "No log file"
+              echo "🔍 Process status:"
+              ps aux | grep pocketbase | grep -v grep
               exit 1
             fi
 
