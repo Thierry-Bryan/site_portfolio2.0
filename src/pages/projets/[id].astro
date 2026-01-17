@@ -46,12 +46,22 @@ if (themeData) {
 }
 
 const themeName = themeData?.name || "basique";
-// Si on a un thème personnalisé, on génère le CSS
-// Sinon on utilise le CSS par défaut (basique)
-const dynamicThemeCSS = themeData ? generateThemeCSS(themeData) : "";
+
+// GÉNÉRER LE CSS POUR TOUS LES THÈMES (pour la navigation client)
+const allProjets = await getProjets();
+const allThemes = new Set<any>();
+allProjets.forEach(p => {
+  const theme = Array.isArray(p.expand?.theme) ? p.expand.theme[0] : p.expand?.theme;
+  if (theme) allThemes.add(theme);
+});
+
+// Générer le CSS pour tous les thèmes disponibles
+let dynamicThemeCSS = "";
+allThemes.forEach(theme => {
+  dynamicThemeCSS += generateThemeCSS(theme);
+});
 
 // NOUVELLE LOGIQUE : Navigation par catégorie
-const allProjets = await getProjets();
 
 // Récupérer le tag principal du projet actuel
 const currentTags = projet.expand?.tags || [];
