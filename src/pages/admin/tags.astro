@@ -1,33 +1,34 @@
 ---
-import Layout from "../../layouts/Layout.astro";
+import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
 ---
 
-<Layout title="Admin - Tags" theme="basique">
+<LayoutAdmin title="Admin - Tags">
   <div id="admin-content" class="hidden">
     <!-- Sidebar -->
-    <aside class="fixed left-0 top-0 h-screen w-64 bg-gray-900 text-white flex flex-col z-50">
-      <div class="p-6 border-b border-gray-800">
-        <h1 class="text-xl font-bold">Portfolio Admin</h1>
+    <aside class="fixed left-0 top-0 h-screen w-64 bg-black text-white flex flex-col z-50">
+      <div class="p-6 border-b-2 border-white">
+        <h1 class="text-xl font-bold uppercase">Portfolio Admin</h1>
       </div>
       <nav class="flex-1 p-4 space-y-1">
-        <a href="/admin/dashboard" class="block px-4 py-3 hover:bg-gray-800 rounded transition-colors">Dashboard</a>
-        <a href="/admin/themes" class="block px-4 py-3 hover:bg-gray-800 rounded transition-colors">Thèmes</a>
-        <a href="/admin/tags" class="block px-4 py-3 bg-gray-800 rounded text-white font-medium">Tags</a>
-        <a href="/admin/technologies" class="block px-4 py-3 hover:bg-gray-800 rounded transition-colors">Technologies</a>
+        <a href="/admin/dashboard" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">Dashboard</a>
+        <a href="/admin/projets" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">Projets</a>
+        <a href="/admin/themes" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">Thèmes</a>
+        <a href="/admin/tags" class="block px-4 py-2 bg-white text-black uppercase text-sm font-bold">Tags</a>
+        <a href="/admin/technologies" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">Technologies</a>
       </nav>
-      <div class="p-4 border-t border-gray-800">
-        <button id="logout-btn" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded text-white transition-colors">Déconnexion</button>
+      <div class="p-4 border-t-2 border-white">
+        <button id="logout-btn" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white transition-colors uppercase text-sm font-bold">Déconnexion</button>
       </div>
     </aside>
 
-    <main class="ml-64 min-h-screen bg-gray-50">
+    <main class="ml-64 min-h-screen bg-[#faf9f7]">
       <div class="p-8">
         <div class="flex justify-between items-center mb-8">
           <div>
-            <h2 class="text-3xl font-bold text-gray-900 mb-2">Gestion des tags</h2>
-            <p class="text-gray-600">Créer et gérer les catégories de projets</p>
+            <h2 class="text-4xl font-bold text-black uppercase mb-2">Gestion des tags</h2>
+            <p class="text-gray-700">Créer et gérer les catégories de projets</p>
           </div>
-          <button id="new-tag-btn" class="px-6 py-3 bg-blue-600 text-white font-medium rounded hover:bg-blue-700 transition-colors">
+          <button id="new-tag-btn" class="px-6 py-3 bg-black text-white font-bold uppercase hover:bg-gray-800 transition-colors border-4 border-black">
             Nouveau tag
           </button>
         </div>

@@ -1,0 +1,496 @@
+---
+// Gestion complète des projets avec upload d'images
+import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
+---
+
+<LayoutAdmin title="Admin - Projets">
+  <div id="admin-content" class="hidden">
+    <!-- Sidebar -->
+    <aside class="fixed left-0 top-0 h-screen w-64 bg-black text-white flex flex-col z-50">
+      <div class="p-6 border-b-2 border-white">
+        <h1 class="text-xl font-bold uppercase">Portfolio Admin</h1>
+      </div>
+      
+      <nav class="flex-1 p-4 space-y-1">
+        <a href="/admin/dashboard" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">
+          Dashboard
+        </a>
+        <a href="/admin/projets" class="block px-4 py-2 bg-white text-black uppercase text-sm font-bold">
+          Projets
+        </a>
+        <a href="/admin/themes" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">
+          Thèmes
+        </a>
+        <a href="/admin/tags" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">
+          Tags
+        </a>
+        <a href="/admin/technologies" class="block px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase text-sm">
+          Technologies
+        </a>
+      </nav>
+
+      <div class="p-4 border-t-2 border-white">
+        <button
+          id="logout-btn"
+          class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white transition-colors uppercase text-sm font-bold"
+        >
+          Déconnexion
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="ml-64 min-h-screen bg-[#faf9f7]">
+      <div class="p-8">
+        <div class="flex justify-between items-center mb-8">
+          <div>
+            <h2 class="text-4xl font-bold text-black uppercase mb-2">Gestion des projets</h2>
+            <p class="text-gray-700">Créer, modifier et gérer vos projets</p>
+          </div>
+          <button
+            id="new-project-btn"
+            class="px-6 py-3 bg-black text-white font-bold uppercase border-4 border-black hover:bg-white hover:text-black transition-all"
+          >
+            Nouveau projet
+          </button>
+        </div>
+
+        <!-- Liste des projets -->
+        <div id="projects-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Projets chargés dynamiquement -->
+        </div>
+
+        <!-- Modal création/édition -->
+        <div id="project-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div class="bg-[#faf9f7] border-4 border-black max-w-5xl w-full my-8">
+            <!-- Header Modal -->
+            <div class="flex justify-between items-center p-6 border-b-4 border-black bg-white">
+              <h2 class="text-3xl font-bold text-black uppercase" id="modal-title">Nouveau projet</h2>
+              <button id="close-modal" class="text-black text-4xl leading-none hover:text-gray-600">×</button>
+            </div>
+
+            <!-- Form Content -->
+            <div class="p-6 max-h-[70vh] overflow-y-auto">
+              <form id="project-form" class="space-y-6">
+                <input type="hidden" id="project-id" />
+
+                <!-- Titre -->
+                <div>
+                  <label class="block text-sm font-bold text-black mb-2 uppercase">
+                    Titre du projet <span class="text-red-600">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="project-title"
+                    required
+                    placeholder="Mon Super Projet"
+                    class="w-full px-4 py-3 border-2 border-black bg-white text-black focus:outline-none focus:border-4"
+                  />
+                </div>
+
+                <!-- Slug -->
+                <div>
+                  <label class="block text-sm font-bold text-black mb-2 uppercase">
+                    Slug (URL) <span class="text-red-600">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="project-slug"
+                    required
+                    placeholder="mon-super-projet"
+                    class="w-full px-4 py-3 border-2 border-black bg-white text-black focus:outline-none focus:border-4"
+                  />
+                  <p class="text-xs text-gray-600 mt-1">URL : /projets/mon-super-projet</p>
+                </div>
+
+                <!-- Sous-titre -->
+                <div>
+                  <label class="block text-sm font-bold text-black mb-2 uppercase">
+                    Sous-titre
+                  </label>
+                  <input
+                    type="text"
+                    id="project-subtitle"
+                    placeholder="Description courte"
+                    class="w-full px-4 py-3 border-2 border-black bg-white text-black focus:outline-none focus:border-4"
+                  />
+                </div>
+
+                <!-- Description complète -->
+                <div>
+                  <label class="block text-sm font-bold text-black mb-2 uppercase">
+                    Description complète
+                  </label>
+                  <textarea
+                    id="project-description"
+                    rows="6"
+                    placeholder="Description détaillée du projet..."
+                    class="w-full px-4 py-3 border-2 border-black bg-white text-black focus:outline-none focus:border-4"
+                  ></textarea>
+                </div>
+
+                <!-- Image Hero -->
+                <div>
+                  <label class="block text-sm font-bold text-black mb-2 uppercase">
+                    Image Hero <span class="text-red-600">*</span>
+                  </label>
+                  <input
+                    type="file"
+                    id="project-hero-image"
+                    accept="image/*"
+                    class="w-full px-4 py-3 border-2 border-black bg-white text-black"
+                  />
+                  <div id="hero-preview" class="mt-3"></div>
+                </div>
+
+                <!-- Galerie d'images -->
+                <div>
+                  <label class="block text-sm font-bold text-black mb-2 uppercase">
+                    Galerie d'images
+                  </label>
+                  <input
+                    type="file"
+                    id="project-gallery"
+                    accept="image/*"
+                    multiple
+                    class="w-full px-4 py-3 border-2 border-black bg-white text-black"
+                  />
+                  <div id="gallery-preview" class="mt-3 grid grid-cols-3 gap-2"></div>
+                </div>
+
+                <!-- Thème -->
+                <div>
+                  <label class="block text-sm font-bold text-black mb-2 uppercase">
+                    Thème <span class="text-red-600">*</span>
+                  </label>
+                  <select
+                    id="project-theme"
+                    required
+                    class="w-full px-4 py-3 border-2 border-black bg-white text-black focus:outline-none focus:border-4"
+                  >
+                    <option value="">Chargement...</option>
+                  </select>
+                </div>
+
+                <!-- Tags -->
+                <div>
+                  <label class="block text-sm font-bold text-black mb-2 uppercase">
+                    Tags
+                  </label>
+                  <div id="tags-checkboxes" class="space-y-2 p-4 border-2 border-black bg-white">
+                    <!-- Tags chargés dynamiquement -->
+                  </div>
+                </div>
+
+                <!-- Technologies -->
+                <div>
+                  <label class="block text-sm font-bold text-black mb-2 uppercase">
+                    Technologies
+                  </label>
+                  <div id="techs-checkboxes" class="space-y-2 p-4 border-2 border-black bg-white">
+                    <!-- Technologies chargées dynamiquement -->
+                  </div>
+                </div>
+
+                <!-- Ordre -->
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-bold text-black mb-2 uppercase">
+                      Ordre d'affichage
+                    </label>
+                    <input
+                      type="number"
+                      id="project-order"
+                      value="0"
+                      class="w-full px-4 py-3 border-2 border-black bg-white text-black focus:outline-none focus:border-4"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-bold text-black mb-2 uppercase">
+                      Publié
+                    </label>
+                    <label class="flex items-center gap-3 px-4 py-3 border-2 border-black bg-white cursor-pointer">
+                      <input
+                        type="checkbox"
+                        id="project-published"
+                        class="w-5 h-5"
+                      />
+                      <span class="text-black">Visible sur le site</span>
+                    </label>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <!-- Footer Modal -->
+            <div class="p-6 border-t-4 border-black bg-white flex justify-end gap-3">
+              <button
+                type="button"
+                id="cancel-btn"
+                class="px-6 py-3 border-2 border-black bg-white text-black uppercase font-bold hover:bg-black hover:text-white transition-all"
+              >
+                Annuler
+              </button>
+              <button
+                type="submit"
+                form="project-form"
+                class="px-6 py-3 bg-black text-white uppercase font-bold border-2 border-black hover:bg-white hover:text-black transition-all"
+              >
+                Enregistrer
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="loading" class="min-h-screen flex items-center justify-center">
+    <div class="text-2xl font-bold uppercase">Chargement...</div>
+  </div>
+</LayoutAdmin>
+
+<script>
+  import PocketBase from "pocketbase";
+  
+  const pb = new PocketBase("https://portfolio.bryan-thierry.fr/");
+  
+  if (!pb.authStore.isValid) {
+    window.location.href = "/admin";
+  } else {
+    document.getElementById("loading")?.classList.add("hidden");
+    document.getElementById("admin-content")?.classList.remove("hidden");
+    loadProjects();
+    loadThemes();
+    loadTags();
+    loadTechs();
+  }
+
+  let allThemes: any[] = [];
+  let allTags: any[] = [];
+  let allTechs: any[] = [];
+
+  // Charger les thèmes
+  async function loadThemes() {
+    try {
+      allThemes = await pb.collection("themes").getFullList({ sort: "name" });
+      const select = document.getElementById("project-theme") as HTMLSelectElement;
+      select.innerHTML = '<option value="">Sélectionner un thème</option>' +
+        allThemes.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+    } catch (error) {
+      console.error("Erreur chargement thèmes:", error);
+    }
+  }
+
+  // Charger les tags
+  async function loadTags() {
+    try {
+      allTags = await pb.collection("tags").getFullList({ sort: "name" });
+      const container = document.getElementById("tags-checkboxes")!;
+      container.innerHTML = allTags.map(tag => `
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" value="${tag.id}" class="tag-checkbox w-4 h-4" />
+          <span>${tag.name}</span>
+        </label>
+      `).join('');
+    } catch (error) {
+      console.error("Erreur chargement tags:", error);
+    }
+  }
+
+  // Charger les technologies
+  async function loadTechs() {
+    try {
+      allTechs = await pb.collection("technologies").getFullList({ sort: "name" });
+      const container = document.getElementById("techs-checkboxes")!;
+      container.innerHTML = allTechs.map(tech => `
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" value="${tech.id}" class="tech-checkbox w-4 h-4" />
+          <span>${tech.name}</span>
+        </label>
+      `).join('');
+    } catch (error) {
+      console.error("Erreur chargement techs:", error);
+    }
+  }
+
+  // Charger les projets
+  async function loadProjects() {
+    try {
+      const projects = await pb.collection("projets").getFullList({
+        sort: "-created",
+        expand: "theme"
+      });
+      const container = document.getElementById("projects-list")!;
+      
+      container.innerHTML = projects.map(project => {
+        const imageUrl = project.hero_image
+          ? pb.files.getUrl(project, project.hero_image, { thumb: '300x200' })
+          : '/images/placeholder.webp';
+        const themeName = project.expand?.theme?.name || 'basique';
+        
+        return `
+          <div class="bg-white border-4 border-black hover:shadow-[8px_8px_0px_black] transition-all">
+            <div class="aspect-video bg-gray-200 overflow-hidden">
+              <img src="${imageUrl}" alt="${project.title}" class="w-full h-full object-cover" />
+            </div>
+            <div class="p-4">
+              <h3 class="text-xl font-bold text-black uppercase mb-2">${project.title}</h3>
+              <p class="text-sm text-gray-700 mb-3">${project.subtitle || ''}</p>
+              <div class="flex items-center justify-between text-xs text-gray-600 mb-4">
+                <span class="px-2 py-1 bg-black text-white">${themeName}</span>
+                <span>${project.published ? 'Publié' : 'Brouillon'}</span>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="editProject('${project.id}')" class="flex-1 px-4 py-2 bg-black text-white text-sm uppercase font-bold hover:bg-white hover:text-black hover:border-2 hover:border-black transition-all">
+                  Modifier
+                </button>
+                <button onclick="deleteProject('${project.id}', '${project.title}')" class="px-4 py-2 bg-red-600 text-white text-sm uppercase font-bold hover:bg-red-700 transition-all">
+                  Supprimer
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    } catch (error) {
+      console.error("Erreur chargement projets:", error);
+    }
+  }
+
+  // Nouveau projet
+  document.getElementById("new-project-btn")?.addEventListener("click", () => {
+    (document.getElementById("project-form") as HTMLFormElement).reset();
+    (document.getElementById("project-id") as HTMLInputElement).value = "";
+    document.getElementById("modal-title")!.textContent = "Nouveau projet";
+    document.getElementById("project-modal")?.classList.remove("hidden");
+    
+    // Décocher tous les checkboxes
+    document.querySelectorAll('.tag-checkbox').forEach((cb: any) => cb.checked = false);
+    document.querySelectorAll('.tech-checkbox').forEach((cb: any) => cb.checked = false);
+  });
+
+  // Auto-generate slug
+  document.getElementById("project-title")?.addEventListener("input", (e) => {
+    const title = (e.target as HTMLInputElement).value;
+    const slug = title.toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    (document.getElementById("project-slug") as HTMLInputElement).value = slug;
+  });
+
+  // Fermer modal
+  document.getElementById("close-modal")?.addEventListener("click", closeModal);
+  document.getElementById("cancel-btn")?.addEventListener("click", closeModal);
+  
+  function closeModal() {
+    document.getElementById("project-modal")?.classList.add("hidden");
+  }
+
+  // Sauvegarder
+  document.getElementById("project-form")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    
+    const projectId = (document.getElementById("project-id") as HTMLInputElement).value;
+    const formData = new FormData();
+    
+    formData.append("title", (document.getElementById("project-title") as HTMLInputElement).value);
+    formData.append("slug", (document.getElementById("project-slug") as HTMLInputElement).value);
+    formData.append("subtitle", (document.getElementById("project-subtitle") as HTMLInputElement).value);
+    formData.append("description", (document.getElementById("project-description") as HTMLTextAreaElement).value);
+    formData.append("theme", (document.getElementById("project-theme") as HTMLSelectElement).value);
+    formData.append("order", (document.getElementById("project-order") as HTMLInputElement).value);
+    formData.append("published", (document.getElementById("project-published") as HTMLInputElement).checked.toString());
+    
+    // Tags sélectionnés
+    const selectedTags = Array.from(document.querySelectorAll('.tag-checkbox:checked')).map((cb: any) => cb.value);
+    selectedTags.forEach(tagId => formData.append("tags", tagId));
+    
+    // Technologies sélectionnées
+    const selectedTechs = Array.from(document.querySelectorAll('.tech-checkbox:checked')).map((cb: any) => cb.value);
+    selectedTechs.forEach(techId => formData.append("technologies", techId));
+    
+    // Image hero
+    const heroImageInput = document.getElementById("project-hero-image") as HTMLInputElement;
+    if (heroImageInput.files && heroImageInput.files[0]) {
+      formData.append("hero_image", heroImageInput.files[0]);
+    }
+    
+    // Galerie (si supporté par le schema)
+    const galleryInput = document.getElementById("project-gallery") as HTMLInputElement;
+    if (galleryInput.files) {
+      Array.from(galleryInput.files).forEach(file => {
+        formData.append("gallery", file);
+      });
+    }
+    
+    try {
+      if (projectId) {
+        await pb.collection("projets").update(projectId, formData);
+      } else {
+        await pb.collection("projets").create(formData);
+      }
+      
+      closeModal();
+      loadProjects();
+      alert("Projet enregistré avec succès !");
+    } catch (error: any) {
+      console.error("Erreur sauvegarde:", error);
+      alert("Erreur: " + (error.message || "Impossible d'enregistrer"));
+    }
+  });
+
+  // Éditer un projet
+  (window as any).editProject = async (id: string) => {
+    try {
+      const project = await pb.collection("projets").getOne(id, { expand: "tags,technologies,theme" });
+      
+      (document.getElementById("project-id") as HTMLInputElement).value = id;
+      (document.getElementById("project-title") as HTMLInputElement).value = project.title;
+      (document.getElementById("project-slug") as HTMLInputElement).value = project.slug;
+      (document.getElementById("project-subtitle") as HTMLInputElement).value = project.subtitle || "";
+      (document.getElementById("project-description") as HTMLTextAreaElement).value = project.description || "";
+      (document.getElementById("project-theme") as HTMLSelectElement).value = project.theme;
+      (document.getElementById("project-order") as HTMLInputElement).value = project.order || "0";
+      (document.getElementById("project-published") as HTMLInputElement).checked = project.published;
+      
+      // Cocher les tags
+      document.querySelectorAll('.tag-checkbox').forEach((cb: any) => {
+        cb.checked = project.tags?.includes(cb.value);
+      });
+      
+      // Cocher les technologies
+      document.querySelectorAll('.tech-checkbox').forEach((cb: any) => {
+        cb.checked = project.technologies?.includes(cb.value);
+      });
+      
+      document.getElementById("modal-title")!.textContent = `Modifier : ${project.title}`;
+      document.getElementById("project-modal")?.classList.remove("hidden");
+    } catch (error) {
+      console.error("Erreur:", error);
+      alert("Erreur lors du chargement du projet");
+    }
+  };
+
+  // Supprimer un projet
+  (window as any).deleteProject = async (id: string, title: string) => {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer "${title}" ?`)) return;
+    
+    try {
+      await pb.collection("projets").delete(id);
+      loadProjects();
+      alert("Projet supprimé !");
+    } catch (error) {
+      console.error("Erreur:", error);
+      alert("Erreur lors de la suppression");
+    }
+  };
+
+  // Déconnexion
+  document.getElementById("logout-btn")?.addEventListener("click", () => {
+    pb.authStore.clear();
+    window.location.href = "/admin";
+  });
+</script>
+</LayoutAdmin>
