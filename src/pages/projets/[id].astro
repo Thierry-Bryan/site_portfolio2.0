@@ -11,7 +11,6 @@ import {
   getMultipleFileUrls,
   getNextProjet,
   getPreviousProjet,
-  generateThemeCSS,
 } from "../../utils/pb.ts";
 
 // Générer les routes statiques pour tous les projets
@@ -68,37 +67,22 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
 // Récupérer les technologies du projet depuis expand
 const projetTechnologies = projet.expand?.technologies || [];
 
-// DEBUG : Voir ce qu'on récupère
-console.log('Projet récupéré:', projet.title);
-console.log('Expand:', projet.expand);
-console.log('Theme dans expand:', projet.expand?.theme);
-console.log('Theme direct:', projet.theme);
+// Récupérer le thème - essayer d'abord la relation, puis l'ancien champ
+let themeForLayout = "basique"; // fallback
 
-// Récupérer le thème du projet et générer le CSS
-const projetTheme = projet.expand?.theme || null;
-let dynamicThemeCSS = "";
-
-if (projetTheme) {
-  console.log('Thème trouvé:', projetTheme.name);
-  dynamicThemeCSS = generateThemeCSS(projetTheme);
-  console.log('CSS généré:', dynamicThemeCSS ? 'OUI' : 'NON');
-} else {
-  console.log('Aucun thème trouvé, fallback sur basique');
+if (projet.expand?.theme?.name) {
+  themeForLayout = projet.expand.theme.name;
+} else if (projet.theme) {
+  themeForLayout = projet.theme;
 }
 
-// Utiliser le nom du thème pour Layout, avec fallback sur "basique"
-const themeForLayout = projetTheme?.name || "basique";
-console.log('Thème final pour Layout:', themeForLayout);
+console.log('Thème utilisé:', themeForLayout);
 ---
 
 <Layout
   theme={themeForLayout as any}
   title={`${projet.title} - Portfolio Bryan Thierry`}
 >
-  <!-- Injection du CSS dynamique pour le thème du projet -->
-  {dynamicThemeCSS && (
-    <style is:inline set:html={dynamicThemeCSS} />
-  )}
   <!-- Hero Section -->
   <section
     class="relative h-[calc(120vh-7rem)] flex items-stretch overflow-hidden"

@@ -103,7 +103,10 @@ export async function getThemes() {
  * @returns {string} CSS généré
  */
 export function generateThemeCSS(themeRecord: any): string {
-    if (!themeRecord?.css_variables) return '';
+    if (!themeRecord?.css_variables) {
+        console.log('Pas de css_variables trouvées pour le thème:', themeRecord?.name);
+        return '';
+    }
     
     const cssVars = themeRecord.css_variables;
     const darkVars = themeRecord.dark_mode_colors || {};
@@ -124,6 +127,7 @@ export function generateThemeCSS(themeRecord: any): string {
         css += `}\n`;
     }
     
+    console.log('CSS généré pour', themeRecord.name, ':', css.length, 'caractères');
     return css;
 }
 
