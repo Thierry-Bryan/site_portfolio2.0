@@ -4,17 +4,32 @@ import Card from "../components/Card.astro";
 import Button from "../components/Button.astro";
 import Hero from "../components/Hero.astro";
 import BackgroundComics from "../components/BackgroundComics.astro";
-import { getProjets, getFileUrl } from "../utils/pb.ts";
+import { getProjets, getFileUrl, generateThemeCSS } from "../utils/pb.ts";
 import { Image } from "astro:assets";
 
 const theme = "basique";
 
 let projets = [];
 let isPocketBaseDown = false;
+let dynamicThemesCSS = "";
 
 try {
   // Récupérer tous les projets depuis PocketBase
   projets = await getProjets();
+  
+  // Générer le CSS dynamique pour tous les thèmes des projets
+  const usedThemes = new Set();
+  projets.forEach(projet => {
+    if (projet.expand?.theme) {
+      usedThemes.add(projet.expand.theme);
+    }
+  });
+  
+  // Créer le CSS pour tous les thèmes utilisés
+  dynamicThemesCSS = Array.from(usedThemes).map(themeRecord => 
+    generateThemeCSS(themeRecord)
+  ).join('\n');
+  
 } catch (error) {
   console.error(
     "Erreur de connexion à PocketBase sur la page d'accueil:",
@@ -25,6 +40,11 @@ try {
 ---
 
 <Layout theme={theme} title="Accueil - Portfolio Bryan Thierry">
+  <!-- Injection du CSS dynamique pour les thèmes -->
+  {dynamicThemesCSS && (
+    <style is:inline set:html={dynamicThemesCSS} />
+  )}
+  
   <Hero />
   <section class="pt-15 pb-20">
     <div class="flex items-center justify-center mb-5">

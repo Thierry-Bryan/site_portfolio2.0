@@ -22,7 +22,7 @@ pb.autoCancellation(false);
 // ----------------------------------------------------
 
 /**
- * Récupérer tous les projets publiés avec leurs relations
+ * Récupérer tous les projets publiés avec leurs relations (incluant themes)
  * @returns {Promise<Array>}
  */
 export async function getProjets() {
@@ -31,7 +31,7 @@ export async function getProjets() {
         const records = await pb.collection("projets").getFullList({
             filter: "published = true",
             sort: "order",
-            expand: "tags,technologies",
+            expand: "tags,technologies,theme",
         });
         console.log('Projets récupérés:', records.length);
         return records;
@@ -40,7 +40,7 @@ export async function getProjets() {
         return [];
     }
 }/**
- * Récupérer un projet par son slug avec ses relations
+ * Récupérer un projet par son slug avec ses relations (incluant theme)
  * @param {string} slug
  * @returns {Promise<Object|null>}
  */
@@ -49,7 +49,7 @@ export async function getProjetBySlug(slug: string) {
         const record = await pb
             .collection("projets")
             .getFirstListItem(`slug="${slug}"`, {
-                expand: "tags,technologies",
+                expand: "tags,technologies,theme",
             });
     return record;
   } catch (error) {
@@ -77,6 +77,54 @@ export function getMultipleFileUrls(record: any, fieldName: string) {
         return [];
     }
     return record[fieldName].map((filename: string) => getFileUrl(record, filename));
+}
+
+/**
+ * Récupérer tous les thèmes disponibles
+ * @returns {Promise<Array>}
+ */
+export async function getThemes() {
+    try {
+        console.log('Tentative de récupération des thèmes...');
+        const records = await pb.collection("themes").getFullList({
+            sort: "name",
+        });
+        console.log('Thèmes récupérés:', records.length);
+        return records;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des thèmes:', error);
+        return [];
+    }
+}
+
+/**
+ * Générer le CSS dynamique pour un thème
+ * @param {Object} themeRecord - L'enregistrement du thème
+ * @returns {string} CSS généré
+ */
+export function generateThemeCSS(themeRecord: any): string {
+    if (!themeRecord?.css_variables) return '';
+    
+    const cssVars = themeRecord.css_variables;
+    const darkVars = themeRecord.dark_mode_colors || {};
+    
+    // CSS pour le mode clair
+    let css = `[data-theme="${themeRecord.name}"] {\n`;
+    Object.entries(cssVars).forEach(([key, value]) => {
+        css += `  --${key}: ${value};\n`;
+    });
+    css += `}\n\n`;
+    
+    // CSS pour le mode sombre
+    if (Object.keys(darkVars).length > 0) {
+        css += `[data-theme="${themeRecord.name}-dark"] {\n`;
+        Object.entries(darkVars).forEach(([key, value]) => {
+            css += `  --${key}: ${value};\n`;
+        });
+        css += `}\n`;
+    }
+    
+    return css;
 }
 
 /**

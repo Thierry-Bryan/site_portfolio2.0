@@ -11,6 +11,7 @@ import {
   getMultipleFileUrls,
   getNextProjet,
   getPreviousProjet,
+  generateThemeCSS,
 } from "../../utils/pb.ts";
 
 // Générer les routes statiques pour tous les projets
@@ -66,12 +67,27 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
 
 // Récupérer les technologies du projet depuis expand
 const projetTechnologies = projet.expand?.technologies || [];
+
+// Récupérer le thème du projet et générer le CSS
+const projetTheme = projet.expand?.theme;
+let dynamicThemeCSS = "";
+
+if (projetTheme) {
+  dynamicThemeCSS = generateThemeCSS(projetTheme);
+}
+
+// Utiliser le nom du thème pour Layout, avec fallback sur "basique"
+const themeForLayout = projetTheme?.name || "basique";
 ---
 
 <Layout
-  theme={projet.theme as any}
+  theme={themeForLayout as any}
   title={`${projet.title} - Portfolio Bryan Thierry`}
 >
+  <!-- Injection du CSS dynamique pour le thème du projet -->
+  {dynamicThemeCSS && (
+    <style is:inline set:html={dynamicThemeCSS} />
+  )}
   <!-- Hero Section -->
   <section
     class="relative h-[calc(120vh-7rem)] flex items-stretch overflow-hidden"
