@@ -1,225 +1,289 @@
 ---
-// Gestion des thèmes avec color picker
+// Gestion des thèmes avec preview en temps réel
 import Layout from "../../layouts/Layout.astro";
 ---
 
 <Layout title="Admin - Thèmes" theme="basique">
   <div id="admin-content" class="hidden">
-    <section class="min-h-screen bg-[var(--b1)] py-20 px-4">
-      <div class="max-w-7xl mx-auto">
-        <!-- Header -->
-        <div class="flex justify-between items-center mb-12">
+    <!-- Sidebar -->
+    <aside class="fixed left-0 top-0 h-screen w-64 bg-gray-900 text-white flex flex-col z-50">
+      <div class="p-6 border-b border-gray-800">
+        <h1 class="text-xl font-bold">Portfolio Admin</h1>
+      </div>
+      
+      <nav class="flex-1 p-4 space-y-1">
+        <a href="/admin/dashboard" class="block px-4 py-3 hover:bg-gray-800 rounded transition-colors">
+          Dashboard
+        </a>
+        <a href="/admin/themes" class="block px-4 py-3 bg-gray-800 rounded text-white font-medium">
+          Thèmes
+        </a>
+        <a href="/admin/tags" class="block px-4 py-3 hover:bg-gray-800 rounded transition-colors">
+          Tags
+        </a>
+        <a href="/admin/technologies" class="block px-4 py-3 hover:bg-gray-800 rounded transition-colors">
+          Technologies
+        </a>
+      </nav>
+
+      <div class="p-4 border-t border-gray-800">
+        <button
+          id="logout-btn"
+          class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded text-white transition-colors"
+        >
+          Déconnexion
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="ml-64 min-h-screen bg-gray-50">
+      <div class="p-8">
+        <div class="flex justify-between items-center mb-8">
           <div>
-            <a href="/admin/dashboard" class="text-[var(--bc)] font-secondary hover:text-[var(--p)] mb-2 inline-block">
-              ← Retour au dashboard
-            </a>
-            <h1 class="text-5xl font-primary text-[var(--bc)]">
-              GESTION DES THÈMES
-            </h1>
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">Gestion des thèmes</h2>
+            <p class="text-gray-600">Créer et modifier les palettes de couleurs</p>
           </div>
           <button
             id="new-theme-btn"
-            class="px-6 py-3 bg-[var(--p)] text-[var(--b1)] font-primary border-2 border-[var(--bc)] hover:shadow-[4px_4px_0px_var(--bc)] transition-all"
+            class="px-6 py-3 bg-blue-600 text-white font-medium rounded hover:bg-blue-700 transition-colors"
           >
-            + NOUVEAU THÈME
+            Nouveau thème
           </button>
         </div>
 
         <!-- Liste des thèmes -->
-        <div id="themes-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div id="themes-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <!-- Thèmes chargés dynamiquement -->
         </div>
 
         <!-- Modal création/édition -->
-        <div id="theme-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-          <div class="bg-[var(--b1)] border-4 border-[var(--bc)] max-w-4xl w-full max-h-[90vh] overflow-y-auto p-8">
-            <div class="flex justify-between items-center mb-6">
-              <h2 class="text-3xl font-primary text-[var(--bc)]" id="modal-title">NOUVEAU THÈME</h2>
-              <button id="close-modal" class="text-3xl text-[var(--bc)] hover:text-[var(--p)]">×</button>
+        <div id="theme-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div class="bg-white rounded-lg max-w-7xl w-full max-h-[95vh] overflow-hidden flex flex-col">
+            <!-- Header Modal -->
+            <div class="flex justify-between items-center p-6 border-b">
+              <div>
+                <h2 class="text-2xl font-bold text-gray-900" id="modal-title">Nouveau thème</h2>
+                <p class="text-sm text-gray-600 mt-1">Définissez les couleurs et visualisez le rendu en temps réel</p>
+              </div>
+              <button id="close-modal" class="text-gray-400 hover:text-gray-600 text-3xl leading-none">×</button>
             </div>
 
-            <form id="theme-form" class="space-y-6">
-              <input type="hidden" id="theme-id" />
+            <!-- Content en 2 colonnes -->
+            <div class="flex-1 overflow-hidden flex">
+              <!-- Colonne gauche : Formulaire -->
+              <div class="w-1/2 p-6 overflow-y-auto border-r">
+                <form id="theme-form" class="space-y-6">
+                  <input type="hidden" id="theme-id" />
 
-              <!-- Nom du thème -->
-              <div>
-                <label class="block text-[var(--bc)] font-secondary mb-2">
-                  Nom du thème (slug) *
-                </label>
-                <input
-                  type="text"
-                  id="theme-name"
-                  required
-                  placeholder="ex: mon-theme"
-                  class="w-full p-3 border-2 border-[var(--bc)] bg-[var(--b1)] text-[var(--bc)] font-secondary focus:outline-none focus:border-[var(--p)]"
-                />
+                  <!-- Nom du thème -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Nom du thème <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="theme-name"
+                      required
+                      placeholder="ex: mon-theme"
+                      class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                    <p class="text-xs text-gray-500 mt-1">Utilisez uniquement des lettres minuscules et des tirets</p>
+                  </div>
+
+                  <!-- Section Mode Clair -->
+                  <div class="pt-4 border-t">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Mode Clair</h3>
+                    
+                    <div class="space-y-4">
+                      <!-- Primaire -->
+                      <div class="flex items-center gap-4">
+                        <input
+                          type="color"
+                          id="color-p"
+                          class="h-10 w-16 rounded border border-gray-300 cursor-pointer"
+                        />
+                        <div class="flex-1">
+                          <label class="block text-sm font-medium text-gray-700 mb-1">Primaire</label>
+                          <input
+                            type="text"
+                            id="color-p-text"
+                            placeholder="#8b5cf6"
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded font-mono"
+                          />
+                        </div>
+                      </div>
+
+                      <!-- Secondaire -->
+                      <div class="flex items-center gap-4">
+                        <input
+                          type="color"
+                          id="color-s"
+                          class="h-10 w-16 rounded border border-gray-300 cursor-pointer"
+                        />
+                        <div class="flex-1">
+                          <label class="block text-sm font-medium text-gray-700 mb-1">Secondaire</label>
+                          <input
+                            type="text"
+                            id="color-s-text"
+                            placeholder="#a855f7"
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded font-mono"
+                          />
+                        </div>
+                      </div>
+
+                      <!-- Accent -->
+                      <div class="flex items-center gap-4">
+                        <input
+                          type="color"
+                          id="color-a"
+                          class="h-10 w-16 rounded border border-gray-300 cursor-pointer"
+                        />
+                        <div class="flex-1">
+                          <label class="block text-sm font-medium text-gray-700 mb-1">Accent</label>
+                          <input
+                            type="text"
+                            id="color-a-text"
+                            placeholder="#c084fc"
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded font-mono"
+                          />
+                        </div>
+                      </div>
+
+                      <!-- Fond Base -->
+                      <div class="flex items-center gap-4">
+                        <input
+                          type="color"
+                          id="color-b1"
+                          class="h-10 w-16 rounded border border-gray-300 cursor-pointer"
+                        />
+                        <div class="flex-1">
+                          <label class="block text-sm font-medium text-gray-700 mb-1">Fond Base</label>
+                          <input
+                            type="text"
+                            id="color-b1-text"
+                            placeholder="#faf9f7"
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded font-mono"
+                          />
+                        </div>
+                      </div>
+
+                      <!-- Texte Base -->
+                      <div class="flex items-center gap-4">
+                        <input
+                          type="color"
+                          id="color-bc"
+                          class="h-10 w-16 rounded border border-gray-300 cursor-pointer"
+                        />
+                        <div class="flex-1">
+                          <label class="block text-sm font-medium text-gray-700 mb-1">Texte Base</label>
+                          <input
+                            type="text"
+                            id="color-bc-text"
+                            placeholder="#000000"
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded font-mono"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Section Mode Sombre (optionnel) -->
+                  <div class="pt-4 border-t">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Mode Sombre (optionnel)</h3>
+                    <p class="text-xs text-gray-500 mb-4">Si non défini, les couleurs du mode clair seront utilisées</p>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                      <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Primaire Dark</label>
+                        <input type="color" id="color-p-dark" class="h-10 w-full rounded border border-gray-300" />
+                      </div>
+                      <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Secondaire Dark</label>
+                        <input type="color" id="color-s-dark" class="h-10 w-full rounded border border-gray-300" />
+                      </div>
+                      <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Accent Dark</label>
+                        <input type="color" id="color-a-dark" class="h-10 w-full rounded border border-gray-300" />
+                      </div>
+                      <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Fond Dark</label>
+                        <input type="color" id="color-b1-dark" class="h-10 w-full rounded border border-gray-300" />
+                      </div>
+                      <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Texte Dark</label>
+                        <input type="color" id="color-bc-dark" class="h-10 w-full rounded border border-gray-300" />
+                      </div>
+                    </div>
+                  </div>
+                </form>
               </div>
 
-              <h3 class="text-2xl font-primary text-[var(--bc)] mt-8 mb-4">COULEURS MODE CLAIR</h3>
+              <!-- Colonne droite : Preview -->
+              <div class="w-1/2 p-6 bg-gray-100 overflow-y-auto">
+                <div class="mb-4">
+                  <h3 class="text-lg font-semibold text-gray-900 mb-2">Aperçu en temps réel</h3>
+                  <p class="text-xs text-gray-600 mb-4">Visualisez comment votre thème apparaîtra</p>
+                </div>
 
-              <!-- Couleur Primaire -->
-              <div>
-                <label class="block text-[var(--bc)] font-secondary mb-2">
-                  Couleur Primaire (p) *
-                </label>
-                <div class="flex gap-4">
-                  <input
-                    type="color"
-                    id="color-p"
-                    class="h-16 w-24 border-2 border-[var(--bc)] cursor-pointer"
-                  />
-                  <input
-                    type="text"
-                    id="color-p-text"
-                    placeholder="#ff0000"
-                    class="flex-1 p-3 border-2 border-[var(--bc)] bg-[var(--b1)] text-[var(--bc)] font-mono focus:outline-none focus:border-[var(--p)]"
-                  />
-                </div>
-              </div>
+                <!-- Preview simple avec composants stylés -->
+                <div id="simple-preview" class="space-y-4">
+                  <!-- Carte preview -->
+                  <div id="preview-card" class="border-2 p-6 rounded">
+                    <h4 class="text-2xl font-bold mb-3">Titre du Projet</h4>
+                    <p class="mb-4">Ceci est un exemple de texte sur votre thème. Vous pouvez voir comment les couleurs s'harmonisent ensemble.</p>
+                    <button id="preview-button" class="px-6 py-3 font-semibold rounded border-2">
+                      Voir le projet
+                    </button>
+                  </div>
 
-              <!-- Couleur Secondaire -->
-              <div>
-                <label class="block text-[var(--bc)] font-secondary mb-2">
-                  Couleur Secondaire (s) *
-                </label>
-                <div class="flex gap-4">
-                  <input
-                    type="color"
-                    id="color-s"
-                    class="h-16 w-24 border-2 border-[var(--bc)] cursor-pointer"
-                  />
-                  <input
-                    type="text"
-                    id="color-s-text"
-                    placeholder="#00ff00"
-                    class="flex-1 p-3 border-2 border-[var(--bc)] bg-[var(--b1)] text-[var(--bc)] font-mono focus:outline-none focus:border-[var(--p)]"
-                  />
-                </div>
-              </div>
-
-              <!-- Couleur Accent -->
-              <div>
-                <label class="block text-[var(--bc)] font-secondary mb-2">
-                  Couleur Accent (a) *
-                </label>
-                <div class="flex gap-4">
-                  <input
-                    type="color"
-                    id="color-a"
-                    class="h-16 w-24 border-2 border-[var(--bc)] cursor-pointer"
-                  />
-                  <input
-                    type="text"
-                    id="color-a-text"
-                    placeholder="#0000ff"
-                    class="flex-1 p-3 border-2 border-[var(--bc)] bg-[var(--b1)] text-[var(--bc)] font-mono focus:outline-none focus:border-[var(--p)]"
-                  />
-                </div>
-              </div>
-
-              <!-- Fond Base -->
-              <div>
-                <label class="block text-[var(--bc)] font-secondary mb-2">
-                  Fond Base (b1) *
-                </label>
-                <div class="flex gap-4">
-                  <input
-                    type="color"
-                    id="color-b1"
-                    class="h-16 w-24 border-2 border-[var(--bc)] cursor-pointer"
-                  />
-                  <input
-                    type="text"
-                    id="color-b1-text"
-                    placeholder="#ffffff"
-                    class="flex-1 p-3 border-2 border-[var(--bc)] bg-[var(--b1)] text-[var(--bc)] font-mono focus:outline-none focus:border-[var(--p)]"
-                  />
-                </div>
-              </div>
-
-              <!-- Couleur Texte Base -->
-              <div>
-                <label class="block text-[var(--bc)] font-secondary mb-2">
-                  Couleur Texte Base (bc) *
-                </label>
-                <div class="flex gap-4">
-                  <input
-                    type="color"
-                    id="color-bc"
-                    class="h-16 w-24 border-2 border-[var(--bc)] cursor-pointer"
-                  />
-                  <input
-                    type="text"
-                    id="color-bc-text"
-                    placeholder="#000000"
-                    class="flex-1 p-3 border-2 border-[var(--bc)] bg-[var(--b1)] text-[var(--bc)] font-mono focus:outline-none focus:border-[var(--p)]"
-                  />
-                </div>
-              </div>
-
-              <h3 class="text-2xl font-primary text-[var(--bc)] mt-8 mb-4">COULEURS MODE SOMBRE (optionnel)</h3>
-
-              <!-- Dark Mode Colors -->
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-[var(--bc)] font-secondary mb-2 text-sm">Primaire Dark</label>
-                  <input type="color" id="color-p-dark" class="h-12 w-full border-2 border-[var(--bc)] cursor-pointer" />
-                </div>
-                <div>
-                  <label class="block text-[var(--bc)] font-secondary mb-2 text-sm">Secondaire Dark</label>
-                  <input type="color" id="color-s-dark" class="h-12 w-full border-2 border-[var(--bc)] cursor-pointer" />
-                </div>
-                <div>
-                  <label class="block text-[var(--bc)] font-secondary mb-2 text-sm">Accent Dark</label>
-                  <input type="color" id="color-a-dark" class="h-12 w-full border-2 border-[var(--bc)] cursor-pointer" />
-                </div>
-                <div>
-                  <label class="block text-[var(--bc)] font-secondary mb-2 text-sm">Fond Dark</label>
-                  <input type="color" id="color-b1-dark" class="h-12 w-full border-2 border-[var(--bc)] cursor-pointer" />
-                </div>
-                <div>
-                  <label class="block text-[var(--bc)] font-secondary mb-2 text-sm">Texte Dark</label>
-                  <input type="color" id="color-bc-dark" class="h-12 w-full border-2 border-[var(--bc)] cursor-pointer" />
-                </div>
-              </div>
-
-              <!-- Aperçu -->
-              <div class="mt-8">
-                <h3 class="text-2xl font-primary text-[var(--bc)] mb-4">APERÇU</h3>
-                <div id="theme-preview" class="border-4 border-[var(--bc)] p-8 space-y-4">
-                  <div id="preview-box" class="p-6 border-2 border-black">
-                    <h4 class="text-2xl font-primary mb-2">Titre du projet</h4>
-                    <p class="font-secondary mb-4">Description du projet avec du texte</p>
-                    <button class="px-6 py-2 font-primary">BOUTON</button>
+                  <!-- Palette de couleurs -->
+                  <div class="bg-white p-4 rounded shadow">
+                    <p class="text-sm font-medium text-gray-700 mb-3">Palette de couleurs</p>
+                    <div class="flex gap-2">
+                      <div id="palette-p" class="w-12 h-12 rounded border border-gray-300"></div>
+                      <div id="palette-s" class="w-12 h-12 rounded border border-gray-300"></div>
+                      <div id="palette-a" class="w-12 h-12 rounded border border-gray-300"></div>
+                      <div id="palette-b1" class="w-12 h-12 rounded border border-gray-300"></div>
+                      <div id="palette-bc" class="w-12 h-12 rounded border border-gray-300"></div>
+                    </div>
+                    <div class="flex gap-2 text-xs text-gray-600 mt-2">
+                      <div class="w-12 text-center">P</div>
+                      <div class="w-12 text-center">S</div>
+                      <div class="w-12 text-center">A</div>
+                      <div class="w-12 text-center">B1</div>
+                      <div class="w-12 text-center">BC</div>
+                    </div>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <!-- Boutons -->
-              <div class="flex gap-4">
-                <button
-                  type="submit"
-                  class="flex-1 p-4 bg-[var(--p)] text-[var(--b1)] font-primary border-2 border-[var(--bc)] hover:shadow-[4px_4px_0px_var(--bc)] transition-all"
-                >
-                  ENREGISTRER
-                </button>
-                <button
-                  type="button"
-                  id="cancel-btn"
-                  class="px-8 p-4 bg-[var(--b1)] text-[var(--bc)] font-primary border-2 border-[var(--bc)] hover:bg-[var(--bc)] hover:text-[var(--b1)] transition-all"
-                >
-                  ANNULER
-                </button>
-              </div>
-            </form>
+            <!-- Footer Modal -->
+            <div class="p-6 border-t bg-gray-50 flex justify-end gap-3">
+              <button
+                type="button"
+                id="cancel-btn"
+                class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-100 transition-colors"
+              >
+                Annuler
+              </button>
+              <button
+                type="submit"
+                form="theme-form"
+                class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+              >
+                Enregistrer le thème
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </section>
+    </main>
   </div>
 
   <div id="loading" class="min-h-screen flex items-center justify-center">
-    <div class="text-2xl font-primary text-[var(--bc)]">Chargement...</div>
+    <div class="text-lg text-gray-600">Chargement...</div>
   </div>
 </Layout>
 
@@ -236,7 +300,7 @@ import Layout from "../../layouts/Layout.astro";
     loadThemes();
   }
 
-  // Sync color picker avec input text
+  // Sync color inputs
   function syncColorInputs(colorId: string, textId: string) {
     const colorInput = document.getElementById(colorId) as HTMLInputElement;
     const textInput = document.getElementById(textId) as HTMLInputElement;
@@ -260,44 +324,53 @@ import Layout from "../../layouts/Layout.astro";
   syncColorInputs("color-b1", "color-b1-text");
   syncColorInputs("color-bc", "color-bc-text");
 
-  // Mise à jour preview en temps réel
+  // Mise à jour preview
   function updatePreview() {
-    const previewBox = document.getElementById("preview-box")!;
     const p = (document.getElementById("color-p-text") as HTMLInputElement).value || "#8b5cf6";
+    const s = (document.getElementById("color-s-text") as HTMLInputElement).value || "#a855f7";
+    const a = (document.getElementById("color-a-text") as HTMLInputElement).value || "#c084fc";
     const b1 = (document.getElementById("color-b1-text") as HTMLInputElement).value || "#faf9f7";
     const bc = (document.getElementById("color-bc-text") as HTMLInputElement).value || "#000000";
     
-    previewBox.style.background = b1;
-    previewBox.style.color = bc;
-    previewBox.style.borderColor = bc;
+    // Preview card
+    const card = document.getElementById("preview-card")!;
+    card.style.background = b1;
+    card.style.color = bc;
+    card.style.borderColor = bc;
     
-    const button = previewBox.querySelector("button")!;
+    const button = document.getElementById("preview-button")!;
     button.style.background = p;
     button.style.color = b1;
     button.style.borderColor = bc;
-    button.style.border = `2px solid ${bc}`;
+    
+    // Palette
+    (document.getElementById("palette-p")! as HTMLElement).style.background = p;
+    (document.getElementById("palette-s")! as HTMLElement).style.background = s;
+    (document.getElementById("palette-a")! as HTMLElement).style.background = a;
+    (document.getElementById("palette-b1")! as HTMLElement).style.background = b1;
+    (document.getElementById("palette-bc")! as HTMLElement).style.background = bc;
   }
 
-  // Charger la liste des thèmes
+  // Charger les thèmes
   async function loadThemes() {
     try {
       const themes = await pb.collection("themes").getFullList({ sort: "name" });
       const container = document.getElementById("themes-list")!;
       
       container.innerHTML = themes.map(theme => `
-        <div class="border-4 border-[var(--bc)] p-6 bg-[var(--b1)]">
-          <h3 class="text-2xl font-primary text-[var(--bc)] mb-4">${theme.name}</h3>
+        <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">${theme.name}</h3>
           <div class="flex gap-2 mb-4">
             ${Object.entries(theme.css_variables).slice(0, 5).map(([key, val]: [string, any]) => 
-              `<div class="w-12 h-12 border-2 border-[var(--bc)]" style="background: ${val}"></div>`
+              `<div class="w-10 h-10 rounded border border-gray-200" style="background: ${val}"></div>`
             ).join('')}
           </div>
           <div class="flex gap-2">
-            <button onclick="editTheme('${theme.id}')" class="flex-1 px-4 py-2 bg-[var(--p)] text-[var(--b1)] font-primary border-2 border-[var(--bc)]">
-              MODIFIER
+            <button onclick="editTheme('${theme.id}')" class="flex-1 px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
+              Modifier
             </button>
-            <button onclick="deleteTheme('${theme.id}', '${theme.name}')" class="px-4 py-2 bg-red-500 text-white font-primary border-2 border-[var(--bc)]">
-              🗑️
+            <button onclick="deleteTheme('${theme.id}', '${theme.name}')" class="px-4 py-2 bg-red-600 text-white text-sm rounded hover:bg-red-700">
+              Supprimer
             </button>
           </div>
         </div>
@@ -311,8 +384,21 @@ import Layout from "../../layouts/Layout.astro";
   document.getElementById("new-theme-btn")?.addEventListener("click", () => {
     (document.getElementById("theme-form") as HTMLFormElement).reset();
     document.getElementById("theme-id")!.setAttribute("value", "");
-    document.getElementById("modal-title")!.textContent = "NOUVEAU THÈME";
+    document.getElementById("modal-title")!.textContent = "Nouveau thème";
     document.getElementById("theme-modal")?.classList.remove("hidden");
+    
+    // Valeurs par défaut
+    (document.getElementById("color-p") as HTMLInputElement).value = "#8b5cf6";
+    (document.getElementById("color-p-text") as HTMLInputElement).value = "#8b5cf6";
+    (document.getElementById("color-s") as HTMLInputElement).value = "#a855f7";
+    (document.getElementById("color-s-text") as HTMLInputElement).value = "#a855f7";
+    (document.getElementById("color-a") as HTMLInputElement).value = "#c084fc";
+    (document.getElementById("color-a-text") as HTMLInputElement).value = "#c084fc";
+    (document.getElementById("color-b1") as HTMLInputElement).value = "#faf9f7";
+    (document.getElementById("color-b1-text") as HTMLInputElement).value = "#faf9f7";
+    (document.getElementById("color-bc") as HTMLInputElement).value = "#000000";
+    (document.getElementById("color-bc-text") as HTMLInputElement).value = "#000000";
+    
     updatePreview();
   });
 
@@ -324,7 +410,7 @@ import Layout from "../../layouts/Layout.astro";
     document.getElementById("theme-modal")?.classList.add("hidden");
   }
 
-  // Sauvegarder thème
+  // Sauvegarder
   document.getElementById("theme-form")?.addEventListener("submit", async (e) => {
     e.preventDefault();
     
@@ -366,7 +452,7 @@ import Layout from "../../layouts/Layout.astro";
     }
   });
 
-  // Éditer un thème
+  // Éditer
   (window as any).editTheme = async (id: string) => {
     try {
       const theme = await pb.collection("themes").getOne(id);
@@ -392,27 +478,32 @@ import Layout from "../../layouts/Layout.astro";
         (document.getElementById("color-bc-dark") as HTMLInputElement).value = theme.dark_mode_colors.bc || "";
       }
       
-      document.getElementById("modal-title")!.textContent = `MODIFIER ${theme.name.toUpperCase()}`;
+      document.getElementById("modal-title")!.textContent = `Modifier : ${theme.name}`;
       document.getElementById("theme-modal")?.classList.remove("hidden");
       updatePreview();
     } catch (error) {
-      console.error("Erreur chargement thème:", error);
+      console.error("Erreur:", error);
     }
   };
 
-  // Supprimer un thème
+  // Supprimer
   (window as any).deleteTheme = async (id: string, name: string) => {
-    if (!confirm(`Supprimer le thème "${name}" ?`)) return;
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer le thème "${name}" ?`)) return;
     
     try {
       await pb.collection("themes").delete(id);
       loadThemes();
-      alert("Thème supprimé !");
     } catch (error) {
-      console.error("Erreur suppression:", error);
+      console.error("Erreur:", error);
       alert("Erreur lors de la suppression");
     }
   };
+
+  // Déconnexion
+  document.getElementById("logout-btn")?.addEventListener("click", () => {
+    pb.authStore.clear();
+    window.location.href = "/admin";
+  });
 
   function hexToRgb(hex: string): string {
     const r = parseInt(hex.slice(1, 3), 16);
