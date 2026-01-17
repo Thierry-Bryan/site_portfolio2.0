@@ -60,6 +60,9 @@ const { title = "Portfolio", theme = "ca-va-trailer", firstSectionTheme } = Astr
 
         // Fonction globale pour changer le thème
         window.changeTheme = function () {
+          // Sauvegarder la position de scroll AVANT les changements
+          const currentScrollY = window.scrollY;
+          
           const isHome =
             window.location.pathname === "/" ||
             window.location.pathname === "/index.html";
@@ -101,10 +104,13 @@ const { title = "Portfolio", theme = "ca-va-trailer", firstSectionTheme } = Astr
             // Autres pages : appliquer le thème complet
             document.documentElement.setAttribute("data-theme", newTheme);
 
-            // Forcer le recalcul des variables CSS
-            document.body.style.display = "none";
-            document.body.offsetHeight;
-            document.body.style.display = "";
+            // Forcer le recalcul des variables CSS SANS affecter le scroll
+            requestAnimationFrame(() => {
+              // Restaurer la position de scroll après le changement de thème
+              if (window.scrollY !== currentScrollY) {
+                window.scrollTo(0, currentScrollY);
+              }
+            });
 
             // Mettre à jour les sections avec data-theme (chaque section garde son propre thème)
             const sections = document.querySelectorAll("section[data-theme]");
@@ -150,6 +156,11 @@ const { title = "Portfolio", theme = "ca-va-trailer", firstSectionTheme } = Astr
                     if (logoLink) logoLink.style.color = "";
                     navLinks.forEach((link) => (link.style.color = ""));
                   }
+                }
+                
+                // S'assurer que la position de scroll est maintenue après toutes les mises à jour
+                if (window.scrollY !== currentScrollY) {
+                  window.scrollTo(0, currentScrollY);
                 }
               });
             });

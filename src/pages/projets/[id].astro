@@ -512,6 +512,9 @@ const projetTechnologies = projet.expand?.technologies || [];
 
       // Écouter les changements de mode sombre/clair pour mettre à jour les flèches
       function handleThemeChange() {
+        // Sauvegarder la position de scroll avant les changements
+        const scrollPosition = window.scrollY;
+        
         const currentSlug = window.location.pathname.split("/").pop();
         if (projetsData[currentSlug]) {
           const isDarkMode = localStorage.getItem("darkMode") === "true";
@@ -520,12 +523,18 @@ const projetTechnologies = projet.expand?.technologies || [];
             : projetsData[currentSlug].theme;
           updateArrowsTheme(themeToApply);
         }
+        
+        // Restaurer la position de scroll après les changements
+        requestAnimationFrame(() => {
+          window.scrollTo(0, scrollPosition);
+        });
       }
 
       // Observer les changements de localStorage pour le mode sombre
       window.addEventListener("storage", (e) => {
         if (e.key === "darkMode") {
-          handleThemeChange();
+          // Petit délai pour laisser le système de thème global se terminer
+          setTimeout(() => handleThemeChange(), 50);
         }
       });
 
@@ -533,7 +542,8 @@ const projetTechnologies = projet.expand?.technologies || [];
       const themeObserver = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
-            handleThemeChange();
+            // Petit délai pour éviter les conflits avec le système global
+            setTimeout(() => handleThemeChange(), 50);
           }
         });
       });
