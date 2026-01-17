@@ -57,47 +57,59 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
     </aside>
 
     <!-- Main Content -->
-    <main class="ml-64 min-h-screen bg-[#faf9f7]">
+    <main class="ml-64 min-h-screen bg-[var(--b1)]">
       <div class="p-8">
         <div class="mb-8">
-          <h2 class="text-4xl font-bold text-black uppercase mb-2">
-            Dashboard
-          </h2>
-          <p class="text-gray-700">Vue d'ensemble de votre portfolio</p>
+          <h2 class="text-4xl font-bold text-[var(--bc)] uppercase mb-2 tracking-wider">Dashboard</h2>
+          <p class="text-[var(--bc)]/70 text-lg">Vue d'ensemble de votre portfolio</p>
         </div>
 
         <!-- Stats rapides -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div class="bg-white p-6 border-4 border-black">
-            <div class="text-4xl font-bold text-black mb-1" id="stat-projets">
-              -
-            </div>
-            <div class="text-sm text-gray-700 uppercase">Projets</div>
+          <div class="bg-[var(--b2)] p-6 border-4 border-[var(--bc)] hover:shadow-lg transition-all">
+            <div class="text-4xl font-bold text-[var(--bc)] mb-2" id="stat-projets">-</div>
+            <div class="text-sm text-[var(--bc)]/70 uppercase tracking-wide">Projets</div>
           </div>
-          <div class="bg-white p-6 border-4 border-black">
-            <div class="text-4xl font-bold text-black mb-1" id="stat-themes">
-              -
-            </div>
-            <div class="text-sm text-gray-700 uppercase">Thèmes</div>
+          <div class="bg-[var(--b2)] p-6 border-4 border-[var(--bc)] hover:shadow-lg transition-all">
+            <div class="text-4xl font-bold text-[var(--bc)] mb-2" id="stat-themes">-</div>
+            <div class="text-sm text-[var(--bc)]/70 uppercase tracking-wide">Thèmes</div>
           </div>
-          <div class="bg-white p-6 border-4 border-black">
-            <div class="text-4xl font-bold text-black mb-1" id="stat-tags">
-              -
-            </div>
-            <div class="text-sm text-gray-700 uppercase">Tags</div>
+          <div class="bg-[var(--b2)] p-6 border-4 border-[var(--bc)] hover:shadow-lg transition-all">
+            <div class="text-4xl font-bold text-[var(--bc)] mb-2" id="stat-tags">-</div>
+            <div class="text-sm text-[var(--bc)]/70 uppercase tracking-wide">Tags</div>
           </div>
-          <div class="bg-white p-6 border-4 border-black">
-            <div class="text-4xl font-bold text-black mb-1" id="stat-techs">
-              -
-            </div>
-            <div class="text-sm text-gray-700 uppercase">Technologies</div>
+          <div class="bg-[var(--b2)] p-6 border-4 border-[var(--bc)] hover:shadow-lg transition-all">
+            <div class="text-4xl font-bold text-[var(--bc)] mb-2" id="stat-techs">-</div>
+            <div class="text-sm text-[var(--bc)]/70 uppercase tracking-wide">Technologies</div>
           </div>
         </div>
 
         <!-- Actions rapides -->
-        <div class="bg-white border-4 border-black p-6">
-          <h3 class="text-2xl font-bold text-black mb-6 uppercase">
-            Actions rapides
+        <div class="bg-[var(--b2)] border-4 border-[var(--bc)] p-8">
+          <h3 class="text-2xl font-bold text-[var(--bc)] mb-8 uppercase tracking-wider">Actions rapides</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <a href="/admin/projets" class="bg-[var(--b1)] border-2 border-[var(--bc)] p-6 hover:border-4 hover:shadow-lg transition-all group text-center">
+              <div class="text-4xl mb-4">📱</div>
+              <h4 class="font-medium text-[var(--bc)] mb-3 text-lg uppercase tracking-wide">Projets</h4>
+              <p class="text-sm text-[var(--bc)]/70">Gérer vos réalisations</p>
+            </a>
+            <a href="/admin/themes" class="bg-[var(--b1)] border-2 border-[var(--bc)] p-6 hover:border-4 hover:shadow-lg transition-all group text-center">
+              <div class="text-4xl mb-4">🎨</div>
+              <h4 class="font-medium text-[var(--bc)] mb-3 text-lg uppercase tracking-wide">Thèmes</h4>
+              <p class="text-sm text-[var(--bc)]/70">Palettes de couleurs</p>
+            </a>
+            <a href="/admin/tags" class="bg-[var(--b1)] border-2 border-[var(--bc)] p-6 hover:border-4 hover:shadow-lg transition-all group text-center">
+              <div class="text-4xl mb-4">🏷️</div>
+              <h4 class="font-medium text-[var(--bc)] mb-3 text-lg uppercase tracking-wide">Tags</h4>
+              <p class="text-sm text-[var(--bc)]/70">Catégoriser projets</p>
+            </a>
+            <a href="/admin/technologies" class="bg-[var(--b1)] border-2 border-[var(--bc)] p-6 hover:border-4 hover:shadow-lg transition-all group text-center">
+              <div class="text-4xl mb-4">⚙️</div>
+              <h4 class="font-medium text-[var(--bc)] mb-3 text-lg uppercase tracking-wide">Technologies</h4>
+              <p class="text-sm text-[var(--bc)]/70">Stack technique</p>
+            </a>
+          </div>
+        </div>
           </h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <a

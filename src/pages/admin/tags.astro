@@ -22,16 +22,16 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
     </aside>
 
     <!-- Main Content -->
-    <main class="ml-64 min-h-screen bg-[#faf9f7]">
+    <main class="ml-64 min-h-screen bg-[var(--b1)]">
       <div class="p-8">
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
           <div>
-            <h2 class="text-4xl font-black text-black uppercase mb-2 tracking-wider">Tags</h2>
-            <p class="text-gray-600 text-lg">Organisez vos projets par catégories visuelles</p>
+            <h2 class="text-4xl font-bold text-[var(--bc)] uppercase mb-2 tracking-wider">Tags</h2>
+            <p class="text-[var(--bc)]/70 text-lg">Organisez vos projets par catégories</p>
           </div>
-          <button id="new-tag-btn" class="px-6 py-3 bg-black text-white font-medium uppercase hover:bg-gray-800 transition-colors border-2 border-black">
-            🏷️ Nouveau tag
+          <button id="new-tag-btn" class="btn btn-primary uppercase">
+            Nouveau Tag
           </button>
         </div>
 
