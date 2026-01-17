@@ -25,8 +25,8 @@ jobs:
 
       - name: 🔧 Create .env file
         run: |
-          echo "POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" > .env
-          echo "PUBLIC_POCKETBASE_URL=https://pocketbase-portfolio-production.up.railway.app" >> .env
+          echo "POCKETBASE_URL=https://portfolio.bryan-thierry.fr" > .env
+          echo "PUBLIC_POCKETBASE_URL=https://portfolio.bryan-thierry.fr" >> .env
           echo "HOST=0.0.0.0" >> .env
           echo "PORT=3000" >> .env
 
@@ -85,6 +85,22 @@ jobs:
                     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
                     proxy_set_header X-Forwarded-Proto $scheme;
                     proxy_cache_bypass $http_upgrade;
+                }
+
+                location /_/ {
+                    rewrite ^/_/(.*)$ /$1 break;
+                    
+                    proxy_set_header Connection '';
+                    proxy_http_version 1.1;
+                    proxy_buffering off;
+                    proxy_cache off;
+
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_set_header X-Forwarded-Proto $scheme;
+
+                    proxy_pass http://127.0.0.1:8090/;
                 }
             }
             NGINX_EOF
