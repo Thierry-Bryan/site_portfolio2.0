@@ -40,9 +40,15 @@ const themeExpand = projet.expand?.theme;
 const themeData = Array.isArray(themeExpand) ? themeExpand[0] : themeExpand;
 
 // Debug log pour le serveur
-console.log(`[Projet ${projet.slug}] Theme Data:`, themeData ? `Found (${themeData.name})` : "Not found, using basique");
+console.log(
+  `[Projet ${projet.slug}] Theme Data:`,
+  themeData ? `Found (${themeData.name})` : "Not found, using basique",
+);
 if (themeData) {
-  console.log('CSS Variables keys:', Object.keys(themeData.css_variables || {}));
+  console.log(
+    "CSS Variables keys:",
+    Object.keys(themeData.css_variables || {}),
+  );
 }
 
 const themeName = themeData?.name || "basique";
@@ -50,14 +56,16 @@ const themeName = themeData?.name || "basique";
 // GÉNÉRER LE CSS POUR TOUS LES THÈMES (pour la navigation client)
 const allProjets = await getProjets();
 const allThemes = new Set<any>();
-allProjets.forEach(p => {
-  const theme = Array.isArray(p.expand?.theme) ? p.expand.theme[0] : p.expand?.theme;
+allProjets.forEach((p) => {
+  const theme = Array.isArray(p.expand?.theme)
+    ? p.expand.theme[0]
+    : p.expand?.theme;
   if (theme) allThemes.add(theme);
 });
 
 // Générer le CSS pour tous les thèmes disponibles
 let dynamicThemeCSS = "";
-allThemes.forEach(theme => {
+allThemes.forEach((theme) => {
   dynamicThemeCSS += generateThemeCSS(theme);
 });
 
@@ -94,7 +102,6 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
 
 // Récupérer les technologies du projet depuis expand
 const projetTechnologies = projet.expand?.technologies || [];
-
 ---
 
 <Layout
@@ -102,7 +109,6 @@ const projetTechnologies = projet.expand?.technologies || [];
   title={`${projet.title} - Portfolio Bryan Thierry`}
   dynamicCSS={dynamicThemeCSS}
 >
-
   <!-- Hero Section -->
   <section
     class="relative h-[calc(120vh-7rem)] flex items-stretch overflow-hidden"
@@ -545,16 +551,16 @@ const projetTechnologies = projet.expand?.technologies || [];
       function handleThemeChange() {
         // Sauvegarder la position de scroll avant les changements
         const scrollPosition = window.scrollY;
-        
+
         const currentSlug = window.location.pathname.split("/").pop();
         if (projetsData[currentSlug]) {
           const isDarkMode = localStorage.getItem("darkMode") === "true";
-          const themeToApply = isDarkMode 
-            ? projetsData[currentSlug].theme + "-dark" 
+          const themeToApply = isDarkMode
+            ? projetsData[currentSlug].theme + "-dark"
             : projetsData[currentSlug].theme;
           updateArrowsTheme(themeToApply);
         }
-        
+
         // Restaurer la position de scroll après les changements
         requestAnimationFrame(() => {
           window.scrollTo(0, scrollPosition);
@@ -569,19 +575,22 @@ const projetTechnologies = projet.expand?.technologies || [];
         }
       });
 
-      // Observer les changements d'attribut data-theme sur documentElement  
+      // Observer les changements d'attribut data-theme sur documentElement
       const themeObserver = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
-          if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+          if (
+            mutation.type === "attributes" &&
+            mutation.attributeName === "data-theme"
+          ) {
             // Petit délai pour éviter les conflits avec le système global
             setTimeout(() => handleThemeChange(), 50);
           }
         });
       });
-      
+
       themeObserver.observe(document.documentElement, {
         attributes: true,
-        attributeFilter: ['data-theme']
+        attributeFilter: ["data-theme"],
       });
 
       // Initialiser les listeners
@@ -594,7 +603,7 @@ const projetTechnologies = projet.expand?.technologies || [];
       currentTheme: themeName,
       allProjets: allProjets.map((p) => ({
         slug: p.slug,
-        theme: p.expand?.theme?.name || 'basique',
+        theme: p.expand?.theme?.name || "basique",
         backgroundImage: getFileUrl(p, p.hero_image),
         title: p.title.toUpperCase(),
         description: p.hero_description,

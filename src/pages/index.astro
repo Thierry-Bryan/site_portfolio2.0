@@ -25,17 +25,23 @@ try {
 
 // Générer le CSS pour tous les thèmes utilisés
 const allThemes = new Set<any>();
-projets.forEach(p => {
-  const theme = Array.isArray(p.expand?.theme) ? p.expand.theme[0] : p.expand?.theme;
+projets.forEach((p) => {
+  const theme = Array.isArray(p.expand?.theme)
+    ? p.expand.theme[0]
+    : p.expand?.theme;
   if (theme) allThemes.add(theme);
 });
 let dynamicThemeCSS = "";
-allThemes.forEach(theme => {
+allThemes.forEach((theme) => {
   dynamicThemeCSS += generateThemeCSS(theme);
 });
 ---
 
-<Layout theme={theme} title="Accueil - Portfolio Bryan Thierry" dynamicCSS={dynamicThemeCSS}>
+<Layout
+  theme={theme}
+  title="Accueil - Portfolio Bryan Thierry"
+  dynamicCSS={dynamicThemeCSS}
+>
   <Hero />
   <section class="pt-15 pb-20">
     <div class="flex items-center justify-center mb-5">
@@ -103,8 +109,10 @@ allThemes.forEach(theme => {
             {projets.map((projet) => {
               const imageUrl = getFileUrl(projet, projet.hero_image);
               // Extraire le nom du thème depuis expand
-              const themeData = Array.isArray(projet.expand?.theme) ? projet.expand.theme[0] : projet.expand?.theme;
-              const themeName = themeData?.name || 'basique';
+              const themeData = Array.isArray(projet.expand?.theme)
+                ? projet.expand.theme[0]
+                : projet.expand?.theme;
+              const themeName = themeData?.name || "basique";
               return (
                 <a
                   href={`/projets/${projet.slug}`}

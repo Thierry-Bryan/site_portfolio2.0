@@ -31,12 +31,14 @@ const filterOptions = tags.map((tag) => tag.name);
 
 // Générer le CSS pour tous les thèmes utilisés
 const allThemes = new Set<any>();
-projets.forEach(p => {
-  const theme = Array.isArray(p.expand?.theme) ? p.expand.theme[0] : p.expand?.theme;
+projets.forEach((p) => {
+  const theme = Array.isArray(p.expand?.theme)
+    ? p.expand.theme[0]
+    : p.expand?.theme;
   if (theme) allThemes.add(theme);
 });
 let dynamicThemeCSS = "";
-allThemes.forEach(theme => {
+allThemes.forEach((theme) => {
   dynamicThemeCSS += generateThemeCSS(theme);
 });
 ---
@@ -133,10 +135,12 @@ allThemes.forEach(theme => {
 
             // Récupérer les technologies depuis expand
             const projetTechnologies = projet.expand?.technologies || [];
-            
+
             // Extraire le nom du thème depuis expand
-            const themeData = Array.isArray(projet.expand?.theme) ? projet.expand.theme[0] : projet.expand?.theme;
-            const themeName = themeData?.name || 'basique';
+            const themeData = Array.isArray(projet.expand?.theme)
+              ? projet.expand.theme[0]
+              : projet.expand?.theme;
+            const themeName = themeData?.name || "basique";
 
             return (
               <a
@@ -216,7 +220,8 @@ allThemes.forEach(theme => {
             <div
               class="coming-soon-list flex items-center justify-center bg-[var(--b1)] border-2 border-[var(--bc)] h-[180px] w-full"
             >
-              <span class="text-[var(--bc)] text-2xl font-primary">À VENIR</span>
+              <span class="text-[var(--bc)] text-2xl font-primary">À VENIR</span
+              >
             </div>
           </div>
         </div>

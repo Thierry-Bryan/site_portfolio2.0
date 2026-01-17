@@ -114,12 +114,18 @@ body {
 
 /* Effet comics principal pour hover */
 .comics-glow-hover:hover {
-  text-shadow: 0 0 20px var(--a), 3px 3px 0 var(--a), 6px 6px 0 var(--s);
+  text-shadow:
+    0 0 20px var(--a),
+    3px 3px 0 var(--a),
+    6px 6px 0 var(--s);
 }
 
 /* Effet comics navigation - Plus subtil */
 .comics-glow-hover-link:hover {
-  text-shadow: 0 0 20px var(--a), 2px 2px 0 var(--a), 4px 4px 0 var(--s);
+  text-shadow:
+    0 0 20px var(--a),
+    2px 2px 0 var(--a),
+    4px 4px 0 var(--s);
 }
 
 /* === STYLES SPÉCIFIQUES PAGE PROJET === */
@@ -179,7 +185,10 @@ body {
 /* Effet comics pour texte dans cards (via hover sur card) */
 .comics-card:hover .comics-glow-hover {
   color: var(--bc);
-  text-shadow: 0 0 20px var(--p), 2px 2px 0 var(--a), 4px 4px 0 var(--s);
+  text-shadow:
+    0 0 20px var(--p),
+    2px 2px 0 var(--a),
+    4px 4px 0 var(--s);
 }
 
 /* Style de base pour les liens dans cards */
@@ -190,7 +199,10 @@ body {
 /* Effet glow pour liens dans cards (via hover sur card) */
 .comics-card:hover .comics-glow-hover-link {
   color: var(--bc);
-  text-shadow: 0 0 20px var(--p), 2px 2px 0 var(--a), 4px 4px 0 var(--s);
+  text-shadow:
+    0 0 20px var(--p),
+    2px 2px 0 var(--a),
+    4px 4px 0 var(--s);
   transform: scale(1.05) rotate(-1deg);
 }
 
@@ -198,7 +210,10 @@ body {
 .comics-card:hover .comics-icon-hover {
   color: var(--bc);
   transform: scale(1.1);
-  text-shadow: 0 0 20px var(--bc), 3px 3px 0 var(--a), 6px 6px 0 var(--s);
+  text-shadow:
+    0 0 20px var(--bc),
+    3px 3px 0 var(--a),
+    6px 6px 0 var(--s);
 }
 
 /* Transformation comics avec rotation (via hover sur card) */
@@ -447,7 +462,9 @@ body {
   height: 56px;
   display: block;
   color: var(--bc);
-  transition: transform 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease;
 }
 
 .comics-card:hover .social-svg svg {

@@ -12,7 +12,12 @@ interface Props {
   dynamicCSS?: string;
 }
 
-const { title = "Portfolio", theme = "basique", firstSectionTheme, dynamicCSS } = Astro.props;
+const {
+  title = "Portfolio",
+  theme = "basique",
+  firstSectionTheme,
+  dynamicCSS,
+} = Astro.props;
 
 // Définir le thème initial pour le SSR
 const initialTheme = theme;
@@ -26,42 +31,55 @@ const initialTheme = theme;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    
+
     <!-- Préchargement des fonts critiques -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="dns-prefetch" href="https://portfolio.bryan-thierry.fr" />
-    
+
     <!-- Préchargement des assets critiques -->
-    <link rel="preload" as="image" href="/avatar/footer.webp" fetchpriority="high" />
-    
+    <link
+      rel="preload"
+      as="image"
+      href="/avatar/footer.webp"
+      fetchpriority="high"
+    />
+
     <!-- CSS Dynamique injecté pour les thèmes personnalisés -->
     {dynamicCSS && <style set:html={dynamicCSS} />}
-    
+
     <!-- Script CRITIQUE EN PREMIER pour éviter tout flash -->
-    <script is:inline define:vars={{ pageTheme: theme, initialHeaderTheme: firstSectionTheme }}>
+    <script
+      is:inline
+      define:vars={{ pageTheme: theme, initialHeaderTheme: firstSectionTheme }}
+    >
       // EXÉCUTÉ AVANT TOUT LE RESTE DU HTML
       (function () {
-        const isHomePage = window.location.pathname === "/" || window.location.pathname === "/index.html";
-        
+        const isHomePage =
+          window.location.pathname === "/" ||
+          window.location.pathname === "/index.html";
+
         // Détecter le mode sombre IMMÉDIATEMENT
         let isDark = localStorage.getItem("darkMode") === "true";
         if (localStorage.getItem("darkMode") === null) {
           isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
           localStorage.setItem("darkMode", isDark ? "true" : "false");
         }
-        
+
         // Appliquer le thème AVANT que le HTML soit rendu
         let finalTheme;
         if (isHomePage) {
           finalTheme = pageTheme;
-          document.documentElement.setAttribute("data-user-dark-mode", isDark ? "true" : "false");
+          document.documentElement.setAttribute(
+            "data-user-dark-mode",
+            isDark ? "true" : "false",
+          );
         } else {
           finalTheme = isDark ? pageTheme + "-dark" : pageTheme;
         }
-        
+
         document.documentElement.setAttribute("data-theme", finalTheme);
         localStorage.setItem("theme", finalTheme);
-        
+
         // Stocker l'état isDark pour le toggle
         window.__isDarkMode = isDark;
 
@@ -69,7 +87,7 @@ const initialTheme = theme;
         window.changeTheme = function () {
           // Sauvegarder la position de scroll AVANT les changements
           const currentScrollY = window.scrollY;
-          
+
           const isHome =
             window.location.pathname === "/" ||
             window.location.pathname === "/index.html";
@@ -97,7 +115,7 @@ const initialTheme = theme;
           // Sauvegarder la préférence dark/light (pas le thème spécifique)
           localStorage.setItem(
             "darkMode",
-            newTheme.includes("-dark") ? "true" : "false"
+            newTheme.includes("-dark") ? "true" : "false",
           );
           localStorage.setItem("theme", newTheme);
 
@@ -105,7 +123,7 @@ const initialTheme = theme;
             // Page d'accueil : garder le thème clair pour le contenu, mais mettre à jour la préférence
             document.documentElement.setAttribute(
               "data-user-dark-mode",
-              newTheme.includes("-dark") ? "true" : "false"
+              newTheme.includes("-dark") ? "true" : "false",
             );
           } else {
             // Autres pages : appliquer le thème complet
@@ -164,7 +182,7 @@ const initialTheme = theme;
                     navLinks.forEach((link) => (link.style.color = ""));
                   }
                 }
-                
+
                 // S'assurer que la position de scroll est maintenue après toutes les mises à jour
                 if (window.scrollY !== currentScrollY) {
                   window.scrollTo(0, currentScrollY);
@@ -175,10 +193,13 @@ const initialTheme = theme;
 
           if (footer) {
             // Le footer prend le thème actuel de la page, pas un thème fixe
-            const currentPageTheme = document.documentElement.getAttribute("data-theme") || pageTheme;
+            const currentPageTheme =
+              document.documentElement.getAttribute("data-theme") || pageTheme;
             const basePageTheme = currentPageTheme.replace("-dark", "");
             const isDarkForFooter = newTheme.includes("-dark");
-            const footerTheme = isDarkForFooter ? basePageTheme + "-dark" : basePageTheme;
+            const footerTheme = isDarkForFooter
+              ? basePageTheme + "-dark"
+              : basePageTheme;
             footer.setAttribute("data-theme", footerTheme);
           }
 
@@ -196,7 +217,7 @@ const initialTheme = theme;
 
           // Déclencher un événement custom pour notifier les composants
           window.dispatchEvent(
-            new CustomEvent("themeChanged", { detail: { theme: newTheme } })
+            new CustomEvent("themeChanged", { detail: { theme: newTheme } }),
           );
 
           return newTheme;
@@ -224,8 +245,13 @@ const initialTheme = theme;
               : baseTheme;
           } else {
             // Si un thème initial pour le header est spécifié (comme sur la page à propos)
-            if (typeof initialHeaderTheme !== 'undefined' && initialHeaderTheme) {
-              themeForHeaderFooter = isDarkMode ? initialHeaderTheme + "-dark" : initialHeaderTheme;
+            if (
+              typeof initialHeaderTheme !== "undefined" &&
+              initialHeaderTheme
+            ) {
+              themeForHeaderFooter = isDarkMode
+                ? initialHeaderTheme + "-dark"
+                : initialHeaderTheme;
             } else {
               themeForHeaderFooter =
                 document.documentElement.getAttribute("data-theme");
@@ -257,9 +283,12 @@ const initialTheme = theme;
           }
 
           // Le footer prend le thème actuel de la page, pas un thème fixe
-          const currentPageTheme = document.documentElement.getAttribute("data-theme") || pageTheme;
+          const currentPageTheme =
+            document.documentElement.getAttribute("data-theme") || pageTheme;
           const basePageTheme = currentPageTheme.replace("-dark", "");
-          const themeForFooter = isDarkMode ? basePageTheme + "-dark" : basePageTheme;
+          const themeForFooter = isDarkMode
+            ? basePageTheme + "-dark"
+            : basePageTheme;
           if (footer) footer.setAttribute("data-theme", themeForFooter);
 
           // Initialiser les icônes
