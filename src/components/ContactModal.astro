@@ -24,17 +24,17 @@ const svgMap: Record<string, string> = {
     <!-- Modal Card -->
     <div
       id="modal-card"
-      class="modal-card relative bg-(--b1) border-4 border-(--bc) p-6 md:p-12 modal-shadow-primary"
+      class="modal-card relative bg-[var(--b1)] border-4 border-[var(--bc)] p-6 md:p-12 modal-shadow-primary"
     >
       <!-- Bouton fermer -->
       <button
         type="button"
         id="close-modal"
-        class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center border-2 border-(--bc) bg-(--b1) hover:bg-(--p) hover:border-(--p) transition-all duration-300 group z-50"
+        class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center border-2 border-[var(--bc)] bg-[var(--b1)] hover:bg-[var(--p)] hover:border-[var(--p)] transition-all duration-300 group z-50"
         aria-label="Fermer"
       >
         <svg
-          class="w-5 h-5 text-(--bc) group-hover:text-(--b1) transition-colors pointer-events-none"
+          class="w-5 h-5 text-[var(--bc)] group-hover:text-[var(--b1)] transition-colors pointer-events-none"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -48,16 +48,16 @@ const svgMap: Record<string, string> = {
       </button>
 
       <!-- Ligne décorative -->
-      <div class="absolute top-0 left-0 w-full h-2 bg-(--p)"></div>
+      <div class="absolute top-0 left-0 w-full h-2 bg-[var(--p)]"></div>
 
       <!-- Titre -->
       <h2
-        class="text-3xl md:text-5xl font-primary text-(--p) mb-3 uppercase tracking-tight"
+        class="text-3xl md:text-5xl font-primary text-[var(--p)] mb-3 uppercase tracking-tight"
       >
         Parlons Projet
       </h2>
       <p
-        class="text-xs md:text-sm font-secondary text-(--bc) mb-8 opacity-70 leading-relaxed"
+        class="text-xs md:text-sm font-secondary text-[var(--bc)] mb-8 opacity-70 leading-relaxed"
       >
         Une idée en tête ? Remplissez le formulaire et je vous réponds sous 24h.
       </p>
@@ -70,7 +70,7 @@ const svgMap: Record<string, string> = {
           <div>
             <label
               for="name"
-              class="block font-secondary text-xs font-bold text-(--bc) mb-2 uppercase tracking-wide"
+              class="block font-secondary text-xs font-bold text-[var(--bc)] mb-2 uppercase tracking-wide"
             >
               Nom *
             </label>
@@ -79,7 +79,7 @@ const svgMap: Record<string, string> = {
               id="name"
               name="name"
               required
-              class="w-full px-4 py-3 border-2 border-(--bc) bg-(--b1) text-(--bc) font-secondary text-sm focus:outline-none focus:border-(--p) focus:shadow-[3px_3px_0_0_var(--p)] transition-all duration-200"
+              class="w-full px-4 py-3 border-2 border-[var(--bc)] bg-[var(--b1)] text-[var(--bc)] font-secondary text-sm focus:outline-none focus:border-[var(--p)] focus:shadow-[3px_3px_0_0_var(--p)] transition-all duration-200"
               placeholder="Votre nom"
             />
           </div>
@@ -88,7 +88,7 @@ const svgMap: Record<string, string> = {
           <div>
             <label
               for="email"
-              class="block font-secondary text-xs font-bold text-(--bc) mb-2 uppercase tracking-wide"
+              class="block font-secondary text-xs font-bold text-[var(--bc)] mb-2 uppercase tracking-wide"
             >
               Email *
             </label>
@@ -97,7 +97,7 @@ const svgMap: Record<string, string> = {
               id="email"
               name="email"
               required
-              class="w-full px-4 py-3 border-2 border-(--bc) bg-(--b1) text-(--bc) font-secondary text-sm focus:outline-none focus:border-(--p) focus:shadow-[3px_3px_0_0_var(--p)] transition-all duration-200"
+              class="w-full px-4 py-3 border-2 border-[var(--bc)] bg-[var(--b1)] text-[var(--bc)] font-secondary text-sm focus:outline-none focus:border-[var(--p)] focus:shadow-[3px_3px_0_0_var(--p)] transition-all duration-200"
               placeholder="votre@email.com"
             />
           </div>
@@ -107,7 +107,7 @@ const svgMap: Record<string, string> = {
         <div>
           <label
             for="message"
-            class="block font-secondary text-xs font-bold text-(--bc) mb-2 uppercase tracking-wide"
+            class="block font-secondary text-xs font-bold text-[var(--bc)] mb-2 uppercase tracking-wide"
           >
             Message *
           </label>
@@ -116,13 +116,13 @@ const svgMap: Record<string, string> = {
             name="message"
             required
             rows="5"
-            class="w-full px-4 py-3 border-2 border-(--bc) bg-(--b1) text-(--bc) font-secondary text-sm focus:outline-none focus:border-(--p) focus:shadow-[3px_3px_0_0_var(--p)] transition-all duration-200 resize-none"
+            class="w-full px-4 py-3 border-2 border-[var(--bc)] bg-[var(--b1)] text-[var(--bc)] font-secondary text-sm focus:outline-none focus:border-[var(--p)] focus:shadow-[3px_3px_0_0_var(--p)] transition-all duration-200 resize-none"
             placeholder="Décrivez votre projet en quelques lignes..."
           ></textarea>
         </div>
 
         <!-- Message de succès/erreur -->
-        <div id="form-message" class="hidden p-4 border-2 border-(--bc)">
+        <div id="form-message" class="hidden p-4 border-2 border-[var(--bc)]">
           <p class="font-secondary text-sm"></p>
         </div>
 
@@ -140,12 +140,12 @@ const svgMap: Record<string, string> = {
 
       <!-- Séparateur -->
       <div class="flex items-center gap-4 my-6">
-        <div class="flex-1 h-[2px] bg-(--bc) opacity-20"></div>
+        <div class="flex-1 h-[2px] bg-[var(--bc)] opacity-20"></div>
         <span
-          class="font-secondary text-xs uppercase tracking-widest text-(--bc) opacity-50"
+          class="font-secondary text-xs uppercase tracking-widest text-[var(--bc)] opacity-50"
           >ou</span
         >
-        <div class="flex-1 h-[2px] bg-(--bc) opacity-20"></div>
+        <div class="flex-1 h-[2px] bg-[var(--bc)] opacity-20"></div>
       </div>
 
       <!-- Réseaux sociaux -->
@@ -156,7 +156,7 @@ const svgMap: Record<string, string> = {
               href={social.url}
               target="_blank"
               rel="noopener noreferrer"
-              class="modal-social-link group relative w-12 h-12 flex items-center justify-center border-2 border-(--bc) bg-(--b1) hover:bg-(--p) hover:border-(--p) transition-all duration-300"
+              class="modal-social-link group relative w-12 h-12 flex items-center justify-center border-2 border-[var(--bc)] bg-[var(--b1)] hover:bg-[var(--p)] hover:border-[var(--p)] transition-all duration-300"
               aria-label={social.name}
               title={social.name}
             >

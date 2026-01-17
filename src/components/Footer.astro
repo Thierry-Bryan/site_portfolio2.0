@@ -26,7 +26,7 @@ const svgByName: Record<string, string> = {
 <footer
   id="footer"
   data-theme={theme}
-  class="relative w-full min-h-[calc(100vh-var(--header-height,80px))] bg-(--b1) border-t-4 border-(--p) overflow-hidden flex flex-col"
+  class="relative w-full min-h-[calc(100vh-var(--header-height,80px))] bg-[var(--b1)] border-t-4 border-[var(--p)] overflow-hidden flex flex-col"
   style="min-height:calc(100vh - var(--header-height,80px));"
 >
   <BackgroundComics />
@@ -53,7 +53,7 @@ const svgByName: Record<string, string> = {
                 class="email-box comics-glow-hover-link w-full"
               >
                 <p
-                  class="font-primary text-lg md:text-xl tracking-tight text-(--bc) uppercase text-center"
+                  class="font-primary text-lg md:text-xl tracking-tight text-[var(--bc)] uppercase text-center"
                 >
                   {siteConfig.author.email}
                 </p>
@@ -79,10 +79,10 @@ const svgByName: Record<string, string> = {
                     ?.replace(/fill=\"#000\"/g, 'fill="currentColor"')
                     .replace(/fill=\"#000000\"/g, 'fill="currentColor"')}
                 />
-                <h3 class="font-primary text-lg md:text-2xl uppercase text-(--bc) tracking-tight comics-glow-hover-link comics-transform-hover">
+                <h3 class="font-primary text-lg md:text-2xl uppercase text-[var(--bc)] tracking-tight comics-glow-hover-link comics-transform-hover">
                   {social.name}
                 </h3>
-                <p class="font-secondary text-xs md:text-sm text-(--bc) text-center opacity-70 leading-5 md:leading-6">
+                <p class="font-secondary text-xs md:text-sm text-[var(--bc)] text-center opacity-70 leading-5 md:leading-6">
                   {social.label}
                 </p>
                 <div class="arrow-circle">
@@ -110,25 +110,25 @@ const svgByName: Record<string, string> = {
 
   <!-- Section mentions légales collée en bas -->
   <div
-    class="w-full border-t-2 border-(--bc) py-3 z-10 relative bg-(--b1) mt-auto"
+    class="w-full border-t-2 border-[var(--bc)] py-3 z-10 relative bg-[var(--b1)] mt-auto"
   >
     <div class="container mx-auto px-6">
       <div
         class="flex flex-col md:flex-row justify-between items-center gap-2 text-center md:text-left"
       >
-        <p class="font-secondary text-sm text-(--bc)">
+        <p class="font-secondary text-sm text-[var(--bc)]">
           © 2025 Bryan Thierry. Tous droits réservés.
         </p>
         <div class="flex gap-4">
           <a
             href="/mentions-legales"
-            class="font-secondary text-sm text-(--bc) hover:text-(--p) transition-colors duration-300"
+            class="font-secondary text-sm text-[var(--bc)] hover:text-[var(--p)] transition-colors duration-300"
           >
             Mentions légales
           </a>
           <a
             href="/politique-confidentialite"
-            class="font-secondary text-sm text-(--bc) hover:text-(--p) transition-colors duration-300"
+            class="font-secondary text-sm text-[var(--bc)] hover:text-[var(--p)] transition-colors duration-300"
           >
             Politique de confidentialité
           </a>

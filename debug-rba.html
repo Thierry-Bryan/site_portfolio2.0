@@ -1,0 +1,420 @@
+﻿<!DOCTYPE html><html lang="fr" data-theme="rba"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.15.1"><title>RBA - Portfolio Bryan Thierry</title><!-- Préchargement des fonts critiques --><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="dns-prefetch" href="https://portfolio.bryan-thierry.fr"><!-- Préchargement des assets critiques --><link rel="preload" as="image" href="/avatar/footer.webp" fetchpriority="high"><!-- CSS Dynamique injecté pour les thèmes personnalisés --><style>[data-theme="rba"] {
+  --p: #8b5cf6;
+  --s: #a855f7;
+  --a: #c084fc;
+  --b1: #faf9f7;
+  --b1-rgb: 250, 249, 247;
+  --bc: #000000;
+}
+
+[data-theme="rba-dark"] {
+  --p: #8b5cf6;
+  --s: #a855f7;
+  --a: #c084fc;
+  --b1: #000000;
+  --b1-rgb: 0, 0, 0;
+  --bc: #faf9f7;
+}
+</style><!-- Script CRITIQUE EN PREMIER pour éviter tout flash --><script>(function(){const pageTheme = "rba";
+const initialHeaderTheme = undefined;
+
+      // EXÉCUTÉ AVANT TOUT LE RESTE DU HTML
+      (function () {
+        const isHomePage = window.location.pathname === "/" || window.location.pathname === "/index.html";
+        
+        // Détecter le mode sombre IMMÉDIATEMENT
+        let isDark = localStorage.getItem("darkMode") === "true";
+        if (localStorage.getItem("darkMode") === null) {
+          isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          localStorage.setItem("darkMode", isDark ? "true" : "false");
+        }
+        
+        // Appliquer le thème AVANT que le HTML soit rendu
+        let finalTheme;
+        if (isHomePage) {
+          finalTheme = pageTheme;
+          document.documentElement.setAttribute("data-user-dark-mode", isDark ? "true" : "false");
+        } else {
+          finalTheme = isDark ? pageTheme + "-dark" : pageTheme;
+        }
+        
+        document.documentElement.setAttribute("data-theme", finalTheme);
+        localStorage.setItem("theme", finalTheme);
+        
+        // Stocker l'état isDark pour le toggle
+        window.__isDarkMode = isDark;
+
+        // Fonction globale pour changer le thème
+        window.changeTheme = function () {
+          // Sauvegarder la position de scroll AVANT les changements
+          const currentScrollY = window.scrollY;
+          
+          const isHome =
+            window.location.pathname === "/" ||
+            window.location.pathname === "/index.html";
+          let currentTheme;
+
+          if (isHome) {
+            // Sur la page d'accueil, lire la préférence utilisateur
+            const userDarkMode =
+              document.documentElement.getAttribute("data-user-dark-mode") ===
+              "true";
+            const baseTheme =
+              document.documentElement.getAttribute("data-theme");
+            currentTheme = userDarkMode ? baseTheme + "-dark" : baseTheme;
+          } else {
+            currentTheme =
+              document.documentElement.getAttribute("data-theme") ||
+              defaultTheme;
+          }
+
+          const isDark = currentTheme.includes("-dark");
+          const newTheme = isDark
+            ? currentTheme.replace("-dark", "")
+            : currentTheme + "-dark";
+
+          // Sauvegarder la préférence dark/light (pas le thème spécifique)
+          localStorage.setItem(
+            "darkMode",
+            newTheme.includes("-dark") ? "true" : "false"
+          );
+          localStorage.setItem("theme", newTheme);
+
+          if (isHome) {
+            // Page d'accueil : garder le thème clair pour le contenu, mais mettre à jour la préférence
+            document.documentElement.setAttribute(
+              "data-user-dark-mode",
+              newTheme.includes("-dark") ? "true" : "false"
+            );
+          } else {
+            // Autres pages : appliquer le thème complet
+            document.documentElement.setAttribute("data-theme", newTheme);
+
+            // Forcer le recalcul des variables CSS SANS affecter le scroll
+            requestAnimationFrame(() => {
+              // Restaurer la position de scroll après le changement de thème
+              if (window.scrollY !== currentScrollY) {
+                window.scrollTo(0, currentScrollY);
+              }
+            });
+
+            // Mettre à jour les sections avec data-theme (chaque section garde son propre thème)
+            const sections = document.querySelectorAll("section[data-theme]");
+            sections.forEach((section) => {
+              const sectionTheme = section.getAttribute("data-theme");
+              const sectionBaseTheme = sectionTheme.replace("-dark", "");
+              const newSectionTheme = newTheme.includes("-dark")
+                ? sectionBaseTheme + "-dark"
+                : sectionBaseTheme;
+              section.setAttribute("data-theme", newSectionTheme);
+            });
+          }
+
+          // Mettre à jour header et footer (sur TOUTES les pages)
+          const header = document.getElementById("header");
+          const footer = document.getElementById("footer");
+
+          if (header) {
+            // Le header prend le newTheme (qui peut être celui de la section ou de la page)
+            header.setAttribute("data-theme", newTheme);
+
+            // Forcer la mise à jour immédiate du background du header
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                const headerComputedStyle = getComputedStyle(header);
+                const bgColor = headerComputedStyle
+                  .getPropertyValue("--b1")
+                  .trim();
+                if (header.classList.contains("scrolled") || !isHome) {
+                  header.style.backgroundColor = `${bgColor}f5`;
+                }
+
+                // Sur la page d'accueil, forcer la mise à jour des couleurs du texte
+                if (isHome) {
+                  const isDarkMode = newTheme.includes("-dark");
+                  const logoLink = header.querySelector(".logo-link");
+                  const navLinks = header.querySelectorAll(".nav-link");
+
+                  if (isDarkMode) {
+                    if (logoLink) logoLink.style.color = "white";
+                    navLinks.forEach((link) => (link.style.color = "white"));
+                  } else {
+                    if (logoLink) logoLink.style.color = "";
+                    navLinks.forEach((link) => (link.style.color = ""));
+                  }
+                }
+                
+                // S'assurer que la position de scroll est maintenue après toutes les mises à jour
+                if (window.scrollY !== currentScrollY) {
+                  window.scrollTo(0, currentScrollY);
+                }
+              });
+            });
+          }
+
+          if (footer) {
+            // Le footer prend le thème actuel de la page, pas un thème fixe
+            const currentPageTheme = document.documentElement.getAttribute("data-theme") || pageTheme;
+            const basePageTheme = currentPageTheme.replace("-dark", "");
+            const isDarkForFooter = newTheme.includes("-dark");
+            const footerTheme = isDarkForFooter ? basePageTheme + "-dark" : basePageTheme;
+            footer.setAttribute("data-theme", footerTheme);
+          }
+
+          // Mettre à jour les icônes du toggle
+          const sunIcon = document.querySelector(".sun-icon");
+          const moonIcon = document.querySelector(".moon-icon");
+
+          if (!isDark) {
+            sunIcon?.classList.add("hidden");
+            moonIcon?.classList.remove("hidden");
+          } else {
+            sunIcon?.classList.remove("hidden");
+            moonIcon?.classList.add("hidden");
+          }
+
+          // Déclencher un événement custom pour notifier les composants
+          window.dispatchEvent(
+            new CustomEvent("themeChanged", { detail: { theme: newTheme } })
+          );
+
+          return newTheme;
+        };
+
+        // Au chargement, synchroniser header et footer avec le bon thème
+        window.addEventListener("DOMContentLoaded", function () {
+          const isHome =
+            window.location.pathname === "/" ||
+            window.location.pathname === "/index.html";
+          const header = document.getElementById("header");
+          const footer = document.getElementById("footer");
+          const isDarkMode = localStorage.getItem("darkMode") === "true";
+
+          let themeForHeaderFooter;
+          if (isHome) {
+            // Sur la page d'accueil, utiliser la préférence utilisateur pour header/footer
+            const userDarkMode =
+              document.documentElement.getAttribute("data-user-dark-mode") ===
+              "true";
+            const baseTheme =
+              document.documentElement.getAttribute("data-theme");
+            themeForHeaderFooter = userDarkMode
+              ? baseTheme + "-dark"
+              : baseTheme;
+          } else {
+            // Si un thème initial pour le header est spécifié (comme sur la page à propos)
+            if (typeof initialHeaderTheme !== 'undefined' && initialHeaderTheme) {
+              themeForHeaderFooter = isDarkMode ? initialHeaderTheme + "-dark" : initialHeaderTheme;
+            } else {
+              themeForHeaderFooter =
+                document.documentElement.getAttribute("data-theme");
+            }
+
+            // Sur les autres pages, mettre à jour chaque section avec son propre thème
+            const sections = document.querySelectorAll("section[data-theme]");
+            sections.forEach((section) => {
+              const sectionTheme = section.getAttribute("data-theme");
+              const sectionBaseTheme = sectionTheme.replace("-dark", "");
+              const newSectionTheme = isDarkMode
+                ? sectionBaseTheme + "-dark"
+                : sectionBaseTheme;
+              section.setAttribute("data-theme", newSectionTheme);
+            });
+          }
+
+          if (header) {
+            header.setAttribute("data-theme", themeForHeaderFooter);
+
+            // Sur la page d'accueil en mode sombre, mettre le texte en blanc
+            if (isHome && themeForHeaderFooter.includes("-dark")) {
+              const logoLink = header.querySelector(".logo-link");
+              const navLinks = header.querySelectorAll(".nav-link");
+
+              if (logoLink) logoLink.style.color = "white";
+              navLinks.forEach((link) => (link.style.color = "white"));
+            }
+          }
+
+          // Le footer prend le thème actuel de la page, pas un thème fixe
+          const currentPageTheme = document.documentElement.getAttribute("data-theme") || pageTheme;
+          const basePageTheme = currentPageTheme.replace("-dark", "");
+          const themeForFooter = isDarkMode ? basePageTheme + "-dark" : basePageTheme;
+          if (footer) footer.setAttribute("data-theme", themeForFooter);
+
+          // Initialiser les icônes
+          const isDark = themeForHeaderFooter.includes("-dark");
+          const sunIcon = document.querySelector(".sun-icon");
+          const moonIcon = document.querySelector(".moon-icon");
+
+          if (isDark) {
+            sunIcon?.classList.add("hidden");
+            moonIcon?.classList.remove("hidden");
+          } else {
+            sunIcon?.classList.remove("hidden");
+            moonIcon?.classList.add("hidden");
+          }
+        });
+      })();
+    })();</script><link rel="stylesheet" href="/_astro/index.YnkpPIAb.css">
+<style>.btn-hover[data-astro-cid-vnzlvqnm]{background:radial-gradient(circle,var(--p),var(--s));box-shadow:-5px 5px #000;text-shadow:none;transition:box-shadow .3s ease,filter .3s ease;position:relative;overflow:hidden;filter:drop-shadow(0 8px 16px var(--accent-glow, var(--glow, rgba(0, 0, 0, .3))))}.btn-hover[data-astro-cid-vnzlvqnm]:before{content:"";position:absolute;top:50%;left:50%;width:0;height:0;background:radial-gradient(circle,#fff,#f0f0f0);transform:translate(-50%,-50%);transition:all .4s cubic-bezier(.25,.46,.45,.94);border-radius:50%;z-index:0}.btn-hover[data-astro-cid-vnzlvqnm]:hover:before{width:120%;height:300%}.btn-hover[data-astro-cid-vnzlvqnm]:hover{box-shadow:-5px 5px 0 0 var(--p);filter:none}.btn-text[data-astro-cid-vnzlvqnm]{position:relative;z-index:1;display:inline-block;transition:color .3s ease,text-shadow .3s ease}.btn-hover[data-astro-cid-vnzlvqnm].hero-button{background:radial-gradient(circle,#fff,#f0f0f0);box-shadow:-5px 5px 0 0 var(--p);text-shadow:none}.btn-hover[data-astro-cid-vnzlvqnm].hero-button:before{background:radial-gradient(circle,var(--p),var(--s))}.btn-hover[data-astro-cid-vnzlvqnm].hero-button:hover{box-shadow:-5px 5px 0 0 var(--color-white)}.btn-hover[data-astro-cid-vnzlvqnm].hero-button .btn-text[data-astro-cid-vnzlvqnm]{color:#181818}
+@keyframes scroll{0%{transform:translate(0)}to{transform:translate(-50%)}}.animate-scroll[data-astro-cid-l7boyr7q]{animation:scroll 30s linear infinite}.arrow-wrapper-disabled[data-astro-cid-ctbfjxou]{opacity:.3!important;pointer-events:none!important;cursor:not-allowed!important}.arrow-wrapper-disabled[data-astro-cid-ctbfjxou] button[data-astro-cid-ctbfjxou]{opacity:.5!important}.arrow-wrapper-disabled[data-astro-cid-ctbfjxou] svg[data-astro-cid-ctbfjxou]{opacity:.6!important}
+</style></head> <body class="overflow-x-hidden"> <!-- Mobile Menu Backdrop --><div id="mobile-menu-backdrop" class="fixed inset-0 z-[999] bg-black bg-opacity-50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 md:hidden"></div> <!-- Mobile Menu --> <div id="mobile-menu" class="fixed inset-0 z-[1000] bg-[var(--b1)] transform translate-x-full transition-transform duration-300 ease-in-out md:hidden overflow-y-auto"> <div class="flex items-center justify-between px-6 py-4 border-b-2 border-[var(--bc)] border-opacity-10"> <a href="/" class="logo-link font-primary text-4xl tracking-tight relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover">
+BRYAN THIERRY
+</a> <button id="mobile-menu-close" class="p-2 rounded-lg transition-colors duration-300 hover:bg-[var(--p)] hover:bg-opacity-10" aria-label="Fermer le menu"> <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path> </svg> </button> </div> <nav class="flex flex-col h-[calc(100%-80px)] px-6 py-8 justify-center"> <ul class="space-y-6 mb-12"> <li> <a href="/" class="mobile-nav-link font-primary text-2xl block py-3 transition-all duration-300 hover:scale-105 hover:-rotate-1 text-[var(--bc)]">
+ACCUEIL
+</a> </li> <li> <a href="/services" class="mobile-nav-link font-primary text-2xl block py-3 transition-all duration-300 hover:scale-105 hover:-rotate-1 text-[var(--bc)]">
+MES SERVICES
+</a> </li> <li> <a href="/projets" class="mobile-nav-link font-primary text-2xl block py-3 transition-all duration-300 hover:scale-105 hover:-rotate-1 text-[var(--bc)]">
+MES PROJETS
+</a> </li> <li> <a href="/a-propos" class="mobile-nav-link font-primary text-2xl block py-3 transition-all duration-300 hover:scale-105 hover:-rotate-1 text-[var(--bc)]">
+A PROPOS
+</a> </li> </ul> <button onclick="window.openContactModal(); document.getElementById('mobile-menu').classList.add('translate-x-full'); document.getElementById('mobile-menu-backdrop').classList.add('opacity-0', 'pointer-events-none'); document.body.style.overflow = '';" class="w-full font-primary relative inline-flex h-11 px-8 items-center justify-center overflow-hidden cursor-pointer transition-all duration-200 btn-gradient-primary btn-shadow"> <span class="btn-text relative z-10 btn-text-white">ME CONTACTER</span> </button> </nav> </div> <header id="header" class="navbar w-full px-6 py-4 fixed top-0 z-50 transition-all duration-500 bg-transparent projet-page"> <!-- Mobile: Logo + Hamburger --> <div class="flex items-center justify-between w-full md:hidden"> <a href="/" class="mobile-logo-link logo-link font-primary text-2xl tracking-tight relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover">
+BRYAN THIERRY
+</a> <div class="flex items-center gap-3"> <button id="mobile-menu-btn" class="mobile-hamburger p-2 rounded-lg transition-colors duration-300 hover:bg-[var(--p)] hover:bg-opacity-10" aria-label="Menu" aria-expanded="false"> <svg class="w-6 h-6 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path class="hamburger-line" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path> </svg> </button> </div> </div> <!-- Desktop: Logo + Nav + Actions --> <div class="hidden md:flex items-center justify-between w-full"> <div class="navbar-start"> <a href="/" class="desktop-logo-link logo-link font-primary text-4xl tracking-tight relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover">
+BRYAN THIERRY
+</a> </div> <div class="navbar-center"> <ul class="menu menu-horizontal gap-10 px-1"> <li> <a href="/services" class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link hover:bg-transparent">
+MES SERVICES
+</a> </li> <li> <a href="/projets" class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link hover:bg-transparent">
+MES PROJETS
+</a> </li> <li> <a href="/a-propos" class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link hover:bg-transparent">
+A PROPOS
+</a> </li> <li> <a href="https://drive.google.com/file/d/1EzEQnYgxazbyD1uuetc9JN6hzklZ7v2X/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link hover:bg-transparent">
+Voir mon CV
+</a> </li> </ul> </div> <div class="navbar-end flex items-center gap-4"> <button id="theme-toggle" class="relative w-16 h-8 rounded-full border-2 transition-all duration-300" aria-label="Changer de thème" data-astro-cid-x3pjskd3> <div id="toggle-indicator" class="absolute top-0.5 left-0.5 w-6 h-6 rounded-full transition-all duration-300 flex items-center justify-center" data-astro-cid-x3pjskd3> <svg class="sun-icon w-4 h-4 transition-all duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" data-astro-cid-x3pjskd3> <circle cx="12" cy="12" r="4" data-astro-cid-x3pjskd3></circle> <line x1="12" y1="2" x2="12" y2="4" data-astro-cid-x3pjskd3></line> <line x1="12" y1="20" x2="12" y2="22" data-astro-cid-x3pjskd3></line> <line x1="4.93" y1="4.93" x2="6.34" y2="6.34" data-astro-cid-x3pjskd3></line> <line x1="17.66" y1="17.66" x2="19.07" y2="19.07" data-astro-cid-x3pjskd3></line> <line x1="2" y1="12" x2="4" y2="12" data-astro-cid-x3pjskd3></line> <line x1="20" y1="12" x2="22" y2="12" data-astro-cid-x3pjskd3></line> <line x1="4.93" y1="19.07" x2="6.34" y2="17.66" data-astro-cid-x3pjskd3></line> <line x1="17.66" y1="6.34" x2="19.07" y2="4.93" data-astro-cid-x3pjskd3></line> </svg> <svg class="moon-icon hidden w-4 h-4 transition-all duration-300" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" data-astro-cid-x3pjskd3> <path d="M21.64 13a1 1 0 0 0-1.05-.14 8.05 8.05 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05z" data-astro-cid-x3pjskd3></path> </svg> </div> </button>  <script>
+  // Initialiser IMMÉDIATEMENT l'état du toggle (avant DOMContentLoaded)
+  (function() {
+    const isDark = window.__isDarkMode || localStorage.getItem("darkMode") === "true";
+    
+    // Appliquer l'état dès que les éléments existent
+    function initToggle() {
+      const indicator = document.getElementById("toggle-indicator");
+      const sunIcon = document.querySelector(".sun-icon");
+      const moonIcon = document.querySelector(".moon-icon");
+      
+      if (indicator && sunIcon && moonIcon) {
+        if (isDark) {
+          indicator.style.transform = "translateX(32px)";
+          sunIcon.classList.add("hidden");
+          moonIcon.classList.remove("hidden");
+        } else {
+          indicator.style.transform = "translateX(0px)";
+          sunIcon.classList.remove("hidden");
+          moonIcon.classList.add("hidden");
+        }
+        return true;
+      }
+      return false;
+    }
+    
+    // Essayer immédiatement
+    if (!initToggle()) {
+      // Si pas encore prêt, réessayer au DOMContentLoaded
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initToggle);
+      } else {
+        initToggle();
+      }
+    }
+  })();
+</script> <script type="module">const e=document.getElementById("theme-toggle"),t=document.getElementById("toggle-indicator");function n(){const e="true"===localStorage.getItem("darkMode"),n=document.querySelector(".sun-icon"),d=document.querySelector(".moon-icon");t&&(e?(t.style.transform="translateX(32px)",n?.classList.add("hidden"),d?.classList.remove("hidden")):(t.style.transform="translateX(0px)",n?.classList.remove("hidden"),d?.classList.add("hidden")))}e?.addEventListener("click",()=>{"function"==typeof window.changeTheme&&(window.changeTheme(),n())}),window.addEventListener("themeChanged",n);</script> <button onclick="window.openContactModal()" aria-label="Me contacter" class="header-button font-primary relative inline-flex h-11 px-8 items-center justify-center overflow-hidden cursor-pointer transition-all duration-200 btn-gradient-primary btn-shadow"> <span class="btn-text relative z-10 btn-text-white">ME CONTACTER</span> </button> </div> </div> </header> <script type="module" src="/_astro/Header.astro_astro_type_script_index_0_lang.CK5bs151.js"></script> <script type="module">const e=document.getElementById("mobile-menu-btn"),t=document.getElementById("mobile-menu-close"),n=document.getElementById("mobile-menu"),d=document.getElementById("mobile-menu-backdrop"),l=document.querySelectorAll(".mobile-nav-link");function i(){n?.classList.add("translate-x-full"),d?.classList.add("opacity-0","pointer-events-none"),e?.setAttribute("aria-expanded","false"),document.body.style.overflow=""}e?.addEventListener("click",()=>{!n?.classList.contains("translate-x-full")?i():(n?.classList.remove("translate-x-full"),d?.classList.remove("opacity-0","pointer-events-none"),e?.setAttribute("aria-expanded","true"),document.body.style.overflow="hidden")}),t?.addEventListener("click",i),d?.addEventListener("click",i),l.forEach(e=>{e.addEventListener("click",i)}),window.addEventListener("resize",()=>{window.innerWidth>=768&&i()});</script>   <section class="relative h-[calc(120vh-7rem)] flex items-stretch overflow-hidden" data-astro-cid-ctbfjxou> <!-- Indicateur de catégorie --> <div class="category-navigation absolute top-20 right-4 md:top-8 md:right-8 z-40" data-astro-cid-ctbfjxou> <div class="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-lg shadow-lg" data-astro-cid-ctbfjxou> <span class="text-xs md:text-sm font-semibold text-white/90 tracking-wide" data-astro-cid-ctbfjxou> WEB (4/5)
+</span> </div> </div> <div class="w-full h-full relative" data-astro-cid-ctbfjxou> <!-- Zone gauche : Texte sur fond avec angle prononcé (desktop uniquement) --> <div class="hidden md:flex absolute left-0 top-0 h-full flex-col justify-center pl-12 md:pl-16 lg:pl-20 pr-8 py-12 w-[35%] min-w-[340px] z-30" data-astro-cid-ctbfjxou> <div class="absolute inset-0 -z-10 shadow-left clip-hero-left" data-astro-cid-ctbfjxou></div> <h1 class="hero-title text-4xl md:text-5xl lg:text-7xl mb-5 md:mb-6 leading-[0.95] transition-colors duration-700 text-color-p transform-rotate-title" data-astro-cid-ctbfjxou> RBA </h1> <p class="hero-description text-sm md:text-base lg:text-lg font-medium max-w-md leading-relaxed transition-colors duration-700 text-color-bc" data-astro-cid-ctbfjxou> Refonte complète pour une association engagée : nouvelle identité visuelle, logo symbolique et site web moderne pour sensibiliser à la biodiversité. </p> </div> <!-- Zone centrale : comics + device (desktop uniquement) --> <div class="hidden md:flex absolute left-[38%] top-0 h-full items-center justify-center w-[60%] z-20 clip-hero-center" id="hero-center" data-astro-cid-ctbfjxou> <!-- Background pattern comics --> <div class="absolute inset-0 w-full h-full overflow-visible transition-all duration-700" id="background-comics" data-astro-cid-ctbfjxou> <!-- Dégradé comics dynamique --><div class="absolute inset-0 w-full h-full pointer-events-none gradient-primary-vertical opacity-100 z-0"></div> <!-- Images comics en overlay --> <div class="absolute inset-0 w-full h-full pointer-events-none bg-halftone-color-dodge"></div> <div class="absolute inset-0 w-full h-full pointer-events-none bg-halftone-color-burn"></div> <div class="absolute inset-0 w-full h-full pointer-events-none bg-retro-comics"></div> </div> </div> <!-- Background comics plein écran mobile uniquement --> <div class="md:hidden absolute inset-0 w-full h-full overflow-visible transition-all duration-700 z-10" id="background-comics-mobile" data-astro-cid-ctbfjxou> <!-- Dégradé comics dynamique --><div class="absolute inset-0 w-full h-full pointer-events-none gradient-primary-vertical opacity-100 z-0"></div> <!-- Images comics en overlay --> <div class="absolute inset-0 w-full h-full pointer-events-none bg-halftone-color-dodge"></div> <div class="absolute inset-0 w-full h-full pointer-events-none bg-halftone-color-burn"></div> <div class="absolute inset-0 w-full h-full pointer-events-none bg-retro-comics"></div> </div> <!-- Titre mobile en blanc, positionné en haut --> <h1 class="md:hidden absolute top-32 left-0 right-0 z-30 text-5xl leading-tight text-center px-6 text-white" data-astro-cid-ctbfjxou> RBA </h1> <!-- Device image : centrée mobile, décalée desktop --> <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:-translate-x-[70px] z-20 md:z-22" data-astro-cid-ctbfjxou> <img src="https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/yoef0g06aezvs95/mes_projets_rba_y13znwk1pc.webp?thumb=" alt="RBA" class="block mx-auto w-[100vw] max-w-[420px] max-h-[500px] md:max-h-[280px] lg:max-h-[360px] h-auto transition-opacity duration-500 drop-shadow-hero" id="hero-device" data-astro-cid-ctbfjxou> </div> <!-- Zone droite : triangle avec angle prononcé (desktop uniquement) --> <div class="triangle-right hidden md:block absolute right-0 top-0 h-full w-[25%] min-w-[160px] z-25 pointer-events-none transition-all duration-700 card-bg-p clip-hero-right" data-astro-cid-ctbfjxou> <div class="absolute inset-0 -z-10 shadow-right clip-triangle-right" data-astro-cid-ctbfjxou></div> </div> <!-- Flèches de navigation : centrées mobile, positionnées desktop --> <div class="absolute bottom-24 left-8 md:bottom-20 md:left-[35%] z-40 cursor-pointer" id="prev-arrow-wrapper" data-prev-projet="ca-va-trailer" data-astro-cid-ctbfjxou> <div class="arrow-wrapper arrow-wrapper-prev relative inline-block w-28 h-10 md:w-36 md:h-14"> <button data-prev-projet="ca-va-trailer" class="arrow-prev
+  flex items-center justify-center
+  relative
+  transition-all duration-300
+  cursor-pointer
+  w-full h-full" data-theme="rba" style="background:var(--p) !important"> <svg class="w-10 h-6 md:w-12 md:h-7 relative z-10 text-[var(--b1)]" fill="none" stroke="currentColor" viewBox="0 0 28 24" stroke-width="2.5"> <path stroke-linecap="round" stroke-linejoin="round" d="M23 12H5m0 0l7 7m-7-7l7-7"></path> </svg> </button> </div> </div> <div class="absolute bottom-24 right-8 md:bottom-20 md:right-[17%] z-40 cursor-pointer" id="next-arrow-wrapper" data-next-projet="omnisphere" data-astro-cid-ctbfjxou> <div class="arrow-wrapper arrow-wrapper-next relative inline-block w-28 h-10 md:w-36 md:h-14"> <button data-next-projet="omnisphere" class="arrow-next
+  flex items-center justify-center
+  relative
+  transition-all duration-300
+  cursor-pointer
+  w-full h-full" data-theme="rba" style=""> <svg class="w-10 h-6 md:w-12 md:h-7 relative z-10 text-[var(--p)]" fill="none" stroke="currentColor" viewBox="0 0 28 24" stroke-width="2.5"> <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h18m0 0l-7-7m7 7l-7 7"></path> </svg> </button> </div> </div> </div> </section>  <section class="py-4 overflow-hidden border-t-4 border-b-4 transition-colors duration-300 banner-bg" id="projet-banner" data-theme="rba" data-astro-cid-l7boyr7q> <div class="flex whitespace-nowrap animate-scroll" data-astro-cid-l7boyr7q> <div class="flex items-center gap-8 pr-8" id="banner-content" data-astro-cid-l7boyr7q>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  <span class="font-primary text-2xl md:text-3xl italic transform -rotate-2 banner-title transition-colors duration-300 text-color-bc" data-astro-cid-l7boyr7q> RBA </span> <span class="text-4xl text-color-p" data-astro-cid-l7boyr7q>★</span>  </div> </div> </section>   <script type="module" src="/_astro/_id_.astro_astro_type_script_index_0_lang.B6D0DCVj.js"></script> <script data-projet-init>(function(){const currentTheme = "0n3gyvn4ydwofl5";
+const allProjets = [{"slug":"echosafe","theme":"uvxtcgmhv66ubfe","backgroundImage":"https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/rtzm87vhu5rb14d/mes_projets_echosafe_ftndr0pfts.webp?thumb=","title":"ECHO SAFE","description":"Application solidaire pour lutter contre le harcèlement : messagerie sécurisée, moodtracker et kit de secours, pensée pour l'humain et la simplicité.","contentDescription":"<p>Echo Safe est n&eacute; d'un constat aussi simple que r&eacute;voltant : chaque ann&eacute;e, 1.5 million de personnes sont victimes de harc&egrave;lement, souvent sans savoir vers qui se tourner. Nous avons donc voulu offrir une application bienveillante o&ugrave; chaque victime puisse trouver un soutien simplement.<br><br>Avec l'aide de mes pairs, nous sommes pass&eacute;s par toutes les &eacute;tapes : d&eacute;finir une strat&eacute;gie de communication claire, penser l'exp&eacute;rience utilisateur, maquetter l'interface, puis coder le tout pour que &ccedil;a prenne vie.<br><br>Notre solution : une messagerie s&eacute;curis&eacute;e pour mettre en relation victimes et b&eacute;n&eacute;voles, un moodtracker pour suivre son &eacute;tat d&rsquo;esprit au quotidien, et un kit de secours regroupant les num&eacute;ros d&rsquo;urgence et des ressources essentielles. Simple, direct et humain.</p>","images":["https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/rtzm87vhu5rb14d/mockup1_echo_safe_njv9q5yhxo.webp?thumb=","https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/rtzm87vhu5rb14d/mockup2_echo_safe_22epdaoxe0.webp?thumb=","https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/rtzm87vhu5rb14d/logo_echo_safe_sbss8txqvz.webp?thumb=","https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/rtzm87vhu5rb14d/maquette_echo_safe_iv1klq371i.webp?thumb=","https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/rtzm87vhu5rb14d/couleurs_echo_safe_q1bjyk8u9x.webp?thumb="],"siteUrl":"https://echo-safe1.netlify.app/","technologies":[{"category":"Frontend","collectionId":"pbc_458473246","collectionName":"technologies","created":"2025-11-16 16:38:12.023Z","id":"jljcmbxbj1tsjxi","logo":"tailwind_t0r2ggkz0g.svg","name":"Tailwind CSS","slug":"tailwind css","updated":"2025-11-20 09:34:17.663Z"},{"category":"Frontend","collectionId":"pbc_458473246","collectionName":"technologies","created":"2025-11-16 16:37:54.174Z","id":"drt0o6ien6h6kgl","logo":"astro_tena7b56ms.svg","name":"Astro","slug":"astro","updated":"2025-11-20 09:54:36.282Z"},{"category":"Design","collectionId":"pbc_458473246","collectionName":"technologies","created":"2025-11-16 16:37:21.509Z","id":"at3skjcp8uwf634","logo":"figma_hmaqszc5ky.svg","name":"Figma","slug":"figma","updated":"2025-11-20 09:35:41.066Z"}],"tags":[{"collectionId":"pbc_1219621782","collectionName":"tags","created":"2025-11-16 16:34:24.326Z","id":"67suh9nuesdet2l","name":"Web","slug":"web","updated":"2025-11-16 16:34:28.154Z"}]},{"slug":"les-12-fragments","theme":"v9ac6v4y1ejag9i","backgroundImage":"https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/jiua906xhx59iu3/mes_projets_12_fragments_m08ffei65j.webp?thumb=","title":"LES 12 FRAGMENTS","description":"Site créatif autour de 12 avatars pixel art, chacun avec son histoire, dans un univers interactif et narratif unique.","contentDescription":"<p>Ce projet explore la cr&eacute;ation d'avatars personnalis&eacute;s, int&eacute;gralement con&ccedil;us en pixel art via Illustrator.<br><br>J'ai r&eacute;alis&eacute; 12 avatars avec diff&eacute;rentes poses, repr&eacute;sentant chacun un &eacute;l&egrave;ve de ma classe, que j'ai ensuite import&eacute;s sur un site web que j'ai int&eacute;gralement d&eacute;velopp&eacute;.<br><br>Le c&oelig;ur de ce projet r&eacute;side dans son storytelling, car chaque personnage a sa propre histoire, inscrite dans un univers narratif commun.<br><br>Le site est enrichi par une multitude d'animations interactives, allant de l'animation des personnages &agrave; l'exploration d'une carte compos&eacute;e de biomes uniques, tout est con&ccedil;u pour immerger l'utilisateur dans l'univers.</p>","images":["https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/jiua906xhx59iu3/les_12_fragments_map_bhnujtup06.webp?thumb=","https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/jiua906xhx59iu3/les_12_fragments_avatars_mockup_vk8jv2kma1.webp?thumb=","https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/jiua906xhx59iu3/les_12_fragments_avatars_gglxtgvxtk.webp?thumb="],"siteUrl":"https://les-douze-fragments.netlify.app/","technologies":[{"category":"Frontend","collectionId":"pbc_458473246","collectionName":"technologies","created":"2025-11-16 16:33:59.006Z","id":"apjualulvgfnmrc","logo":"html_7exrsc1g0i.svg","name":"HTML","slug":"html","updated":"2025-11-20 09:35:53.101Z"},{"category":"Frontend","collectionId":"pbc_458473246","collectionName":"technologies","created":"2025-11-16 16:37:34.032Z","id":"xsj4lwp4dd39523","logo":"css_l4ymtdlb52.svg","name":"CSS","slug":"css","updated":"2025-11-20 09:34:40.775Z"},{"category":"Frontend","collectionId":"pbc_458473246","collectionName":"technologies","created":"2025-11-16 16:39:45.910Z","id":"dcz6147rowuh8yb","logo":"js29im9zxtoe_kdl6e3ua8a.svg","name":"Java Script","slug":"java script","updated":"2025-11-20 09:34:03.994Z"}],"tags":[{"collectionId":"pbc_1219621782","collectionName":"tags","created":"2025-11-16 16:34:24.326Z","id":"67suh9nuesdet2l","name":"Web","slug":"web","updated":"2025-11-16 16:34:28.154Z"}]},{"slug":"ca-va-trailer","theme":"f6xv80g9o6ht4as","backgroundImage":"https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/vfgbmadsoizxf8j/mes_projets_cavatrailer_fjrbomiyzx.webp?thumb=","title":"ÇA VA TRAIL'ER","description":"Vitrine immersive d'un festival de cinéma, inspirée du vieux cinéma, avec une identité visuelle forte et une expérience utilisateur fluide.","contentDescription":"<p>\"&Ccedil;a va trail'er\" est un site fictif de festival de cin&eacute;ma, pens&eacute; comme une vraie vitrine d'&eacute;v&eacute;nement. Mon id&eacute;e a &eacute;t&eacute; de concevoir une interface ancr&eacute;e dans l'univers du vieux cin&eacute;ma, avec une esth&eacute;tique noir et blanc, et une touche de rouge.<br><br>En seulement 2 semaines, j'ai d&eacute;fini l'ambiance, maquett&eacute; l'interface avant de la d&eacute;velopper enti&egrave;rement. Pour &ccedil;a, je me suis appuy&eacute; sur Astro pour la performance, Tailwind pour le styling et Pocketbase pour la gestion des donn&eacute;es. Autant dire qu'il a fallu &ecirc;tre organis&eacute; et efficace pour finir un site fonctionnel dans les temps.<br><br>Le r&eacute;sultat ? Un site fluide et lisible pens&eacute; autour d'une exp&eacute;rience utilisateur intuitive. \"&Ccedil;a va trail'er\" est simple dans sa navigation et fort dans son identit&eacute; visuelle.</p>","images":["https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/vfgbmadsoizxf8j/moodboard_ca_va_trailer_jllv7sz1fc.webp?thumb=","https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/vfgbmadsoizxf8j/mockup_ca_va_trailer_fivr775b80.webp?thumb=","https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/vfgbmadsoizxf8j/maquette_ca_va_trailer_wijw1hypa4.webp?thumb=","https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/vfgbmadsoizxf8j/couleurs_ca_va_trailer_xaxzkoijlb.webp?thumb="],"siteUrl":"https://ca-va-trailer.netlify.app/","technologies":[{"category":"Frontend","collectionId":"pbc_458473246","collectionName":"technologies","created":"2025-11-16 16:37:54.174Z","id":"drt0o6ien6h6kgl","logo":"astro_tena7b56ms.svg","name":"Astro","slug":"astro","updated":"2025-11-20 09:54:36.282Z"},{"category":"Frontend","collectionId":"pbc_458473246","collectionName":"technologies","created":"2025-11-16 16:38:12.023Z","id":"jljcmbxbj1tsjxi","logo":"tailwind_t0r2ggkz0g.svg","name":"Tailwind CSS","slug":"tailwind css","updated":"2025-11-20 09:34:17.663Z"}],"tags":[{"collectionId":"pbc_1219621782","collectionName":"tags","created":"2025-11-16 16:34:24.326Z","id":"67suh9nuesdet2l","name":"Web","slug":"web","updated":"2025-11-16 16:34:28.154Z"}]},{"slug":"rba","theme":"0n3gyvn4ydwofl5","backgroundImage":"https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/yoef0g06aezvs95/mes_projets_rba_y13znwk1pc.webp?thumb=","title":"RBA","description":"Refonte complète pour une association engagée : nouvelle identité visuelle, logo symbolique et site web moderne pour sensibiliser à la biodiversité.","contentDescription":"<p>R&eacute;seau Biodiversit&eacute; pour les Abeilles (RBA) est une association engag&eacute;e pour la cohabitation entre agriculture et biodiversit&eacute;. Face au d&eacute;clin des pollinisateurs, nous avons men&eacute; avec mon &eacute;quipe une refonte compl&egrave;te de leur identit&eacute; visuelle.<br><br>Notre mission a &eacute;t&eacute; de repenser la strat&eacute;gie de communication, de cr&eacute;er une nouvelle identit&eacute; forte, puis de d&eacute;velopper le site sur WordPress. J'ai utilis&eacute; Illustrator pour concevoir un nouveau logo centr&eacute; sur l'abeille, puis Figma pour mod&eacute;liser l'interface.<br><br>Pour redonner du sens &agrave; leur image, nous avons mis&eacute; sur une palette de couleurs coh&eacute;rente : L'orange, pour la vitalit&eacute; et le lien direct avec le miel, le noir, pour la lisibilit&eacute;, le blanc, pour la clart&eacute; et une d&eacute;clinaison de violet, apportant une touche d'&eacute;l&eacute;gance selon les supports.<br><br>R&eacute;sultat ? Un logo symbolique, accompagn&eacute; d'un site web align&eacute; avec les valeurs du RBA. Ce projet est con&ccedil;u pour sensibiliser autour d'un enjeu vital : la protection des pollinisateurs.</p>","images":["https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/yoef0g06aezvs95/variantes_logo_rba_kn2gr3lnrv.webp?thumb=","https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/yoef0g06aezvs95/mockups_rba_7n63gniern.webp?thumb=","https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/yoef0g06aezvs95/mockup1_rba_issnfcaa24.webp?thumb=","https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/yoef0g06aezvs95/hero_rba_vfyp6q4saz.webp?thumb=","https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/yoef0g06aezvs95/geometrie_logo_rba_trfp6aqako.webp?thumb=","https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/yoef0g06aezvs95/couleurs_rba_hise7a43jh.webp?thumb="],"siteUrl":"https://sae-202-rba.nicolas-thai.fr/","technologies":[{"category":"Frontend","collectionId":"pbc_458473246","collectionName":"technologies","created":"2025-11-16 16:40:36.400Z","id":"hi3wllcqku4ve6f","logo":"wordpress_vwfqt056tq.svg","name":"Wordpress","slug":"worpress","updated":"2025-11-20 09:33:52.862Z"}],"tags":[{"collectionId":"pbc_1219621782","collectionName":"tags","created":"2025-11-16 16:34:24.326Z","id":"67suh9nuesdet2l","name":"Web","slug":"web","updated":"2025-11-16 16:34:28.154Z"}]},{"slug":"omnisphere","theme":"2q8wijswlkw9f6u","backgroundImage":"https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/8sccebmlb61po71/mes_projets_omnisphere_cro82lnw03.webp?thumb=","title":"OMNISPHÈRE","description":"Un site immersif qui questionne l’avenir de nos relations humaines à l’ère de la réalité virtuelle, avec un design futuriste et une forte identité visuelle.","contentDescription":"<p>Omnisph&egrave;re explore la fronti&egrave;re entre le monde r&eacute;el et la r&eacute;alit&eacute; virtuelle. &Agrave; travers les articles, j'ai voulu que le site interroge sur les cons&eacute;quences des avanc&eacute;es technologiques (notamment la r&eacute;alit&eacute; virtuelle et l'IA) sur nos relations humaines dans un futur proche.<br><br>Dans le cadre du th&egrave;me \"La pr&eacute;histoire du futur\", j&rsquo;ai choisi de me concentrer sur le casque VR, un objet d&rsquo;aujourd&rsquo;hui qui pourrait devenir, dans un futur dystopique, &agrave; la fois un symbole de progr&egrave;s et une source de d&eacute;rives : d&eacute;pendance, isolement, perte d&rsquo;authenticit&eacute; dans les &eacute;changes. Une r&eacute;flexion en &eacute;cho &agrave; notre usage actuel des r&eacute;seaux sociaux et &agrave; leurs effets sur nos liens sociaux et notre sant&eacute; mentale.<br><br>Le design du site, inspir&eacute; de l&rsquo;univers de Ready Player One, adopte une esth&eacute;tique futuriste, avec des couleurs rose et bleu, pour refl&eacute;ter l&rsquo;ambiance immersive propre &agrave; la r&eacute;alit&eacute; virtuelle. Un visuel assum&eacute; hors des sentiers battus.<br><br>Ce projet, enti&egrave;rement cod&eacute; en HTML, CSS et JavaScript, m&rsquo;a permis de m&ecirc;ler r&eacute;flexion critique et cr&eacute;ation visuelle. Le r&eacute;sultat : un site original et marquant, qui questionne autant qu&rsquo;il attire.</p>","images":["https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/8sccebmlb61po71/moodboard_omnisphere_e3wy4kq4mx.webp?thumb=","https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/8sccebmlb61po71/couleurs_omnisphere_foj7migh1n.webp?thumb="],"siteUrl":"https://omni-sphere.netlify.app/fr/","technologies":[{"category":"Frontend","collectionId":"pbc_458473246","collectionName":"technologies","created":"2025-11-16 16:37:34.032Z","id":"xsj4lwp4dd39523","logo":"css_l4ymtdlb52.svg","name":"CSS","slug":"css","updated":"2025-11-20 09:34:40.775Z"},{"category":"Frontend","collectionId":"pbc_458473246","collectionName":"technologies","created":"2025-11-16 16:33:59.006Z","id":"apjualulvgfnmrc","logo":"html_7exrsc1g0i.svg","name":"HTML","slug":"html","updated":"2025-11-20 09:35:53.101Z"},{"category":"Frontend","collectionId":"pbc_458473246","collectionName":"technologies","created":"2025-11-16 16:39:45.910Z","id":"dcz6147rowuh8yb","logo":"js29im9zxtoe_kdl6e3ua8a.svg","name":"Java Script","slug":"java script","updated":"2025-11-20 09:34:03.994Z"}],"tags":[{"collectionId":"pbc_1219621782","collectionName":"tags","created":"2025-11-16 16:34:24.326Z","id":"67suh9nuesdet2l","name":"Web","slug":"web","updated":"2025-11-16 16:34:28.154Z"}]}];
+
+    // Stocker les données pour le script
+    document.documentElement.dataset.currentTheme = currentTheme;
+    document.documentElement.dataset.allProjets = JSON.stringify(allProjets);
+  })();</script>  <section id="contenu" class="pt-8 pb-35 card-bg-b1 transition-bg-color" data-theme="0n3gyvn4ydwofl5" data-astro-cid-ctbfjxou> <div class="mx-4 md:mx-8 lg:mx-16" data-astro-cid-ctbfjxou> <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start" data-astro-cid-ctbfjxou> <!-- Contenu texte sticky --> <div class="lg:sticky lg:top-8" data-astro-cid-ctbfjxou> <div data-astro-cid-ctbfjxou> <div class="flex flex-wrap items-center gap-4 mb-6" data-astro-cid-ctbfjxou> <h2 class="font-primary text-4xl transform -rotate-1 m-0" data-astro-cid-ctbfjxou>
+DESCRIPTION
+</h2> <div id="projet-technologies" class="flex flex-wrap gap-2" data-astro-cid-ctbfjxou> <span class="px-2 py-1 text-xs font-secondary border border-(--bc) text-(--bc)" data-astro-cid-ctbfjxou> Wordpress </span> </div> </div> <div id="projet-description" class="text-lg leading-relaxed mb-8 text-color-bc transition-color" data-astro-cid-ctbfjxou><p>R&eacute;seau Biodiversit&eacute; pour les Abeilles (RBA) est une association engag&eacute;e pour la cohabitation entre agriculture et biodiversit&eacute;. Face au d&eacute;clin des pollinisateurs, nous avons men&eacute; avec mon &eacute;quipe une refonte compl&egrave;te de leur identit&eacute; visuelle.<br><br>Notre mission a &eacute;t&eacute; de repenser la strat&eacute;gie de communication, de cr&eacute;er une nouvelle identit&eacute; forte, puis de d&eacute;velopper le site sur WordPress. J'ai utilis&eacute; Illustrator pour concevoir un nouveau logo centr&eacute; sur l'abeille, puis Figma pour mod&eacute;liser l'interface.<br><br>Pour redonner du sens &agrave; leur image, nous avons mis&eacute; sur une palette de couleurs coh&eacute;rente : L'orange, pour la vitalit&eacute; et le lien direct avec le miel, le noir, pour la lisibilit&eacute;, le blanc, pour la clart&eacute; et une d&eacute;clinaison de violet, apportant une touche d'&eacute;l&eacute;gance selon les supports.<br><br>R&eacute;sultat ? Un logo symbolique, accompagn&eacute; d'un site web align&eacute; avec les valeurs du RBA. Ce projet est con&ccedil;u pour sensibiliser autour d'un enjeu vital : la protection des pollinisateurs.</p></div> </div> <!-- Bouton vers le site (si disponible) --> <div id="projet-button-container" class="text-center pt-8" data-astro-cid-ctbfjxou> <!-- Button --><a href="https://sae-202-rba.nicolas-thai.fr/" class="inline-flex
+  h-[45px]
+  px-8
+  justify-center
+  items-center
+  text-white
+  font-primary 
+  relative 
+  transition-all 
+  duration-200
+  cursor-pointer
+  btn-hover
+  theme-0n3gyvn4ydwofl5
+  font-primary text-lg px-8 py-4" role="button" target="_blank" rel="noopener noreferrer" data-astro-cid-vnzlvqnm><span class="btn-text" data-astro-cid-vnzlvqnm>
+VOIR LE SITE FINAL
+</span></a><script>
+  function initButtons() {
+    const buttons = document.querySelectorAll(".btn-hover");
+    
+    buttons.forEach((btn) => {
+      btn.addEventListener("mouseenter", () => {
+        // Vérifier en temps réel si c'est un hero button
+        const isHeroButton = btn.classList.contains("hero-button");
+        const textEl = btn.querySelector(".btn-text");
+        
+        if (textEl) {
+          if (isHeroButton) {
+            // Hero button: noir → blanc sans ombre
+            textEl.style.color = "white";
+            textEl.style.textShadow = "none";
+          } else {
+            // Bouton normal: couleurs du thème → noir sans ombre
+            textEl.style.color = "#181818";
+            textEl.style.textShadow = "none";
+          }
+        }
+      });
+      
+      btn.addEventListener("mouseleave", () => {
+        // Vérifier en temps réel si c'est un hero button
+        const isHeroButton = btn.classList.contains("hero-button");
+        const textEl = btn.querySelector(".btn-text");
+        
+        if (textEl) {
+          if (isHeroButton) {
+            // Hero button: retour au noir sans ombre
+            textEl.style.color = "#181818";
+            textEl.style.textShadow = "none";
+          } else {
+            // Bouton normal: retour au blanc sans ombre
+            textEl.style.color = "white";
+            textEl.style.textShadow = "none";
+          }
+        }
+      });
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initButtons);
+  } else {
+    initButtons();
+  }
+  
+  // Réinitialiser après navigation
+  document.addEventListener("astro:page-load", initButtons);
+</script> </div> </div> <!-- Images du projet --> <div id="projet-images-container" class="space-y-8 pb-20" data-astro-cid-ctbfjxou> <div data-astro-cid-ctbfjxou> <img src="https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/yoef0g06aezvs95/variantes_logo_rba_kn2gr3lnrv.webp?thumb=" alt="RBA - Mockup 1" class="w-full h-auto object-cover" data-astro-cid-ctbfjxou> </div><div data-astro-cid-ctbfjxou> <img src="https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/yoef0g06aezvs95/mockups_rba_7n63gniern.webp?thumb=" alt="RBA - Mockup 2" class="w-full h-auto object-cover" data-astro-cid-ctbfjxou> </div><div data-astro-cid-ctbfjxou> <img src="https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/yoef0g06aezvs95/mockup1_rba_issnfcaa24.webp?thumb=" alt="RBA - Mockup 3" class="w-full h-auto object-cover" data-astro-cid-ctbfjxou> </div><div data-astro-cid-ctbfjxou> <img src="https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/yoef0g06aezvs95/hero_rba_vfyp6q4saz.webp?thumb=" alt="RBA - Mockup 4" class="w-full h-auto object-cover" data-astro-cid-ctbfjxou> </div><div data-astro-cid-ctbfjxou> <img src="https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/yoef0g06aezvs95/geometrie_logo_rba_trfp6aqako.webp?thumb=" alt="RBA - Mockup 5" class="w-full h-auto object-cover" data-astro-cid-ctbfjxou> </div><div data-astro-cid-ctbfjxou> <img src="https://portfolio.bryan-thierry.fr/api/files/pbc_621264433/yoef0g06aezvs95/couleurs_rba_hise7a43jh.webp?thumb=" alt="RBA - Mockup 6" class="w-full h-auto object-cover" data-astro-cid-ctbfjxou> </div> </div> </div> </div> </section>  <footer id="footer" data-theme="rba" class="relative w-full min-h-[calc(100vh-var(--header-height,80px))] bg-(--b1) border-t-4 border-(--p) overflow-hidden flex flex-col" style="min-height:calc(100vh - var(--header-height,80px));"> <!-- Dégradé comics dynamique --><div class="absolute inset-0 w-full h-full pointer-events-none gradient-primary-vertical opacity-100 z-0"></div> <!-- Images comics en overlay --> <div class="absolute inset-0 w-full h-full pointer-events-none bg-halftone-color-dodge"></div> <div class="absolute inset-0 w-full h-full pointer-events-none bg-halftone-color-burn"></div> <div class="absolute inset-0 w-full h-full pointer-events-none bg-retro-comics"></div> <div class="flex-1 grid grid-cols-1 md:grid-cols-[1fr_2fr] z-10 relative"> <div class="relative w-full h-[460px] hidden md:flex items-center justify-center"> <img src="/avatar/footer.webp" alt="Photo de Bryan Thierry" class="absolute left-1/2 top-1/2 -translate-x-[40%] -translate-y-1/2 object-contain max-h-[500px] max-w-[400px] brightness-90 contrast-110"> </div> <div class="relative container mx-auto px-6 py-4 md:py-8 flex flex-col h-full justify-center"> <!-- Email + réseaux sociaux groupés au centre --> <div class="flex-1 flex flex-col justify-center items-center w-full"> <div class="w-full mb-6 md:mb-8"> <div class="md:grid md:grid-cols-3 md:gap-4 w-full"> <div class="flex justify-center md:justify-start md:col-span-3"> <a href="mailto:bryan.thierry.pro@gmail.com" class="email-box comics-glow-hover-link w-full"> <p class="font-primary text-lg md:text-xl tracking-tight text-(--bc) uppercase text-center"> bryan.thierry.pro@gmail.com </p> </a> </div> </div> </div> <div class="social-grid mb-3 md:mb-5 grid grid-cols-1 md:grid-cols-3 gap-4 w-full justify-center items-center"> <a href="https://www.instagram.com/bryan.thierry.75/?hl=fr-ca" target="_blank" rel="noopener noreferrer" class="comics-card social-card p-3 md:p-7 gap-1 md:gap-3 min-h-[clamp(120px,18vw,260px)] w-full flex flex-col items-center justify-center transition-all duration-300" aria-label="Instagram"> <span class="w-10 h-10 md:w-14 md:h-14 transition-all duration-300 shrink-0 social-svg"><svg width="48" height="48" viewBox="0 0 109 109" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M92.65 24.525a8.175 8.175 0 11-16.35 0 8.175 8.175 0 0116.35 0z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M54.5 81.75c15.05 0 27.25-12.2 27.25-27.25S69.55 27.25 54.5 27.25 27.25 39.45 27.25 54.5s12.2 27.25 27.25 27.25zm0-10.9c9.03 0 16.35-7.32 16.35-16.35 0-9.03-7.32-16.35-16.35-16.35-9.03 0-16.35 7.32-16.35 16.35 0 9.03 7.32 16.35 16.35 16.35z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M0 52.32c0-18.314 0-27.47 3.564-34.465a32.7 32.7 0 0114.29-14.29C24.85 0 34.007 0 52.32 0h4.36c18.314 0 27.47 0 34.465 3.564a32.7 32.7 0 0114.291 14.29C109 24.85 109 34.007 109 52.32v4.36c0 18.314 0 27.47-3.564 34.465a32.7 32.7 0 01-14.29 14.291C84.15 109 74.993 109 56.68 109h-4.36c-18.314 0-27.47 0-34.465-3.564a32.7 32.7 0 01-14.29-14.29C0 84.15 0 74.993 0 56.68v-4.36zM52.32 10.9h4.36c9.337 0 15.684.008 20.59.41 4.778.39 7.222 1.097 8.927 1.966a21.8 21.8 0 019.527 9.527c.869 1.705 1.576 4.149 1.967 8.927.4 4.906.409 11.253.409 20.59v4.36c0 9.337-.008 15.684-.41 20.59-.39 4.778-1.097 7.222-1.966 8.927a21.8 21.8 0 01-9.527 9.527c-1.705.869-4.149 1.576-8.927 1.967-4.906.4-11.253.409-20.59.409h-4.36c-9.337 0-15.684-.008-20.59-.41-4.778-.39-7.222-1.097-8.927-1.966a21.8 21.8 0 01-9.527-9.527c-.869-1.705-1.576-4.149-1.967-8.927-.4-4.906-.409-11.253-.409-20.59v-4.36c0-9.337.008-15.684.41-20.59.39-4.778 1.097-7.222 1.966-8.927a21.8 21.8 0 019.527-9.527c1.705-.869 4.149-1.576 8.927-1.967 4.906-.4 11.253-.409 20.59-.409z" fill="currentColor"/></svg></span> <h3 class="font-primary text-lg md:text-2xl uppercase text-(--bc) tracking-tight comics-glow-hover-link comics-transform-hover"> Instagram </h3> <p class="font-secondary text-xs md:text-sm text-(--bc) text-center opacity-70 leading-5 md:leading-6"> Inspiration &amp; visuels </p> <div class="arrow-circle"> <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"> <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path> </svg> </div> </a><a href="https://www.linkedin.com/in/bryan-thierry/" target="_blank" rel="noopener noreferrer" class="comics-card social-card p-3 md:p-7 gap-1 md:gap-3 min-h-[clamp(120px,18vw,260px)] w-full flex flex-col items-center justify-center transition-all duration-300" aria-label="LinkedIn"> <span class="w-10 h-10 md:w-14 md:h-14 transition-all duration-300 shrink-0 social-svg"><svg width="48" height="48" viewBox="0 0 117 109" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M28.225 13.175c0 7.276-6.319 13.174-14.113 13.174S0 20.451 0 13.175C0 5.898 6.318 0 14.112 0c7.794 0 14.113 5.898 14.113 13.175zM1.93 36.033h24.124V109H1.93V36.033zM64.893 36.033H40.769V109h24.124V71.666c0-8.62 2.949-17.279 14.715-17.279 13.298 0 13.218 11.282 13.156 20.022-.081 11.424.112 23.083.112 34.591H117V70.49c-.204-24.59-6.624-35.92-27.742-35.92-12.542 0-20.316 5.683-24.365 10.825v-9.362z" fill="currentColor"/></svg></span> <h3 class="font-primary text-lg md:text-2xl uppercase text-(--bc) tracking-tight comics-glow-hover-link comics-transform-hover"> LinkedIn </h3> <p class="font-secondary text-xs md:text-sm text-(--bc) text-center opacity-70 leading-5 md:leading-6"> Réseau pro </p> <div class="arrow-circle"> <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"> <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path> </svg> </div> </a><a href="https://www.behance.net/bryanthierry1" target="_blank" rel="noopener noreferrer" class="comics-card social-card p-3 md:p-7 gap-1 md:gap-3 min-h-[clamp(120px,18vw,260px)] w-full flex flex-col items-center justify-center transition-all duration-300" aria-label="Behance"> <span class="w-10 h-10 md:w-14 md:h-14 transition-all duration-300 shrink-0 social-svg"><svg width="48" height="48" viewBox="0 0 163 109" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M0 107.003V0h49.509C65.41 0 78.302 12.88 78.302 28.769c0 10.096-3.107 16.35-14.5 22.766 13.634 6.207 17.42 14.809 17.42 26.808 0 16.231-14.432 28.66-30.678 28.66H0zm20.95-89.29v25.73h24.52s11.917 0 11.917-12.865c0-12.866-11.917-12.866-11.917-12.866H20.95zm0 71.168V61.098h26.3c4.247 0 13.15 2.19 13.15 15.329 0 9.744-8.766 12.363-13.15 12.454h-26.3zM126.015 29.483c-15.068 0-37.396 10.812-37.396 39.553 0 17.5 9.589 39.964 38.355 39.964 23.013 0 33.606-16.88 36.026-25.32h-21.643c-1.096 3.832-5.342 8.075-14.383 8.075-13.15 0-17.808-11.222-18.493-16.834H163v-5.885c0-28.741-21.917-39.553-36.985-39.553zm0 16.423c-12.274 0-16.803 10.128-17.534 15.192h32.876c0-5.064-3.069-15.192-15.342-15.192z" fill="currentColor"/><path d="M99.851 6.08v13.275h51.643V6.079H99.851z" fill="currentColor"/></svg></span> <h3 class="font-primary text-lg md:text-2xl uppercase text-(--bc) tracking-tight comics-glow-hover-link comics-transform-hover"> Behance </h3> <p class="font-secondary text-xs md:text-sm text-(--bc) text-center opacity-70 leading-5 md:leading-6"> Portfolio créatif </p> <div class="arrow-circle"> <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"> <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path> </svg> </div> </a> </div> </div> </div> </div> <!-- Section mentions légales collée en bas --> <div class="w-full border-t-2 border-(--bc) py-3 z-10 relative bg-(--b1) mt-auto"> <div class="container mx-auto px-6"> <div class="flex flex-col md:flex-row justify-between items-center gap-2 text-center md:text-left"> <p class="font-secondary text-sm text-(--bc)">
+© 2025 Bryan Thierry. Tous droits réservés.
+</p> <div class="flex gap-4"> <a href="/mentions-legales" class="font-secondary text-sm text-(--bc) hover:text-(--p) transition-colors duration-300">
+Mentions légales
+</a> <a href="/politique-confidentialite" class="font-secondary text-sm text-(--bc) hover:text-(--p) transition-colors duration-300">
+Politique de confidentialité
+</a> </div> </div> </div> </div> </footer> <div id="contact-modal" class="modal-overlay fixed inset-0 z-[100] hidden items-center justify-center p-4 overflow-y-auto modal-overlay-bg" data-astro-cid-nxxydibx> <div id="modal-container" class="modal-container relative w-full max-w-xl my-auto" data-astro-cid-nxxydibx> <!-- Modal Card --> <div id="modal-card" class="modal-card relative bg-(--b1) border-4 border-(--bc) p-6 md:p-12 modal-shadow-primary" data-astro-cid-nxxydibx> <!-- Bouton fermer --> <button type="button" id="close-modal" class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center border-2 border-(--bc) bg-(--b1) hover:bg-(--p) hover:border-(--p) transition-all duration-300 group z-50" aria-label="Fermer" data-astro-cid-nxxydibx> <svg class="w-5 h-5 text-(--bc) group-hover:text-(--b1) transition-colors pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3" data-astro-cid-nxxydibx> <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" data-astro-cid-nxxydibx></path> </svg> </button> <!-- Ligne décorative --> <div class="absolute top-0 left-0 w-full h-2 bg-(--p)" data-astro-cid-nxxydibx></div> <!-- Titre --> <h2 class="text-3xl md:text-5xl font-primary text-(--p) mb-3 uppercase tracking-tight" data-astro-cid-nxxydibx>
+Parlons Projet
+</h2> <p class="text-xs md:text-sm font-secondary text-(--bc) mb-8 opacity-70 leading-relaxed" data-astro-cid-nxxydibx>
+Une idée en tête ? Remplissez le formulaire et je vous réponds sous 24h.
+</p> <!-- Formulaire --> <form id="contact-form" class="space-y-5" data-astro-cid-nxxydibx> <!-- Grille Nom + Email --> <div class="grid grid-cols-1 md:grid-cols-2 gap-5" data-astro-cid-nxxydibx> <!-- Nom --> <div data-astro-cid-nxxydibx> <label for="name" class="block font-secondary text-xs font-bold text-(--bc) mb-2 uppercase tracking-wide" data-astro-cid-nxxydibx>
+Nom *
+</label> <input type="text" id="name" name="name" required class="w-full px-4 py-3 border-2 border-(--bc) bg-(--b1) text-(--bc) font-secondary text-sm focus:outline-none focus:border-(--p) focus:shadow-[3px_3px_0_0_var(--p)] transition-all duration-200" placeholder="Votre nom" data-astro-cid-nxxydibx> </div> <!-- Email --> <div data-astro-cid-nxxydibx> <label for="email" class="block font-secondary text-xs font-bold text-(--bc) mb-2 uppercase tracking-wide" data-astro-cid-nxxydibx>
+Email *
+</label> <input type="email" id="email" name="email" required class="w-full px-4 py-3 border-2 border-(--bc) bg-(--b1) text-(--bc) font-secondary text-sm focus:outline-none focus:border-(--p) focus:shadow-[3px_3px_0_0_var(--p)] transition-all duration-200" placeholder="votre@email.com" data-astro-cid-nxxydibx> </div> </div> <!-- Message --> <div data-astro-cid-nxxydibx> <label for="message" class="block font-secondary text-xs font-bold text-(--bc) mb-2 uppercase tracking-wide" data-astro-cid-nxxydibx>
+Message *
+</label> <textarea id="message" name="message" required rows="5" class="w-full px-4 py-3 border-2 border-(--bc) bg-(--b1) text-(--bc) font-secondary text-sm focus:outline-none focus:border-(--p) focus:shadow-[3px_3px_0_0_var(--p)] transition-all duration-200 resize-none" placeholder="Décrivez votre projet en quelques lignes..." data-astro-cid-nxxydibx></textarea> </div> <!-- Message de succès/erreur --> <div id="form-message" class="hidden p-4 border-2 border-(--bc)" data-astro-cid-nxxydibx> <p class="font-secondary text-sm" data-astro-cid-nxxydibx></p> </div> <!-- Bouton submit --> <button type="submit" id="submit-btn" class="w-full h-14 font-primary text-xl uppercase relative overflow-hidden transition-all duration-200 cursor-pointer btn-gradient-primary btn-shadow" data-astro-cid-nxxydibx> <span class="btn-text relative z-10 btn-text-white" data-astro-cid-nxxydibx>Envoyer le message</span> </button> </form> <!-- Séparateur --> <div class="flex items-center gap-4 my-6" data-astro-cid-nxxydibx> <div class="flex-1 h-[2px] bg-(--bc) opacity-20" data-astro-cid-nxxydibx></div> <span class="font-secondary text-xs uppercase tracking-widest text-(--bc) opacity-50" data-astro-cid-nxxydibx>ou</span> <div class="flex-1 h-[2px] bg-(--bc) opacity-20" data-astro-cid-nxxydibx></div> </div> <!-- Réseaux sociaux --> <div class="flex justify-center items-center gap-4" data-astro-cid-nxxydibx> <a href="https://www.instagram.com/bryan.thierry.75/?hl=fr-ca" target="_blank" rel="noopener noreferrer" class="modal-social-link group relative w-12 h-12 flex items-center justify-center border-2 border-(--bc) bg-(--b1) hover:bg-(--p) hover:border-(--p) transition-all duration-300" aria-label="Instagram" title="Instagram" data-astro-cid-nxxydibx> <span class="w-6 h-6 modal-social-svg" data-astro-cid-nxxydibx><svg width="48" height="48" viewBox="0 0 109 109" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M92.65 24.525a8.175 8.175 0 11-16.35 0 8.175 8.175 0 0116.35 0z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M54.5 81.75c15.05 0 27.25-12.2 27.25-27.25S69.55 27.25 54.5 27.25 27.25 39.45 27.25 54.5s12.2 27.25 27.25 27.25zm0-10.9c9.03 0 16.35-7.32 16.35-16.35 0-9.03-7.32-16.35-16.35-16.35-9.03 0-16.35 7.32-16.35 16.35 0 9.03 7.32 16.35 16.35 16.35z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M0 52.32c0-18.314 0-27.47 3.564-34.465a32.7 32.7 0 0114.29-14.29C24.85 0 34.007 0 52.32 0h4.36c18.314 0 27.47 0 34.465 3.564a32.7 32.7 0 0114.291 14.29C109 24.85 109 34.007 109 52.32v4.36c0 18.314 0 27.47-3.564 34.465a32.7 32.7 0 01-14.29 14.291C84.15 109 74.993 109 56.68 109h-4.36c-18.314 0-27.47 0-34.465-3.564a32.7 32.7 0 01-14.29-14.29C0 84.15 0 74.993 0 56.68v-4.36zM52.32 10.9h4.36c9.337 0 15.684.008 20.59.41 4.778.39 7.222 1.097 8.927 1.966a21.8 21.8 0 019.527 9.527c.869 1.705 1.576 4.149 1.967 8.927.4 4.906.409 11.253.409 20.59v4.36c0 9.337-.008 15.684-.41 20.59-.39 4.778-1.097 7.222-1.966 8.927a21.8 21.8 0 01-9.527 9.527c-1.705.869-4.149 1.576-8.927 1.967-4.906.4-11.253.409-20.59.409h-4.36c-9.337 0-15.684-.008-20.59-.41-4.778-.39-7.222-1.097-8.927-1.966a21.8 21.8 0 01-9.527-9.527c-.869-1.705-1.576-4.149-1.967-8.927-.4-4.906-.409-11.253-.409-20.59v-4.36c0-9.337.008-15.684.41-20.59.39-4.778 1.097-7.222 1.966-8.927a21.8 21.8 0 019.527-9.527c1.705-.869 4.149-1.576 8.927-1.967 4.906-.4 11.253-.409 20.59-.409z" fill="currentColor"/></svg></span> </a><a href="https://www.linkedin.com/in/bryan-thierry/" target="_blank" rel="noopener noreferrer" class="modal-social-link group relative w-12 h-12 flex items-center justify-center border-2 border-(--bc) bg-(--b1) hover:bg-(--p) hover:border-(--p) transition-all duration-300" aria-label="LinkedIn" title="LinkedIn" data-astro-cid-nxxydibx> <span class="w-6 h-6 modal-social-svg" data-astro-cid-nxxydibx><svg width="48" height="48" viewBox="0 0 117 109" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M28.225 13.175c0 7.276-6.319 13.174-14.113 13.174S0 20.451 0 13.175C0 5.898 6.318 0 14.112 0c7.794 0 14.113 5.898 14.113 13.175zM1.93 36.033h24.124V109H1.93V36.033zM64.893 36.033H40.769V109h24.124V71.666c0-8.62 2.949-17.279 14.715-17.279 13.298 0 13.218 11.282 13.156 20.022-.081 11.424.112 23.083.112 34.591H117V70.49c-.204-24.59-6.624-35.92-27.742-35.92-12.542 0-20.316 5.683-24.365 10.825v-9.362z" fill="currentColor"/></svg></span> </a><a href="https://www.behance.net/bryanthierry1" target="_blank" rel="noopener noreferrer" class="modal-social-link group relative w-12 h-12 flex items-center justify-center border-2 border-(--bc) bg-(--b1) hover:bg-(--p) hover:border-(--p) transition-all duration-300" aria-label="Behance" title="Behance" data-astro-cid-nxxydibx> <span class="w-6 h-6 modal-social-svg" data-astro-cid-nxxydibx><svg width="48" height="48" viewBox="0 0 163 109" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M0 107.003V0h49.509C65.41 0 78.302 12.88 78.302 28.769c0 10.096-3.107 16.35-14.5 22.766 13.634 6.207 17.42 14.809 17.42 26.808 0 16.231-14.432 28.66-30.678 28.66H0zm20.95-89.29v25.73h24.52s11.917 0 11.917-12.865c0-12.866-11.917-12.866-11.917-12.866H20.95zm0 71.168V61.098h26.3c4.247 0 13.15 2.19 13.15 15.329 0 9.744-8.766 12.363-13.15 12.454h-26.3zM126.015 29.483c-15.068 0-37.396 10.812-37.396 39.553 0 17.5 9.589 39.964 38.355 39.964 23.013 0 33.606-16.88 36.026-25.32h-21.643c-1.096 3.832-5.342 8.075-14.383 8.075-13.15 0-17.808-11.222-18.493-16.834H163v-5.885c0-28.741-21.917-39.553-36.985-39.553zm0 16.423c-12.274 0-16.803 10.128-17.534 15.192h32.876c0-5.064-3.069-15.192-15.342-15.192z" fill="currentColor"/><path d="M99.851 6.08v13.275h51.643V6.079H99.851z" fill="currentColor"/></svg></span> </a> </div> </div> </div> </div>  <script type="module" src="/_astro/ContactModal.astro_astro_type_script_index_0_lang.Dvsr_qgx.js"></script> </body></html>

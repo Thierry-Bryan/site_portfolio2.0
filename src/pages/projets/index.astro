@@ -31,11 +31,11 @@ const filterOptions = tags.map((tag) => tag.name);
 ---
 
 <Layout title="Mes Projets" theme="ca-va-trailer">
-  <section class="bg-(--b1) min-h-screen py-30 px-4 md:px-6">
+  <section class="bg-[var(--b1)] min-h-screen py-30 px-4 md:px-6">
     <div class="max-w-7xl mx-auto">
       <!-- Header -->
       <div class="flex items-center justify-center mb-12">
-        <h2 class="text-4xl md:text-6xl text-(--bc) font-primary">
+        <h2 class="text-4xl md:text-6xl text-[var(--bc)] font-primary">
           MES PROJETS
         </h2>
       </div>
@@ -52,7 +52,7 @@ const filterOptions = tags.map((tag) => tag.name);
           {
             filterOptions.map((filterName) => (
               <button
-                class="filter-btn px-6 py-2 border-2 border-(--bc) bg-(--b1) text-(--bc) font-primary cursor-pointer transition-all duration-300 hover:bg-(--p) hover:text-(--b1) hover:border-(--p)"
+                class="filter-btn px-6 py-2 border-2 border-[var(--bc)] bg-[var(--b1)] text-[var(--bc)] font-primary cursor-pointer transition-all duration-300 hover:bg-[var(--p)] hover:text-[var(--b1)] hover:border-[var(--p)]"
                 data-type={filterName}
               >
                 {filterName}
@@ -62,7 +62,7 @@ const filterOptions = tags.map((tag) => tag.name);
         </div>
 
         <!-- Toggle vue grille/ligne -->
-        <div class="flex gap-2 p-1 bg-(--b1) border-2 border-(--bc)">
+        <div class="flex gap-2 p-1 bg-[var(--b1)] border-2 border-[var(--bc)]">
           <button
             id="grid-view-btn"
             class="view-btn active px-4 py-2 transition-all duration-300"
@@ -131,7 +131,7 @@ const filterOptions = tags.map((tag) => tag.name);
                 data-tags-lower={tagNamesLower}
               >
                 {/* Vue grille - avec BackgroundComics et bordure */}
-                <div class="grid-view-content border-2 border-(--bc) bg-(--b1) h-full flex flex-col group">
+                <div class="grid-view-content border-2 border-[var(--bc)] bg-[var(--b1)] h-full flex flex-col group">
                   <div
                     class="w-full h-[220px] flex items-center justify-center overflow-visible relative cursor-pointer"
                     data-theme={projet.theme}
@@ -149,15 +149,15 @@ const filterOptions = tags.map((tag) => tag.name);
                   </div>
                   {/* Description sous l'image en mode grille */}
                   <div class="p-4 flex-1 flex flex-col">
-                    <h3 class="text-xl font-primary text-(--bc) mb-2">
+                    <h3 class="text-xl font-primary text-[var(--bc)] mb-2">
                       {projet.title}
                     </h3>
-                    <p class="text-sm font-secondary text-(--bc) mb-3 flex-1">
+                    <p class="text-sm font-secondary text-[var(--bc)] mb-3 flex-1">
                       {projet.subtitle || ""}
                     </p>
                     <div class="flex flex-wrap gap-2">
                       {projetTechnologies.map((tech: any) => (
-                        <span class="px-2 py-1 text-xs font-secondary border border-(--bc) text-(--bc)">
+                        <span class="px-2 py-1 text-xs font-secondary border border-[var(--bc)] text-[var(--bc)]">
                           {tech.name}
                         </span>
                       ))}
@@ -167,14 +167,14 @@ const filterOptions = tags.map((tag) => tag.name);
 
                 {/* Vue liste - rectangle horizontal */}
                 <div class="list-view-content hidden">
-                  <div class="list-row flex items-center bg-(--b1) border-2 border-(--bc) overflow-hidden group h-20 md:h-20 px-4 w-full">
+                  <div class="list-row flex items-center bg-[var(--b1)] border-2 border-[var(--bc)] overflow-hidden group h-20 md:h-20 px-4 w-full">
                     <div class="flex flex-col w-full md:flex-row md:items-center md:justify-between">
-                      <h3 class="text-2xl font-primary text-(--bc) text-left leading-tight mb-1 md:mb-0">
+                      <h3 class="text-2xl font-primary text-[var(--bc)] text-left leading-tight mb-1 md:mb-0">
                         {projet.title}
                       </h3>
                       <div class="flex flex-wrap gap-2 items-center justify-start md:justify-end">
                         {projetTechnologies.map((tech: any) => (
-                          <span class="px-2 py-1 text-xs font-secondary border border-(--bc) text-(--bc)">
+                          <span class="px-2 py-1 text-xs font-secondary border border-[var(--bc)] text-[var(--bc)]">
                             {tech.name}
                           </span>
                         ))}
@@ -193,15 +193,15 @@ const filterOptions = tags.map((tag) => tag.name);
           data-tags=""
         >
           <div
-            class="grid-view-content border-2 border-(--bc) bg-(--b1) h-full flex items-center justify-center min-h-[220px]"
+            class="grid-view-content border-2 border-[var(--bc)] bg-[var(--b1)] h-full flex items-center justify-center min-h-[220px]"
           >
-            <span class="text-(--bc) text-2xl font-primary">À VENIR</span>
+            <span class="text-[var(--bc)] text-2xl font-primary">À VENIR</span>
           </div>
           <div class="list-view-content hidden">
             <div
-              class="coming-soon-list flex items-center justify-center bg-(--b1) border-2 border-(--bc) h-[180px] w-full"
+              class="coming-soon-list flex items-center justify-center bg-[var(--b1)] border-2 border-[var(--bc)] h-[180px] w-full"
             >
-              <span class="text-(--bc) text-2xl font-primary">À VENIR</span>
+              <span class="text-[var(--bc)] text-2xl font-primary">À VENIR</span>
             </div>
           </div>
         </div>
