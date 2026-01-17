@@ -1,33 +1,81 @@
 ---
 import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
+import { pb } from "../../utils/pb";
+
+let stats = { projets: 0, themes: 0, tags: 0, technologies: 0 };
+
+// === AUTH ===
+const cookieHeader = Astro.request.headers.get("cookie") || "";
+let authError = false;
+try {
+  pb.authStore.loadFromCookie(cookieHeader);
+  if (!pb.authStore.isValid) {
+    console.warn("⚠️ [DASHBOARD] Non authentifié");
+    authError = true;
+  } else {
+    console.log("✅ [DASHBOARD] Admin authentifié");
+  }
+} catch (error) {
+  console.error("❌ [DASHBOARD] Erreur auth:", error);
+  authError = true;
+}
+
+try {
+  stats.projets = (await pb.collection("projets").getList(1, 1)).totalItems;
+  stats.themes = (await pb.collection("themes").getList(1, 1)).totalItems;
+  stats.tags = (await pb.collection("tags").getList(1, 1)).totalItems;
+  stats.technologies = (
+    await pb.collection("technologies").getList(1, 1)
+  ).totalItems;
+  console.log("📊 [DASHBOARD] Stats chargées:", stats);
+} catch (e) {
+  console.error("❌ [DASHBOARD] Stats error:", e);
+}
 ---
 
 <LayoutAdmin title="Dashboard">
   <div class="p-6">
     <h1 class="text-2xl font-bold mb-6">Dashboard</h1>
 
+    {
+      authError && (
+        <div class="alert alert-error mb-6">
+          <span>
+            ❌ Vous n'êtes pas connecté.{" "}
+            <a href="/admin" class="underline font-bold">
+              Connectez-vous ici
+            </a>
+          </span>
+        </div>
+      )
+    }
+
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
       <div class="card bg-base-100 border">
         <div class="card-body p-4">
-          <div class="text-3xl font-bold" id="stat-projets">-</div>
+          <div class="text-3xl font-bold" id="stat-projets">
+            {stats.projets}
+          </div>
           <div class="text-sm text-gray-600">Projets</div>
         </div>
       </div>
       <div class="card bg-base-100 border">
         <div class="card-body p-4">
-          <div class="text-3xl font-bold" id="stat-themes">-</div>
+          <div class="text-3xl font-bold" id="stat-themes">{stats.themes}</div>
           <div class="text-sm text-gray-600">Thèmes</div>
         </div>
       </div>
       <div class="card bg-base-100 border">
         <div class="card-body p-4">
-          <div class="text-3xl font-bold" id="stat-tags">-</div>
+          <div class="text-3xl font-bold" id="stat-tags">{stats.tags}</div>
           <div class="text-sm text-gray-600">Tags</div>
         </div>
       </div>
       <div class="card bg-base-100 border">
         <div class="card-body p-4">
-          <div class="text-3xl font-bold" id="stat-technologies">-</div>
+          <div class="text-3xl font-bold" id="stat-technologies">
+            {stats.technologies}
+          </div>
           <div class="text-sm text-gray-600">Technologies</div>
         </div>
       </div>

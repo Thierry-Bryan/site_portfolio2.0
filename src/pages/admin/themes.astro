@@ -8,19 +8,57 @@ let themes = [];
 let projets = [];
 let selectedThemeId = "";
 
+// === CHARGEMENT AUTH ADMIN ===
+const cookieHeader = Astro.request.headers.get("cookie") || "";
+console.log("🔐 [THEMES] Cookie header présent:", cookieHeader.length > 0);
+
 try {
-  themes = await pb.collection("themes").getFullList({ sort: "nom" });
-  projets = await pb.collection("projets").getFullList({ 
-    sort: "-created",
-    expand: "theme"
-  });
-  
-  if (themes.length > 0) {
-    selectedThemeId = themes[0].id;
+  pb.authStore.loadFromCookie(cookieHeader);
+
+  if (pb.authStore.isValid) {
+    console.log(
+      "✅ [THEMES] Admin authentifié:",
+      pb.authStore.model?.email || "unknown",
+    );
+  } else {
+    console.warn("⚠️ [THEMES] Aucune auth valide");
+    message = "Vous devez être connecté. Allez sur /admin";
+    messageType = "error";
+  }
+} catch (authError) {
+  console.error("❌ [THEMES] Erreur auth:", authError);
+  message = "Erreur d'authentification. Reconnectez-vous sur /admin";
+  messageType = "error";
+}
+
+try {
+  // Tentative sécurisée de charger les thèmes
+  try {
+    console.log("🎨 [THEMES] Chargement des thèmes...");
+    themes = await pb.collection("themes").getFullList({ sort: "nom" });
+    console.log(`✅ [THEMES] ${themes.length} thèmes chargés`);
+    if (themes.length > 0) {
+      selectedThemeId = themes[0].id;
+    }
+  } catch (themeError) {
+    console.error("❌ [THEMES] Erreur:", themeError);
+    message = `Erreur thèmes: ${themeError.message}. Vérifiez les règles API PocketBase.`;
+    messageType = "error";
+  }
+
+  // Récupération des projets pour la preview
+  try {
+    projets = await pb.collection("projets").getFullList({
+      sort: "-created",
+      expand: "theme",
+    });
+  } catch (projError) {
+    console.warn("Erreur chargement projets pour preview:", projError);
   }
 } catch (error) {
-  console.error("Erreur chargement:", error);
-  message = `Erreur: ${error.message}`;
+  // Erreur globale inattendue
+  console.error("Erreur critique themes:", error);
+  message = `Erreur système: ${error.message}`;
   messageType = "error";
 }
 
@@ -44,6 +82,17 @@ if (Astro.request.method === "POST") {
       });
       message = "Thème mis à jour !";
       selectedThemeId = id;
+    } else if (action === "create") {
+      const newTheme = await pb.collection("themes").create({
+        nom: formData.get("nom") || "Nouveau Thème",
+        primary: "#570df8",
+        secondary: "#f002b8",
+        accent: "#37cdbe",
+        neutral: "#3d4451",
+        base_100: "#ffffff",
+      });
+      message = "Thème créé !";
+      selectedThemeId = newTheme.id;
     }
 
     return Astro.redirect(`/admin/themes?selected=${selectedThemeId}`);
@@ -60,182 +109,217 @@ if (selectedFromUrl) {
   selectedThemeId = selectedFromUrl;
 }
 
-const selectedTheme = themes.find(t => t.id === selectedThemeId) || themes[0];
-const projetAvecTheme = projets.find(p => p.theme === selectedTheme?.nom);
+const selectedTheme = themes.find((t) => t.id === selectedThemeId) || themes[0];
+const projetAvecTheme = projets.find((p) => p.theme === selectedTheme?.nom);
 ---
 
 <LayoutAdmin title="Thèmes">
   <div class="min-h-screen bg-gradient-to-br from-base-100 to-base-200 p-8">
     <div class="max-w-7xl mx-auto">
       <div class="mb-8">
-        <h1 class="text-4xl font-black uppercase tracking-wider text-base-content">Éditeur de Thèmes</h1>
-        <p class="text-base-content/60 mt-2">Modifiez les couleurs de vos thèmes avec aperçu en temps réel</p>
+        <h1
+          class="text-4xl font-black uppercase tracking-wider text-base-content"
+        >
+          Éditeur de Thèmes
+        </h1>
+        <p class="text-base-content/60 mt-2">
+          Modifiez les couleurs de vos thèmes avec aperçu en temps réel
+        </p>
       </div>
 
-      {message && (
-        <div class={`alert ${messageType === 'error' ? 'alert-error' : 'alert-success'} mb-6 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`}>
-          <span class="font-bold">{message}</span>
-        </div>
-      )}
+      {
+        message && (
+          <div
+            class={`alert ${messageType === "error" ? "alert-error" : "alert-success"} mb-6 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`}
+          >
+            <span class="font-bold">{message}</span>
+          </div>
+        )
+      }
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Sélecteur de thème + Éditeur de couleurs -->
         <div class="lg:col-span-1 space-y-6">
           <!-- Sélecteur de thème -->
-          <div class="bg-base-100 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-4">
-            <h2 class="text-xl font-black uppercase mb-4">Choisir un thème</h2>
+          <div
+            class="bg-base-100 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-4"
+          >
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-xl font-black uppercase">Choisir un thème</h2>
+              <button
+                onclick="document.getElementById('create-theme-modal').showModal()"
+                class="btn btn-sm btn-primary border-2 border-black font-bold uppercase"
+                >+</button
+              >
+            </div>
             <div class="space-y-2">
-              {themes.map((theme) => (
-                <button
-                  type="button"
-                  onclick={`window.location.href='/admin/themes?selected=${theme.id}'`}
-                  class={`w-full text-left p-3 border-2 border-black transition-all font-bold uppercase text-sm ${
-                    selectedThemeId === theme.id
-                      ? 'bg-primary text-primary-content'
-                      : 'bg-base-100 hover:bg-base-200'
-                  }`}
-                >
-                  {theme.nom}
-                </button>
-              ))}
+              {
+                themes.map((theme) => (
+                  <button
+                    type="button"
+                    onclick={`window.location.href='/admin/themes?selected=${theme.id}'`}
+                    class={`w-full text-left p-3 border-2 border-black transition-all font-bold uppercase text-sm ${
+                      selectedThemeId === theme.id
+                        ? "bg-primary text-primary-content"
+                        : "bg-base-100 hover:bg-base-200"
+                    }`}
+                  >
+                    {theme.nom}
+                  </button>
+                ))
+              }
             </div>
           </div>
 
           <!-- Éditeur de couleurs -->
-          {selectedTheme && (
-            <div class="bg-base-100 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-4">
-              <h2 class="text-xl font-black uppercase mb-4">Couleurs du thème</h2>
-              
-              <form method="POST" id="theme-form">
-                <input type="hidden" name="action" value="update" />
-                <input type="hidden" name="id" value={selectedTheme.id} />
-                
-                <div class="space-y-3">
-                  <div class="form-control">
-                    <label class="label">
-                      <span class="label-text font-bold uppercase text-xs">Primary</span>
-                    </label>
-                    <div class="flex gap-2">
-                      <input 
-                        type="color" 
-                        name="primary" 
-                        id="color-primary"
-                        value={selectedTheme.primary}
-                        class="w-16 h-12 border-2 border-black cursor-pointer rounded"
-                        onchange="updatePreview()"
-                      />
-                      <input 
-                        type="text" 
-                        value={selectedTheme.primary}
-                        id="text-primary"
-                        class="input input-sm input-bordered flex-1 border-2 border-black font-mono"
-                        onchange="document.getElementById('color-primary').value = this.value; updatePreview()"
-                      />
+          {
+            selectedTheme && (
+              <div class="bg-base-100 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-4">
+                <h2 class="text-xl font-black uppercase mb-4">
+                  Couleurs du thème
+                </h2>
+
+                <form method="POST" id="theme-form">
+                  <input type="hidden" name="action" value="update" />
+                  <input type="hidden" name="id" value={selectedTheme.id} />
+
+                  <div class="space-y-3">
+                    <div class="form-control">
+                      <label class="label">
+                        <span class="label-text font-bold uppercase text-xs">
+                          Primary
+                        </span>
+                      </label>
+                      <div class="flex gap-2">
+                        <input
+                          type="color"
+                          name="primary"
+                          id="color-primary"
+                          value={selectedTheme.primary}
+                          class="w-16 h-12 border-2 border-black cursor-pointer rounded"
+                          onchange="updatePreview()"
+                        />
+                        <input
+                          type="text"
+                          value={selectedTheme.primary}
+                          id="text-primary"
+                          class="input input-sm input-bordered flex-1 border-2 border-black font-mono"
+                          onchange="document.getElementById('color-primary').value = this.value; updatePreview()"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="form-control">
+                      <label class="label">
+                        <span class="label-text font-bold uppercase text-xs">
+                          Secondary
+                        </span>
+                      </label>
+                      <div class="flex gap-2">
+                        <input
+                          type="color"
+                          name="secondary"
+                          id="color-secondary"
+                          value={selectedTheme.secondary}
+                          class="w-16 h-12 border-2 border-black cursor-pointer rounded"
+                          onchange="updatePreview()"
+                        />
+                        <input
+                          type="text"
+                          value={selectedTheme.secondary}
+                          id="text-secondary"
+                          class="input input-sm input-bordered flex-1 border-2 border-black font-mono"
+                          onchange="document.getElementById('color-secondary').value = this.value; updatePreview()"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="form-control">
+                      <label class="label">
+                        <span class="label-text font-bold uppercase text-xs">
+                          Accent
+                        </span>
+                      </label>
+                      <div class="flex gap-2">
+                        <input
+                          type="color"
+                          name="accent"
+                          id="color-accent"
+                          value={selectedTheme.accent}
+                          class="w-16 h-12 border-2 border-black cursor-pointer rounded"
+                          onchange="updatePreview()"
+                        />
+                        <input
+                          type="text"
+                          value={selectedTheme.accent}
+                          id="text-accent"
+                          class="input input-sm input-bordered flex-1 border-2 border-black font-mono"
+                          onchange="document.getElementById('color-accent').value = this.value; updatePreview()"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="form-control">
+                      <label class="label">
+                        <span class="label-text font-bold uppercase text-xs">
+                          Neutral
+                        </span>
+                      </label>
+                      <div class="flex gap-2">
+                        <input
+                          type="color"
+                          name="neutral"
+                          id="color-neutral"
+                          value={selectedTheme.neutral}
+                          class="w-16 h-12 border-2 border-black cursor-pointer rounded"
+                          onchange="updatePreview()"
+                        />
+                        <input
+                          type="text"
+                          value={selectedTheme.neutral}
+                          id="text-neutral"
+                          class="input input-sm input-bordered flex-1 border-2 border-black font-mono"
+                          onchange="document.getElementById('color-neutral').value = this.value; updatePreview()"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="form-control">
+                      <label class="label">
+                        <span class="label-text font-bold uppercase text-xs">
+                          Base 100
+                        </span>
+                      </label>
+                      <div class="flex gap-2">
+                        <input
+                          type="color"
+                          name="base_100"
+                          id="color-base_100"
+                          value={selectedTheme.base_100}
+                          class="w-16 h-12 border-2 border-black cursor-pointer rounded"
+                          onchange="updatePreview()"
+                        />
+                        <input
+                          type="text"
+                          value={selectedTheme.base_100}
+                          id="text-base_100"
+                          class="input input-sm input-bordered flex-1 border-2 border-black font-mono"
+                          onchange="document.getElementById('color-base_100').value = this.value; updatePreview()"
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  <div class="form-control">
-                    <label class="label">
-                      <span class="label-text font-bold uppercase text-xs">Secondary</span>
-                    </label>
-                    <div class="flex gap-2">
-                      <input 
-                        type="color" 
-                        name="secondary" 
-                        id="color-secondary"
-                        value={selectedTheme.secondary}
-                        class="w-16 h-12 border-2 border-black cursor-pointer rounded"
-                        onchange="updatePreview()"
-                      />
-                      <input 
-                        type="text" 
-                        value={selectedTheme.secondary}
-                        id="text-secondary"
-                        class="input input-sm input-bordered flex-1 border-2 border-black font-mono"
-                        onchange="document.getElementById('color-secondary').value = this.value; updatePreview()"
-                      />
-                    </div>
-                  </div>
-
-                  <div class="form-control">
-                    <label class="label">
-                      <span class="label-text font-bold uppercase text-xs">Accent</span>
-                    </label>
-                    <div class="flex gap-2">
-                      <input 
-                        type="color" 
-                        name="accent" 
-                        id="color-accent"
-                        value={selectedTheme.accent}
-                        class="w-16 h-12 border-2 border-black cursor-pointer rounded"
-                        onchange="updatePreview()"
-                      />
-                      <input 
-                        type="text" 
-                        value={selectedTheme.accent}
-                        id="text-accent"
-                        class="input input-sm input-bordered flex-1 border-2 border-black font-mono"
-                        onchange="document.getElementById('color-accent').value = this.value; updatePreview()"
-                      />
-                    </div>
-                  </div>
-
-                  <div class="form-control">
-                    <label class="label">
-                      <span class="label-text font-bold uppercase text-xs">Neutral</span>
-                    </label>
-                    <div class="flex gap-2">
-                      <input 
-                        type="color" 
-                        name="neutral" 
-                        id="color-neutral"
-                        value={selectedTheme.neutral}
-                        class="w-16 h-12 border-2 border-black cursor-pointer rounded"
-                        onchange="updatePreview()"
-                      />
-                      <input 
-                        type="text" 
-                        value={selectedTheme.neutral}
-                        id="text-neutral"
-                        class="input input-sm input-bordered flex-1 border-2 border-black font-mono"
-                        onchange="document.getElementById('color-neutral').value = this.value; updatePreview()"
-                      />
-                    </div>
-                  </div>
-
-                  <div class="form-control">
-                    <label class="label">
-                      <span class="label-text font-bold uppercase text-xs">Base 100</span>
-                    </label>
-                    <div class="flex gap-2">
-                      <input 
-                        type="color" 
-                        name="base_100" 
-                        id="color-base_100"
-                        value={selectedTheme.base_100}
-                        class="w-16 h-12 border-2 border-black cursor-pointer rounded"
-                        onchange="updatePreview()"
-                      />
-                      <input 
-                        type="text" 
-                        value={selectedTheme.base_100}
-                        id="text-base_100"
-                        class="input input-sm input-bordered flex-1 border-2 border-black font-mono"
-                        onchange="document.getElementById('color-base_100').value = this.value; updatePreview()"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <button 
-                  type="submit" 
-                  class="btn btn-primary w-full mt-6 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all uppercase font-black"
-                >
-                  💾 Sauvegarder
-                </button>
-              </form>
-            </div>
-          )}
+                  <button
+                    type="submit"
+                    class="btn btn-primary w-full mt-6 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all uppercase font-black"
+                  >
+                    💾 Sauvegarder
+                  </button>
+                </form>
+              </div>
+            )
+          }
         </div>
 
         <!-- Aperçu -->
@@ -243,39 +327,50 @@ const projetAvecTheme = projets.find(p => p.theme === selectedTheme?.nom);
           <div class="sticky top-4">
             <div class="flex justify-between items-center mb-4">
               <h2 class="text-2xl font-black uppercase">Aperçu Temps Réel</h2>
-              {projetAvecTheme && (
-                <a 
-                  href={`/projets/${projetAvecTheme.id}`}
-                  target="_blank"
-                  class="btn btn-sm border-2 border-black font-bold uppercase"
-                >
-                  Ouvrir dans un nouvel onglet
-                </a>
-              )}
+              {
+                projetAvecTheme && (
+                  <a
+                    href={`/projets/${projetAvecTheme.id}`}
+                    target="_blank"
+                    class="btn btn-sm border-2 border-black font-bold uppercase"
+                  >
+                    Ouvrir dans un nouvel onglet
+                  </a>
+                )
+              }
             </div>
-            
-            <div class="border-4 border-black rounded-lg overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-white" style="height: 800px;">
-              {projetAvecTheme ? (
-                <iframe 
-                  id="preview-iframe"
-                  src={`/projets/${projetAvecTheme.id}`}
-                  class="w-full h-full"
-                  title="Aperçu du projet"
-                ></iframe>
-              ) : (
-                <div class="flex flex-col items-center justify-center h-full text-center p-8">
-                  <div class="text-6xl mb-4">🎨</div>
-                  <p class="text-2xl font-bold text-gray-400 mb-2">Aucun projet avec ce thème</p>
-                  <p class="text-sm text-gray-500">Assignez ce thème à un projet pour voir l'aperçu</p>
-                  
-                  <div class="mt-8 space-y-2">
-                    <p class="font-bold text-sm">Projets disponibles :</p>
-                    {projets.slice(0, 3).map((projet) => (
-                      <div class="badge badge-outline">{projet.titre}</div>
-                    ))}
+
+            <div
+              class="border-4 border-black rounded-lg overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-white"
+              style="height: 800px;"
+            >
+              {
+                projetAvecTheme ? (
+                  <iframe
+                    id="preview-iframe"
+                    src={`/projets/${projetAvecTheme.id}`}
+                    class="w-full h-full"
+                    title="Aperçu du projet"
+                  />
+                ) : (
+                  <div class="flex flex-col items-center justify-center h-full text-center p-8">
+                    <div class="text-6xl mb-4">🎨</div>
+                    <p class="text-2xl font-bold text-gray-400 mb-2">
+                      Aucun projet avec ce thème
+                    </p>
+                    <p class="text-sm text-gray-500">
+                      Assignez ce thème à un projet pour voir l'aperçu
+                    </p>
+
+                    <div class="mt-8 space-y-2">
+                      <p class="font-bold text-sm">Projets disponibles :</p>
+                      {projets.slice(0, 3).map((projet) => (
+                        <div class="badge badge-outline">{projet.titre}</div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )
+              }
             </div>
           </div>
         </div>
@@ -283,11 +378,59 @@ const projetAvecTheme = projets.find(p => p.theme === selectedTheme?.nom);
     </div>
   </div>
 
-  <script>
-    function updatePreview() {
+  <!-- Modal Nouveau Thème -->
+  <dialog id="create-theme-modal" class="modal">
+    <div
+      class="modal-box border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-base-100"
+    >
+      <h3 class="font-black text-2xl uppercase mb-4">Nouveau Thème</h3>
+      <form method="POST">
+        <input type="hidden" name="action" value="create" />
+
+        <div class="form-control mb-6">
+          <label class="label font-bold uppercase">Nom du thème</label>
+          <input
+            type="text"
+            name="nom"
+            class="input input-bordered w-full border-2 border-black font-mono"
+            required
+            placeholder="Ex: Cyberpunk, Pastel..."
+          />
+        </div>
+
+        <div class="modal-action">
+          <button
+            type="button"
+            onclick="document.getElementById('create-theme-modal').close()"
+            class="btn border-2 border-black font-bold uppercase"
+          >
+            Annuler
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary border-2 border-black font-bold uppercase"
+          >
+            Créer
+          </button>
+        </div>
+      </form>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
+
+  <script is:inline>
+    window.updatePreview = function () {
       // Mettre à jour les valeurs texte depuis les color pickers
-      const colorInputs = ['primary', 'secondary', 'accent', 'neutral', 'base_100'];
-      colorInputs.forEach(name => {
+      const colorInputs = [
+        "primary",
+        "secondary",
+        "accent",
+        "neutral",
+        "base_100",
+      ];
+      colorInputs.forEach((name) => {
         const colorInput = document.getElementById(`color-${name}`);
         const textInput = document.getElementById(`text-${name}`);
         if (colorInput && textInput) {
@@ -296,21 +439,24 @@ const projetAvecTheme = projets.find(p => p.theme === selectedTheme?.nom);
       });
 
       // Envoyer les nouvelles couleurs à l'iframe pour preview temps réel
-      const iframe = document.getElementById('preview-iframe');
+      const iframe = document.getElementById("preview-iframe");
       if (iframe && iframe.contentWindow) {
         const colors = {};
-        colorInputs.forEach(name => {
+        colorInputs.forEach((name) => {
           const colorInput = document.getElementById(`color-${name}`);
           if (colorInput) {
             colors[name] = colorInput.value;
           }
         });
-        
-        iframe.contentWindow.postMessage({
-          type: 'updateTheme',
-          colors: colors
-        }, '*');
+
+        iframe.contentWindow.postMessage(
+          {
+            type: "updateTheme",
+            colors: colors,
+          },
+          "*",
+        );
       }
-    }
+    };
   </script>
 </LayoutAdmin>

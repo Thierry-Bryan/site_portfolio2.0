@@ -8,18 +8,69 @@ let projets = [];
 let tags = [];
 let technologies = [];
 
+// === CHARGEMENT AUTH ADMIN ===
+const cookieHeader = Astro.request.headers.get("cookie") || "";
+console.log("🔐 [PROJETS] Cookie header présent:", cookieHeader.length > 0);
+
 try {
-  projets = await pb.collection("projets").getFullList({
-    sort: "-created",
-    expand: "tags,technologies",
-  });
-  tags = await pb.collection("tags").getFullList({ sort: "nom" });
-  technologies = await pb
-    .collection("technologies")
-    .getFullList({ sort: "nom" });
-} catch (error) {
-  console.error('Erreur chargement projets:', error);
-  message = `Erreur de chargement: ${error.message || 'Connexion PocketBase impossible'}`;
+  // Charger l'auth depuis les cookies
+  pb.authStore.loadFromCookie(cookieHeader);
+
+  if (pb.authStore.isValid) {
+    console.log(
+      "✅ [PROJETS] Admin authentifié:",
+      pb.authStore.model?.email || "unknown",
+    );
+  } else {
+    console.warn("⚠️ [PROJETS] Aucune auth valide détectée");
+    message =
+      "Vous devez être connecté pour accéder à cette page. Connectez-vous sur /admin";
+    messageType = "error";
+  }
+} catch (authError) {
+  console.error("❌ [PROJETS] Erreur chargement auth:", authError);
+  message = "Erreur d'authentification. Reconnectez-vous sur /admin";
+  messageType = "error";
+}
+
+try {
+  // Récupération résiliente des données
+  // 1. Projets (Vital)
+  try {
+    console.log("📦 [PROJETS] Chargement des projets...");
+    projets = await pb.collection("projets").getFullList({
+      sort: "-created",
+      expand: "tags,technologies",
+    });
+    console.log(`✅ [PROJETS] ${projets.length} projets chargés`);
+  } catch (e) {
+    console.error("❌ [PROJETS] Erreur projets:", e);
+    message = `Erreur projets: ${e.message}. Vérifiez les règles API PocketBase.`;
+    messageType = "error";
+  }
+
+  // 2. Tags (Non-vital)
+  try {
+    console.log("🏷️ [PROJETS] Chargement des tags...");
+    tags = await pb.collection("tags").getFullList({ sort: "nom" });
+    console.log(`✅ [PROJETS] ${tags.length} tags chargés`);
+  } catch (e) {
+    console.warn("⚠️ [PROJETS] Tags:", e.message);
+  }
+
+  // 3. Technologies (Non-vital)
+  try {
+    console.log("💻 [PROJETS] Chargement des technologies...");
+    technologies = await pb
+      .collection("technologies")
+      .getFullList({ sort: "nom" });
+    console.log(`✅ [PROJETS] ${technologies.length} technologies chargées`);
+  } catch (e) {
+    console.warn("⚠️ [PROJETS] Technologies:", e.message);
+  }
+} catch (globalError) {
+  // Catch global au cas où
+  message = `Erreur critique: ${globalError.message}`;
   messageType = "error";
 }
 
@@ -65,8 +116,8 @@ if (Astro.request.method === "POST") {
       return Astro.redirect("/admin/projets");
     }
   } catch (error) {
-    console.error('Erreur POST:', error);
-    message = `Erreur: ${error.message || 'Opération impossible'}`;
+    console.error("Erreur POST:", error);
+    message = `Erreur: ${error.message || "Opération impossible"}`;
     messageType = "error";
   }
 }
@@ -114,7 +165,7 @@ if (Astro.request.method === "POST") {
               <div class="aspect-video bg-base-300 relative overflow-hidden">
                 {projet.image ? (
                   <img
-                    src={`/api/files/projets/${projet.id}/${projet.image}`}
+                    src={pb.files.getURL(projet, projet.image)}
                     alt={projet.titre}
                     class="w-full h-full object-cover"
                   />
@@ -395,17 +446,33 @@ if (Astro.request.method === "POST") {
     </div>
   </dialog>
 
-  <script is:inline define:vars={{ projets, tags, technologies }}>
-    window.openCreateModal = function() {
+  <!-- Passage des données au JS en attributs JSON pour éviter define:vars -->
+  <div
+    id="data-store"
+    data-projets={JSON.stringify(projets)}
+    data-tags={JSON.stringify(tags)}
+    data-technologies={JSON.stringify(technologies)}
+    class="hidden"
+  >
+  </div>
+
+  <script is:inline>
+    // Récupération des données sécurisée
+    const dataStore = document.getElementById("data-store");
+    const projets = JSON.parse(dataStore.dataset.projets || "[]");
+    const tags = JSON.parse(dataStore.dataset.tags || "[]");
+    const technologies = JSON.parse(dataStore.dataset.technologies || "[]");
+
+    window.openCreateModal = function () {
       document.getElementById("modal-title").textContent = "Nouveau Projet";
       document.getElementById("form-action").value = "create";
       document.getElementById("projet-id").value = "";
       document.getElementById("projet-form").reset();
       document.getElementById("preview-iframe").src = "";
       document.getElementById("edit-modal").showModal();
-    }
+    };
 
-    window.openEditModal = function(projetId) {
+    window.openEditModal = function (projetId) {
       const projet = projets.find((p) => p.id === projetId);
       if (!projet) return;
 
@@ -438,17 +505,22 @@ if (Astro.request.method === "POST") {
         });
 
       // Aperçu
-      document.getElementById("preview-iframe").src = `/projets/${projet.id}`;
+      // Utiliser le slug si possible pour correspondre à la route [id].astro
+      const urlParam = projet.slug || projet.id;
+      document.getElementById("preview-iframe").src = `/projets/${urlParam}`;
 
       document.getElementById("edit-modal").showModal();
-    }
+    };
 
-    window.openPreviewModal = function(projetId) {
-      document.getElementById("full-preview-iframe").src = `/projets/${projetId}`;
+    window.openPreviewModal = function (projetId) {
+      const projet = projets.find((p) => p.id === projetId);
+      const urlParam = projet ? projet.slug || projet.id : projetId;
+      document.getElementById("full-preview-iframe").src =
+        `/projets/${urlParam}`;
       document.getElementById("preview-modal").showModal();
-    }
+    };
 
-    window.deleteProjet = function(projetId) {
+    window.deleteProjet = function (projetId) {
       if (!confirm("Êtes-vous sûr de vouloir supprimer ce projet ?")) return;
 
       const form = document.createElement("form");
@@ -459,6 +531,6 @@ if (Astro.request.method === "POST") {
       `;
       document.body.appendChild(form);
       form.submit();
-    }
+    };
   </script>
 </LayoutAdmin>

@@ -79,31 +79,143 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
 <script>
   import PocketBase from "pocketbase";
 
-  const pb = new PocketBase("https://portfolio.bryan-thierry.fr/");
+  // Test de plusieurs URLs PocketBase possibles
+  const POSSIBLE_URLS = [
+    "https://portfolio.bryan-thierry.fr/",
+    "https://portfolio.bryan-thierry.fr/api/",
+    "https://portfolio.bryan-thierry.fr/_/",
+    "http://portfolio.bryan-thierry.fr/",
+  ];
+
+  let pb: PocketBase;
   const form = document.getElementById("login-form") as HTMLFormElement;
   const errorDiv = document.getElementById("error-message") as HTMLDivElement;
 
-  // Vérifier si déjà connecté
-  if (pb.authStore.isValid) {
-    window.location.href = "/admin/dashboard";
+  console.log("📝 Page de connexion chargée");
+
+  // Fonction pour tester si une URL PocketBase répond
+  async function testPocketBaseURL(url: string): Promise<boolean> {
+    try {
+      console.log(`🔍 Test de l'URL: ${url}`);
+      const testPb = new PocketBase(url);
+      // Tenter une requête simple pour vérifier la disponibilité
+      await fetch(`${url}api/health`, { method: "GET" });
+      console.log(`✅ URL accessible: ${url}`);
+      return true;
+    } catch (e) {
+      console.log(`❌ URL non accessible: ${url}`);
+      return false;
+    }
   }
+
+  // Initialiser PocketBase avec la bonne URL
+  (async () => {
+    // Essayer chaque URL
+    for (const url of POSSIBLE_URLS) {
+      try {
+        const testPb = new PocketBase(url);
+        // Tester avec une simple requête
+        const response = await fetch(url, { method: "HEAD" });
+        if (response.ok || response.status === 404) {
+          console.log(`✅ URL PocketBase trouvée: ${url}`);
+          pb = testPb;
+          break;
+        }
+      } catch (e) {
+        console.log(`❌ Échec pour: ${url}`);
+      }
+    }
+
+    if (!pb) {
+      console.warn(
+        "⚠️ Aucune URL PocketBase valide trouvée, utilisation par défaut",
+      );
+      pb = new PocketBase(POSSIBLE_URLS[0]);
+    }
+
+    console.log("🌐 URL PocketBase finale:", pb.baseURL);
+  })();
 
   form?.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    if (!pb) {
+      errorDiv.textContent = "❌ Erreur : PocketBase non initialisé";
+      errorDiv.classList.remove("hidden");
+      return;
+    }
 
     const formData = new FormData(form);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    try {
-      // Connexion admin
-      await pb.admins.authWithPassword(email, password);
+    console.log("🔐 Tentative de connexion pour:", email);
+    console.log("🌐 URL PocketBase utilisée:", pb.baseURL);
 
+    try {
+      // Tentative 1 : Connexion ADMIN (pour gérer les collections admin-only)
+      let authData;
+      try {
+        console.log("Essai 1: Connexion en tant qu'ADMIN...");
+        authData = await pb.admins.authWithPassword(email, password);
+        console.log("✅ Connecté en tant qu'ADMIN:", authData.admin.email);
+      } catch (adminError) {
+        console.warn("⚠️ Échec connexion admin:", adminError);
+        console.warn("Essai en tant qu'utilisateur...");
+        // Tentative 2 : Connexion USER (si ce n'est pas un compte admin)
+        authData = await pb
+          .collection("users")
+          .authWithPassword(email, password);
+        console.log(
+          "✅ Connecté en tant qu'UTILISATEUR:",
+          authData.record.email,
+        );
+      }
+
+      console.log("Token reçu:", pb.authStore.token?.substring(0, 20) + "...");
+
+      // SAUVEGARDE MULTIPLE pour garantir la persistance
+      // 1. Cookie pour SSR (lecture serveur)
+      const cookieStr = pb.authStore.exportToCookie({ httpOnly: false });
+      document.cookie = cookieStr;
+      console.log("🍪 Cookie sauvegardé:", cookieStr.substring(0, 50) + "...");
+
+      // 2. LocalStorage pour le client (backup)
+      localStorage.setItem(
+        "pocketbase_auth",
+        JSON.stringify({
+          token: pb.authStore.token,
+          model: pb.authStore.model,
+        }),
+      );
+      console.log("💾 LocalStorage sauvegardé");
+
+      // Attendre un peu pour que les cookies soient bien enregistrés
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      console.log("🚀 Redirection vers /admin/dashboard");
       // Redirection vers le dashboard
       window.location.href = "/admin/dashboard";
     } catch (error: any) {
-      console.error("Erreur de connexion:", error);
-      errorDiv.textContent = "Email ou mot de passe incorrect";
+      console.error("❌ Erreur de connexion complète:", error);
+      console.error("Code erreur:", error.status);
+      console.error("Message:", error.message);
+      console.error("Détails:", error.data);
+
+      let errorMessage = "Email ou mot de passe incorrect";
+
+      if (error.status === 0 || error.message?.includes("fetch")) {
+        errorMessage =
+          "❌ Impossible de contacter le serveur PocketBase. Vérifiez que https://portfolio.bryan-thierry.fr/ est accessible.";
+      } else if (error.status === 400) {
+        errorMessage =
+          "Email ou mot de passe incorrect. Vérifiez vos identifiants PocketBase.";
+      } else if (error.status === 404) {
+        errorMessage =
+          "❌ Collection 'users' ou endpoint admin introuvable. Problème de configuration PocketBase.";
+      }
+
+      errorDiv.textContent = errorMessage;
       errorDiv.classList.remove("hidden");
     }
   });

@@ -6,11 +6,28 @@ let message = "";
 let messageType = "success";
 let technologies = [];
 
+// === AUTH ===
+const cookieHeader = Astro.request.headers.get("cookie") || "";
 try {
-  technologies = await pb.collection("technologies").getFullList({ sort: "nom" });
+  pb.authStore.loadFromCookie(cookieHeader);
+  if (!pb.authStore.isValid) {
+    message = "Vous devez être connecté. Allez sur /admin";
+    messageType = "error";
+  }
+} catch (authError) {
+  message = "Erreur d'authentification";
+  messageType = "error";
+}
+
+try {
+  console.log("💻 [TECH] Chargement...");
+  technologies = await pb
+    .collection("technologies")
+    .getFullList({ sort: "nom" });
+  console.log(`✅ [TECH] ${technologies.length} technologies chargées`);
 } catch (error) {
   console.error("Erreur chargement technologies:", error);
-  message = `Erreur: ${error.message || 'Connexion impossible'}`;
+  message = `Erreur: ${error.message || "Connexion impossible"}`;
   messageType = "error";
 }
 
@@ -50,10 +67,14 @@ if (Astro.request.method === "POST") {
     <div class="max-w-4xl mx-auto">
       <div class="flex justify-between items-center mb-8">
         <div>
-          <h1 class="text-4xl font-black uppercase tracking-wider text-base-content">Technologies</h1>
+          <h1
+            class="text-4xl font-black uppercase tracking-wider text-base-content"
+          >
+            Technologies
+          </h1>
           <p class="text-base-content/60 mt-2">Vos compétences techniques</p>
         </div>
-        <button 
+        <button
           onclick="openCreateModal()"
           class="btn btn-secondary btn-lg border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all uppercase font-black"
         >
@@ -61,61 +82,78 @@ if (Astro.request.method === "POST") {
         </button>
       </div>
 
-      {message && (
-        <div class={`alert ${messageType === 'error' ? 'alert-error' : 'alert-success'} mb-6 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`}>
-          <span class="font-bold">{message}</span>
-        </div>
-      )}
+      {
+        message && (
+          <div
+            class={`alert ${messageType === "error" ? "alert-error" : "alert-success"} mb-6 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`}
+          >
+            <span class="font-bold">{message}</span>
+          </div>
+        )
+      }
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {technologies.map((tech) => (
-          <div class="bg-base-100 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[3px] hover:translate-y-[3px] transition-all p-4">
-            <h3 class="text-xl font-black uppercase mb-3">{tech.nom}</h3>
-            <div class="flex gap-2">
-              <button 
-                onclick={`openEditModal('${tech.id}', '${tech.nom}')`}
-                class="btn btn-sm flex-1 border-2 border-black font-bold uppercase"
-              >
-                Modifier
-              </button>
-              <button 
-                onclick={`deleteTech('${tech.id}')`}
-                class="btn btn-sm btn-error border-2 border-black font-bold"
-              >
-                Supprimer
-              </button>
+        {
+          technologies.map((tech) => (
+            <div class="bg-base-100 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[3px] hover:translate-y-[3px] transition-all p-4">
+              <h3 class="text-xl font-black uppercase mb-3">{tech.nom}</h3>
+              <div class="flex gap-2">
+                <button
+                  onclick={`openEditModal('${tech.id}', '${tech.nom}')`}
+                  class="btn btn-sm flex-1 border-2 border-black font-bold uppercase"
+                >
+                  Modifier
+                </button>
+                <button
+                  onclick={`deleteTech('${tech.id}')`}
+                  class="btn btn-sm btn-error border-2 border-black font-bold"
+                >
+                  Supprimer
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        }
       </div>
     </div>
   </div>
 
   <!-- Modal -->
   <dialog id="tech-modal" class="modal">
-    <div class="modal-box border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-base-100">
-      <h3 class="font-black text-2xl uppercase mb-4" id="modal-title">Nouvelle Technologie</h3>
+    <div
+      class="modal-box border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-base-100"
+    >
+      <h3 class="font-black text-2xl uppercase mb-4" id="modal-title">
+        Nouvelle Technologie
+      </h3>
       <form method="POST" id="tech-form">
         <input type="hidden" name="action" id="form-action" value="create" />
         <input type="hidden" name="id" id="tech-id" value="" />
-        
+
         <div class="form-control">
           <label class="label font-bold uppercase">Nom de la Technologie</label>
-          <input 
-            type="text" 
-            name="nom" 
-            id="tech-nom" 
-            class="input input-bordered w-full border-2 border-black" 
-            required 
+          <input
+            type="text"
+            name="nom"
+            id="tech-nom"
+            class="input input-bordered w-full border-2 border-black"
+            required
             placeholder="Ex: React, Node.js, Python..."
           />
         </div>
-        
+
         <div class="modal-action">
-          <button type="button" onclick="document.getElementById('tech-modal').close()" class="btn border-2 border-black font-bold uppercase">
+          <button
+            type="button"
+            onclick="document.getElementById('tech-modal').close()"
+            class="btn border-2 border-black font-bold uppercase"
+          >
             Annuler
           </button>
-          <button type="submit" class="btn btn-secondary border-2 border-black font-bold uppercase">
+          <button
+            type="submit"
+            class="btn btn-secondary border-2 border-black font-bold uppercase"
+          >
             Sauvegarder
           </button>
         </div>
@@ -126,33 +164,35 @@ if (Astro.request.method === "POST") {
     </form>
   </dialog>
 
-  <script>
-    function openCreateModal() {
-      document.getElementById('modal-title').textContent = 'Nouvelle Technologie';
-      document.getElementById('form-action').value = 'create';
-      document.getElementById('tech-id').value = '';
-      document.getElementById('tech-nom').value = '';
-      document.getElementById('tech-modal').showModal();
-    }
+  <script is:inline>
+    window.openCreateModal = function () {
+      document.getElementById("modal-title").textContent =
+        "Nouvelle Technologie";
+      document.getElementById("form-action").value = "create";
+      document.getElementById("tech-id").value = "";
+      document.getElementById("tech-nom").value = "";
+      document.getElementById("tech-modal").showModal();
+    };
 
-    function openEditModal(id, nom) {
-      document.getElementById('modal-title').textContent = 'Modifier la Technologie';
-      document.getElementById('form-action').value = 'update';
-      document.getElementById('tech-id').value = id;
-      document.getElementById('tech-nom').value = nom;
-      document.getElementById('tech-modal').showModal();
-    }
+    window.openEditModal = function (id, nom) {
+      document.getElementById("modal-title").textContent =
+        "Modifier la Technologie";
+      document.getElementById("form-action").value = "update";
+      document.getElementById("tech-id").value = id;
+      document.getElementById("tech-nom").value = nom;
+      document.getElementById("tech-modal").showModal();
+    };
 
-    function deleteTech(id) {
-      if (!confirm('Supprimer cette technologie ?')) return;
-      const form = document.createElement('form');
-      form.method = 'POST';
+    window.deleteTech = function (id) {
+      if (!confirm("Supprimer cette technologie ?")) return;
+      const form = document.createElement("form");
+      form.method = "POST";
       form.innerHTML = `
         <input type="hidden" name="action" value="delete" />
         <input type="hidden" name="id" value="${id}" />
       `;
       document.body.appendChild(form);
       form.submit();
-    }
+    };
   </script>
 </LayoutAdmin>
