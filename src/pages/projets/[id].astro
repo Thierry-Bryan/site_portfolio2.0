@@ -581,10 +581,10 @@ const projetTechnologies = projet.expand?.technologies || [];
   <script
     is:inline
     define:vars={{
-      currentTheme: projet.theme,
+      currentTheme: themeName,
       allProjets: allProjets.map((p) => ({
         slug: p.slug,
-        theme: p.theme,
+        theme: p.expand?.theme?.name || 'basique',
         backgroundImage: getFileUrl(p, p.hero_image),
         title: p.title.toUpperCase(),
         description: p.hero_description,
@@ -606,7 +606,7 @@ const projetTechnologies = projet.expand?.technologies || [];
   <section
     id="contenu"
     class="pt-8 pb-35 card-bg-b1 transition-bg-color"
-    data-theme={projet.theme}
+    data-theme={themeName}
   >
     <div class="mx-4 md:mx-8 lg:mx-16">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
