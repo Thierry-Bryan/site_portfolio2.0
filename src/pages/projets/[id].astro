@@ -11,6 +11,7 @@ import {
   getMultipleFileUrls,
   getNextProjet,
   getPreviousProjet,
+  generateThemeCSS,
   pb,
 } from "../../utils/pb.ts";
 
@@ -25,17 +26,6 @@ export async function getStaticPaths() {
 // Récupérer le slug depuis les paramètres de l'URL
 const { id } = Astro.params;
 
-// Charger tous les thèmes pour le mapping dynamique
-let themesMap = {};
-try {
-  const themes = await pb.collection('themes').getFullList();
-  themes.forEach(theme => {
-    themesMap[theme.id] = theme.name;
-  });
-} catch (error) {
-  console.error('Erreur chargement thèmes:', error);
-}
-
 // Récupérer les données du projet
 const projet = await getProjetBySlug(id);
 
@@ -43,6 +33,13 @@ const projet = await getProjetBySlug(id);
 if (!projet) {
   return Astro.redirect("/");
 }
+
+// Gestion du thème dynamique via PocketBase
+const themeData = projet.expand?.theme;
+const themeName = themeData?.name || "basique";
+// Si on a un thème personnalisé, on génère le CSS
+// Sinon on utilise le CSS par défaut (basique)
+const dynamicThemeCSS = themeData ? generateThemeCSS(themeData) : "";
 
 // NOUVELLE LOGIQUE : Navigation par catégorie
 const allProjets = await getProjets();
@@ -79,16 +76,14 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
 // Récupérer les technologies du projet depuis expand
 const projetTechnologies = projet.expand?.technologies || [];
 
-// Récupérer le nom du thème dynamiquement
-const themeForLayout = projet.theme && themesMap[projet.theme] 
-  ? themesMap[projet.theme] 
-  : "basique";
 ---
 
 <Layout
-  theme={themeForLayout as any}
+  theme={themeName as any}
   title={`${projet.title} - Portfolio Bryan Thierry`}
 >
+  {dynamicThemeCSS && <style set:html={dynamicThemeCSS} />}
+
   <!-- Hero Section -->
   <section
     class="relative h-[calc(120vh-7rem)] flex items-stretch overflow-hidden"
