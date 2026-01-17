@@ -80,8 +80,9 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Stop existing PocketBase (with sudo if needed)
-            pkill -f pocketbase || true
+            # Stop existing PocketBase (need sudo for www-data process)
+            sudo pkill -f pocketbase || true
+            sleep 2
             
             # Create pocketbase directory without sudo
             mkdir -p ~/pocketbase
