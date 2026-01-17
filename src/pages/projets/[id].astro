@@ -355,6 +355,9 @@ const projetTechnologies = projet.expand?.technologies || [];
         // Mettre à jour les flèches
         updateArrowsTheme(themeToApply);
 
+        // Mettre à jour le contenu détaillé du projet
+        updateProjectContent(project);
+
         // Mise à jour de l'URL sans rechargement
         window.history.pushState({}, "", `/projets/${projectSlug}`);
         document.title = `${project.title} - Portfolio Bryan Thierry`;
@@ -365,6 +368,79 @@ const projetTechnologies = projet.expand?.technologies || [];
 
         // Re-initialiser les listeners pour les nouvelles flèches
         initNavigationListeners();
+      }
+
+      // Fonction pour mettre à jour le contenu détaillé du projet
+      function updateProjectContent(project) {
+        // Mettre à jour la description complète
+        const projetDescription = document.getElementById("projet-description");
+        if (projetDescription && project.contentDescription) {
+          projetDescription.innerHTML = project.contentDescription;
+        }
+
+        // Mettre à jour les technologies
+        const projetTechnologies = document.getElementById("projet-technologies");
+        if (projetTechnologies && project.technologies) {
+          projetTechnologies.innerHTML = '';
+          project.technologies.forEach(tech => {
+            const span = document.createElement('span');
+            span.className = 'px-2 py-1 text-xs font-secondary border border-(--bc) text-(--bc)';
+            span.textContent = tech.name;
+            projetTechnologies.appendChild(span);
+          });
+        }
+
+        // Mettre à jour les images du projet
+        const projetImagesContainer = document.getElementById("projet-images-container");
+        if (projetImagesContainer && project.images) {
+          projetImagesContainer.innerHTML = '';
+          project.images.forEach((image, index) => {
+            const div = document.createElement('div');
+            const img = document.createElement('img');
+            img.src = image;
+            img.alt = `${project.title} - Mockup ${index + 1}`;
+            img.className = 'w-full h-auto object-cover';
+            div.appendChild(img);
+            projetImagesContainer.appendChild(div);
+          });
+        }
+
+        // Mettre à jour le bouton "VOIR LE SITE FINAL"
+        const projetButtonContainer = document.getElementById("projet-button-container");
+        if (project.siteUrl && project.siteUrl.trim()) {
+          if (!projetButtonContainer) {
+            // Créer le container du bouton s'il n'existe pas
+            const buttonContainer = document.createElement('div');
+            buttonContainer.id = 'projet-button-container';
+            buttonContainer.className = 'text-center pt-8';
+            
+            const button = document.createElement('a');
+            button.href = project.siteUrl;
+            button.target = '_blank';
+            button.className = 'btn font-primary text-lg px-8 py-4';
+            button.textContent = 'VOIR LE SITE FINAL';
+            
+            buttonContainer.appendChild(button);
+            
+            // Ajouter après la description
+            const descriptionParent = projetDescription?.parentNode;
+            if (descriptionParent) {
+              descriptionParent.appendChild(buttonContainer);
+            }
+          } else {
+            // Mettre à jour le lien existant
+            const link = projetButtonContainer.querySelector('a');
+            if (link) {
+              link.href = project.siteUrl;
+            }
+            projetButtonContainer.style.display = 'block';
+          }
+        } else {
+          // Cacher le bouton s'il n'y a pas d'URL
+          if (projetButtonContainer) {
+            projetButtonContainer.style.display = 'none';
+          }
+        }
       }
 
       // Fonction pour initialiser les listeners de navigation
