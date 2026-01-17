@@ -73,23 +73,7 @@ jobs:
           target: "/var/www/portfolio"
           strip_components: 0
 
-      - name: 🛑 Stop existing PocketBase
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            echo "🛑 Stopping any existing PocketBase..."
-            sudo systemctl stop pocketbase 2>/dev/null || true
-            sudo pkill -f "/var/www/pocketbase/pocketbase" 2>/dev/null || true
-            if lsof -ti:8090 2>/dev/null; then
-              sudo kill -9 $(lsof -ti:8090) 2>/dev/null || true
-            fi
-            sleep 2
-            echo "✅ PocketBase stopped"
-
-      - name: 🗄️ Setup PocketBase
+      - name: �️ Setup PocketBase
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -113,15 +97,15 @@ jobs:
             
             chmod +x ~/pocketbase/pocketbase
             
-            echo "🚀 Starting PocketBase..."
+            echo "🚀 Starting PocketBase on port 8091 (temporary)..."
             cd ~/pocketbase
-            nohup ./pocketbase serve --http=127.0.0.1:8090 --dir=./pb_data > ../pocketbase.log 2>&1 &
+            nohup ./pocketbase serve --http=127.0.0.1:8091 --dir=./pb_data > ../pocketbase.log 2>&1 &
             
             echo "⏳ Waiting for PocketBase to start..."
-            sleep 8
+            sleep 5
             
-            if curl -f http://127.0.0.1:8090/_/ > /dev/null 2>&1; then
-              echo "✅ PocketBase started successfully"
+            if curl -f http://127.0.0.1:8091/_/ > /dev/null 2>&1; then
+              echo "✅ PocketBase started successfully on port 8091"
             else
               echo "❌ PocketBase failed to start"
               cat ~/pocketbase.log 2>/dev/null || echo "No log file"
@@ -166,7 +150,7 @@ jobs:
                     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
                     proxy_set_header X-Forwarded-Proto $scheme;
 
-                    proxy_pass http://127.0.0.1:8090/;
+                    proxy_pass http://127.0.0.1:8091/;
                 }
             }
             NGINX_EOF
