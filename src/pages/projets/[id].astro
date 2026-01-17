@@ -67,16 +67,27 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
 // Récupérer les technologies du projet depuis expand
 const projetTechnologies = projet.expand?.technologies || [];
 
+// DEBUG - Voir EXACTEMENT ce qu'on reçoit
+console.log('=== DEBUG THEME ===');
+console.log('Projet:', projet.title);
+console.log('projet.theme:', projet.theme);
+console.log('projet.expand:', JSON.stringify(projet.expand, null, 2));
+
 // Récupérer le thème - essayer d'abord la relation, puis l'ancien champ
 let themeForLayout = "basique"; // fallback
 
 if (projet.expand?.theme?.name) {
   themeForLayout = projet.expand.theme.name;
-} else if (projet.theme) {
+  console.log('✅ Thème via expand.theme.name:', themeForLayout);
+} else if (projet.theme && typeof projet.theme === 'string') {
   themeForLayout = projet.theme;
+  console.log('⚠️ Thème via ancien champ string:', themeForLayout);
+} else {
+  console.log('❌ Aucun thème trouvé, utilisation de basique');
 }
 
-console.log('Thème utilisé:', themeForLayout);
+console.log('Thème final utilisé:', themeForLayout);
+console.log('=== FIN DEBUG ===');
 ---
 
 <Layout
