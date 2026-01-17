@@ -4,11 +4,11 @@ import PocketBase from "pocketbase";
 // CONFIGURATION POCKETBASE POUR VERCEL
 // ----------------------------------------------------
 
-// Utiliser la variable d'environnement ou fallback
+// Utiliser la variable d'environnement ou fallback vers le chemin PocketBase
 const POCKETBASE_URL =
   import.meta.env.POCKETBASE_URL ||
   process.env.POCKETBASE_URL ||
-  'https://portfolio.bryan-thierry.fr/';
+  'https://portfolio.bryan-thierry.fr/_/';
 console.log('PocketBase URL:', POCKETBASE_URL);
 
 // Créer l'instance PocketBase avec gestion d'erreur
@@ -30,7 +30,7 @@ export async function getProjets() {
         console.log('Tentative de récupération des projets...');
         const records = await pb.collection("projets").getFullList({
             filter: "published = true",
-            sort: "-created",
+            sort: "order",
             expand: "tags,technologies,theme",
         });
         console.log('Projets récupérés:', records.length);
