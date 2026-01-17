@@ -25,14 +25,13 @@ export async function getStaticPaths() {
 // Récupérer le slug depuis les paramètres de l'URL
 const { id } = Astro.params;
 
-// RÉCUPÉRER TOUS LES THÈMES D'ABORD
+// Charger tous les thèmes pour le mapping dynamique
 let themesMap = {};
 try {
-  const themesCollection = await pb.collection('themes').getFullList();
-  themesCollection.forEach(theme => {
+  const themes = await pb.collection('themes').getFullList();
+  themes.forEach(theme => {
     themesMap[theme.id] = theme.name;
   });
-  console.log('Thèmes chargés:', Object.keys(themesMap).length);
 } catch (error) {
   console.error('Erreur chargement thèmes:', error);
 }
@@ -80,21 +79,10 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
 // Récupérer les technologies du projet depuis expand
 const projetTechnologies = projet.expand?.technologies || [];
 
-// MAPPER LE THEME ID VERS LE NOM
-let themeForLayout = "basique"; // fallback
-
-if (projet.theme && themesMap[projet.theme]) {
-  // Si on a un ID de theme et qu'il existe dans notre map
-  themeForLayout = themesMap[projet.theme];
-  console.log('✅ Thème trouvé:', themeForLayout, 'pour le projet', projet.title);
-} else if (projet.expand?.theme?.name) {
-  // Si l'expand fonctionne quand même
-  themeForLayout = projet.expand.theme.name;
-  console.log('✅ Thème via expand:', themeForLayout);
-} else {
-  console.log('⚠️ Pas de thème trouvé pour', projet.title, '- utilisation de basique');
-  console.log('projet.theme:', projet.theme);
-}
+// Récupérer le nom du thème dynamiquement
+const themeForLayout = projet.theme && themesMap[projet.theme] 
+  ? themesMap[projet.theme] 
+  : "basique";
 ---
 
 <Layout
