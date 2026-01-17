@@ -1,70 +1,73 @@
 ---
-import LayoutAdmin from '../../layouts/LayoutAdmin.astro';
-import { pb } from '../../utils/pb';
+import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
+import { pb } from "../../utils/pb";
 
-let message = '';
-let messageType = 'success';
+let message = "";
+let messageType = "success";
 let projets = [];
 let tags = [];
 let technologies = [];
 
 try {
-  projets = await pb.collection('projets').getFullList({
-    sort: '-created',
-    expand: 'tags,technologies'
+  projets = await pb.collection("projets").getFullList({
+    sort: "-created",
+    expand: "tags,technologies",
   });
-  tags = await pb.collection('tags').getFullList({ sort: 'nom' });
-  technologies = await pb.collection('technologies').getFullList({ sort: 'nom' });
+  tags = await pb.collection("tags").getFullList({ sort: "nom" });
+  technologies = await pb
+    .collection("technologies")
+    .getFullList({ sort: "nom" });
 } catch (error) {
-  message = `Erreur: ${error.message}`;
-  messageType = 'error';
+  console.error('Erreur chargement projets:', error);
+  message = `Erreur de chargement: ${error.message || 'Connexion PocketBase impossible'}`;
+  messageType = "error";
 }
 
-if (Astro.request.method === 'POST') {
+if (Astro.request.method === "POST") {
   try {
     const formData = await Astro.request.formData();
-    const action = formData.get('action');
-    
-    if (action === 'create' || action === 'update') {
+    const action = formData.get("action");
+
+    if (action === "create" || action === "update") {
       const data = {
-        titre: formData.get('titre'),
-        description: formData.get('description'),
-        contenu: formData.get('contenu'),
-        lien_github: formData.get('lien_github'),
-        lien_demo: formData.get('lien_demo'),
-        statut: formData.get('statut'),
-        ordre_affichage: parseInt(formData.get('ordre_affichage')) || 0,
-        tags: formData.getAll('tags'),
-        technologies: formData.getAll('technologies')
+        titre: formData.get("titre"),
+        description: formData.get("description"),
+        contenu: formData.get("contenu"),
+        lien_github: formData.get("lien_github"),
+        lien_demo: formData.get("lien_demo"),
+        statut: formData.get("statut"),
+        ordre_affichage: parseInt(formData.get("ordre_affichage")) || 0,
+        tags: formData.getAll("tags"),
+        technologies: formData.getAll("technologies"),
       };
-      
-      const imageFile = formData.get('image');
+
+      const imageFile = formData.get("image");
       if (imageFile && imageFile.size > 0) {
         data.image = imageFile;
       }
-      
-      if (action === 'create') {
-        await pb.collection('projets').create(data);
-        message = 'Projet créé avec succès!';
+
+      if (action === "create") {
+        await pb.collection("projets").create(data);
+        message = "Projet créé avec succès!";
       } else {
-        const id = formData.get('id');
-        await pb.collection('projets').update(id, data);
-        message = 'Projet modifié avec succès!';
+        const id = formData.get("id");
+        await pb.collection("projets").update(id, data);
+        message = "Projet modifié avec succès!";
       }
-      
-      return Astro.redirect('/admin/projets');
+
+      return Astro.redirect("/admin/projets");
     }
-    
-    if (action === 'delete') {
-      const id = formData.get('id');
-      await pb.collection('projets').delete(id);
-      message = 'Projet supprimé avec succès!';
-      return Astro.redirect('/admin/projets');
+
+    if (action === "delete") {
+      const id = formData.get("id");
+      await pb.collection("projets").delete(id);
+      message = "Projet supprimé avec succès!";
+      return Astro.redirect("/admin/projets");
     }
-    
   } catch (error) {
-    message = `Erreur: ${error.message}`;
-    messageType = 'error';
+    console.error('Erreur POST:', error);
+    message = `Erreur: ${error.message || 'Opération impossible'}`;
+    messageType = "error";
   }
 }
 ---
@@ -75,10 +78,16 @@ if (Astro.request.method === 'POST') {
       <!-- Header -->
       <div class="flex justify-between items-center mb-8">
         <div>
-          <h1 class="text-4xl font-black uppercase tracking-wider text-base-content">Projets</h1>
-          <p class="text-base-content/60 mt-2">Gérez vos projets de manière visuelle</p>
+          <h1
+            class="text-4xl font-black uppercase tracking-wider text-base-content"
+          >
+            Projets
+          </h1>
+          <p class="text-base-content/60 mt-2">
+            Gérez vos projets de manière visuelle
+          </p>
         </div>
-        <button 
+        <button
           onclick="openCreateModal()"
           class="btn btn-primary btn-lg border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all uppercase font-black"
         >
@@ -86,183 +95,278 @@ if (Astro.request.method === 'POST') {
         </button>
       </div>
 
-      {message && (
-        <div class={`alert ${messageType === 'error' ? 'alert-error' : 'alert-success'} mb-6 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`}>
-          <span class="font-bold">{message}</span>
-        </div>
-      )}
+      {
+        message && (
+          <div
+            class={`alert ${messageType === "error" ? "alert-error" : "alert-success"} mb-6 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`}
+          >
+            <span class="font-bold">{message}</span>
+          </div>
+        )
+      }
 
       <!-- Grille de projets -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projets.map((projet) => (
-          <div class="group relative bg-base-100 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[4px] hover:translate-y-[4px] transition-all overflow-hidden">
-            {/* Image */}
-            <div class="aspect-video bg-base-300 relative overflow-hidden">
-              {projet.image ? (
-                <img 
-                  src={`/api/files/projets/${projet.id}/${projet.image}`} 
-                  alt={projet.titre}
-                  class="w-full h-full object-cover"
-                />
-              ) : (
-                <div class="w-full h-full flex items-center justify-center text-4xl font-black text-base-content/20">
-                  IMG
+        {
+          projets.map((projet) => (
+            <div class="group relative bg-base-100 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[4px] hover:translate-y-[4px] transition-all overflow-hidden">
+              {/* Image */}
+              <div class="aspect-video bg-base-300 relative overflow-hidden">
+                {projet.image ? (
+                  <img
+                    src={`/api/files/projets/${projet.id}/${projet.image}`}
+                    alt={projet.titre}
+                    class="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div class="w-full h-full flex items-center justify-center text-4xl font-black text-base-content/20">
+                    IMG
+                  </div>
+                )}
+                <div class="absolute top-2 right-2">
+                  <span
+                    class={`badge ${projet.statut === "publié" ? "badge-success" : "badge-warning"} badge-lg border-2 border-black font-bold uppercase`}
+                  >
+                    {projet.statut}
+                  </span>
                 </div>
-              )}
-              <div class="absolute top-2 right-2">
-                <span class={`badge ${projet.statut === 'publié' ? 'badge-success' : 'badge-warning'} badge-lg border-2 border-black font-bold uppercase`}>
-                  {projet.statut}
-                </span>
+              </div>
+
+              {/* Contenu */}
+              <div class="p-4">
+                <h3 class="text-xl font-black uppercase mb-2">
+                  {projet.titre}
+                </h3>
+                <p class="text-sm text-base-content/70 mb-3 line-clamp-2">
+                  {projet.description}
+                </p>
+
+                {/* Tags */}
+                {projet.expand?.tags && projet.expand.tags.length > 0 && (
+                  <div class="flex flex-wrap gap-1 mb-3">
+                    {projet.expand.tags.map((tag) => (
+                      <span class="badge badge-sm border-2 border-black font-bold">
+                        {tag.nom}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {/* Technologies */}
+                {projet.expand?.technologies &&
+                  projet.expand.technologies.length > 0 && (
+                    <div class="flex flex-wrap gap-1 mb-4">
+                      {projet.expand.technologies.map((tech) => (
+                        <span class="badge badge-sm badge-secondary border-2 border-black font-bold">
+                          {tech.nom}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                {/* Actions */}
+                <div class="flex gap-2">
+                  <button
+                    onclick={`openEditModal('${projet.id}')`}
+                    class="btn btn-sm flex-1 border-2 border-black font-bold uppercase"
+                  >
+                    Modifier
+                  </button>
+                  <button
+                    onclick={`openPreviewModal('${projet.id}')`}
+                    class="btn btn-sm btn-info border-2 border-black font-bold"
+                  >
+                    👁️
+                  </button>
+                  <button
+                    onclick={`deleteProjet('${projet.id}')`}
+                    class="btn btn-sm btn-error border-2 border-black font-bold"
+                  >
+                    🗑️
+                  </button>
+                </div>
               </div>
             </div>
-            
-            {/* Contenu */}
-            <div class="p-4">
-              <h3 class="text-xl font-black uppercase mb-2">{projet.titre}</h3>
-              <p class="text-sm text-base-content/70 mb-3 line-clamp-2">{projet.description}</p>
-              
-              {/* Tags */}
-              {projet.expand?.tags && projet.expand.tags.length > 0 && (
-                <div class="flex flex-wrap gap-1 mb-3">
-                  {projet.expand.tags.map((tag) => (
-                    <span class="badge badge-sm border-2 border-black font-bold">{tag.nom}</span>
-                  ))}
-                </div>
-              )}
-              
-              {/* Technologies */}
-              {projet.expand?.technologies && projet.expand.technologies.length > 0 && (
-                <div class="flex flex-wrap gap-1 mb-4">
-                  {projet.expand.technologies.map((tech) => (
-                    <span class="badge badge-sm badge-secondary border-2 border-black font-bold">{tech.nom}</span>
-                  ))}
-                </div>
-              )}
-              
-              {/* Actions */}
-              <div class="flex gap-2">
-                <button 
-                  onclick={`openEditModal('${projet.id}')`}
-                  class="btn btn-sm flex-1 border-2 border-black font-bold uppercase"
-                >
-                  Modifier
-                </button>
-                <button 
-                  onclick={`openPreviewModal('${projet.id}')`}
-                  class="btn btn-sm btn-info border-2 border-black font-bold"
-                >
-                  👁️
-                </button>
-                <button 
-                  onclick={`deleteProjet('${projet.id}')`}
-                  class="btn btn-sm btn-error border-2 border-black font-bold"
-                >
-                  🗑️
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
+          ))
+        }
       </div>
     </div>
   </div>
 
   <!-- Modal Création/Édition -->
   <dialog id="edit-modal" class="modal">
-    <div class="modal-box max-w-5xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-base-100">
-      <h3 class="font-black text-3xl uppercase mb-4" id="modal-title">Nouveau Projet</h3>
-      
+    <div
+      class="modal-box max-w-5xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-base-100"
+    >
+      <h3 class="font-black text-3xl uppercase mb-4" id="modal-title">
+        Nouveau Projet
+      </h3>
+
       <form method="POST" enctype="multipart/form-data" id="projet-form">
         <input type="hidden" name="action" id="form-action" value="create" />
         <input type="hidden" name="id" id="projet-id" value="" />
-        
+
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <!-- Formulaire -->
           <div class="space-y-4">
             <div>
               <label class="label font-bold uppercase">Titre</label>
-              <input type="text" name="titre" id="titre" class="input input-bordered w-full border-2 border-black" required />
+              <input
+                type="text"
+                name="titre"
+                id="titre"
+                class="input input-bordered w-full border-2 border-black"
+                required
+              />
             </div>
-            
+
             <div>
               <label class="label font-bold uppercase">Description</label>
-              <textarea name="description" id="description" class="textarea textarea-bordered w-full h-24 border-2 border-black"></textarea>
+              <textarea
+                name="description"
+                id="description"
+                class="textarea textarea-bordered w-full h-24 border-2 border-black"
+              ></textarea>
             </div>
-            
+
             <div>
               <label class="label font-bold uppercase">Contenu</label>
-              <textarea name="contenu" id="contenu" class="textarea textarea-bordered w-full h-32 border-2 border-black"></textarea>
+              <textarea
+                name="contenu"
+                id="contenu"
+                class="textarea textarea-bordered w-full h-32 border-2 border-black"
+              ></textarea>
             </div>
-            
+
             <div class="grid grid-cols-2 gap-4">
               <div>
                 <label class="label font-bold uppercase text-xs">GitHub</label>
-                <input type="url" name="lien_github" id="lien_github" class="input input-bordered w-full input-sm border-2 border-black" />
+                <input
+                  type="url"
+                  name="lien_github"
+                  id="lien_github"
+                  class="input input-bordered w-full input-sm border-2 border-black"
+                />
               </div>
               <div>
                 <label class="label font-bold uppercase text-xs">Démo</label>
-                <input type="url" name="lien_demo" id="lien_demo" class="input input-bordered w-full input-sm border-2 border-black" />
+                <input
+                  type="url"
+                  name="lien_demo"
+                  id="lien_demo"
+                  class="input input-bordered w-full input-sm border-2 border-black"
+                />
               </div>
             </div>
-            
+
             <div class="grid grid-cols-2 gap-4">
               <div>
                 <label class="label font-bold uppercase text-xs">Statut</label>
-                <select name="statut" id="statut" class="select select-bordered w-full select-sm border-2 border-black">
+                <select
+                  name="statut"
+                  id="statut"
+                  class="select select-bordered w-full select-sm border-2 border-black"
+                >
                   <option value="brouillon">Brouillon</option>
                   <option value="publié">Publié</option>
                 </select>
               </div>
               <div>
                 <label class="label font-bold uppercase text-xs">Ordre</label>
-                <input type="number" name="ordre_affichage" id="ordre_affichage" class="input input-bordered w-full input-sm border-2 border-black" value="0" />
+                <input
+                  type="number"
+                  name="ordre_affichage"
+                  id="ordre_affichage"
+                  class="input input-bordered w-full input-sm border-2 border-black"
+                  value="0"
+                />
               </div>
             </div>
-            
+
             <div>
               <label class="label font-bold uppercase text-xs">Image</label>
-              <input type="file" name="image" id="image" accept="image/*" class="file-input file-input-bordered w-full file-input-sm border-2 border-black" />
+              <input
+                type="file"
+                name="image"
+                id="image"
+                accept="image/*"
+                class="file-input file-input-bordered w-full file-input-sm border-2 border-black"
+              />
             </div>
-            
+
             <div>
               <label class="label font-bold uppercase text-xs">Tags</label>
-              <div class="flex flex-wrap gap-2 p-2 border-2 border-black rounded bg-base-200">
-                {tags.map((tag) => (
-                  <label class="label cursor-pointer gap-2">
-                    <input type="checkbox" name="tags" value={tag.id} class="checkbox checkbox-sm" />
-                    <span class="label-text text-xs font-bold">{tag.nom}</span>
-                  </label>
-                ))}
+              <div
+                class="flex flex-wrap gap-2 p-2 border-2 border-black rounded bg-base-200"
+              >
+                {
+                  tags.map((tag) => (
+                    <label class="label cursor-pointer gap-2">
+                      <input
+                        type="checkbox"
+                        name="tags"
+                        value={tag.id}
+                        class="checkbox checkbox-sm"
+                      />
+                      <span class="label-text text-xs font-bold">
+                        {tag.nom}
+                      </span>
+                    </label>
+                  ))
+                }
               </div>
             </div>
-            
+
             <div>
-              <label class="label font-bold uppercase text-xs">Technologies</label>
-              <div class="flex flex-wrap gap-2 p-2 border-2 border-black rounded bg-base-200">
-                {technologies.map((tech) => (
-                  <label class="label cursor-pointer gap-2">
-                    <input type="checkbox" name="technologies" value={tech.id} class="checkbox checkbox-sm checkbox-secondary" />
-                    <span class="label-text text-xs font-bold">{tech.nom}</span>
-                  </label>
-                ))}
+              <label class="label font-bold uppercase text-xs"
+                >Technologies</label
+              >
+              <div
+                class="flex flex-wrap gap-2 p-2 border-2 border-black rounded bg-base-200"
+              >
+                {
+                  technologies.map((tech) => (
+                    <label class="label cursor-pointer gap-2">
+                      <input
+                        type="checkbox"
+                        name="technologies"
+                        value={tech.id}
+                        class="checkbox checkbox-sm checkbox-secondary"
+                      />
+                      <span class="label-text text-xs font-bold">
+                        {tech.nom}
+                      </span>
+                    </label>
+                  ))
+                }
               </div>
             </div>
           </div>
-          
+
           <!-- Aperçu -->
           <div>
             <label class="label font-bold uppercase">Aperçu Temps Réel</label>
-            <div class="border-4 border-black rounded overflow-hidden bg-white" style="height: 600px;">
+            <div
+              class="border-4 border-black rounded overflow-hidden bg-white"
+              style="height: 600px;"
+            >
               <iframe id="preview-iframe" src="" class="w-full h-full"></iframe>
             </div>
           </div>
         </div>
-        
+
         <div class="modal-action">
-          <button type="button" onclick="document.getElementById('edit-modal').close()" class="btn border-2 border-black font-bold uppercase">
+          <button
+            type="button"
+            onclick="document.getElementById('edit-modal').close()"
+            class="btn border-2 border-black font-bold uppercase"
+          >
             Annuler
           </button>
-          <button type="submit" class="btn btn-primary border-2 border-black font-bold uppercase">
+          <button
+            type="submit"
+            class="btn btn-primary border-2 border-black font-bold uppercase"
+          >
             Sauvegarder
           </button>
         </div>
@@ -275,10 +379,17 @@ if (Astro.request.method === 'POST') {
 
   <!-- Modal Aperçu -->
   <dialog id="preview-modal" class="modal">
-    <div class="modal-box max-w-6xl h-[90vh] border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-base-100 p-0">
-      <div class="p-4 border-b-4 border-black bg-base-200 flex justify-between items-center">
+    <div
+      class="modal-box max-w-6xl h-[90vh] border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-base-100 p-0"
+    >
+      <div
+        class="p-4 border-b-4 border-black bg-base-200 flex justify-between items-center"
+      >
         <h3 class="font-black text-2xl uppercase">Aperçu du Projet</h3>
-        <button onclick="document.getElementById('preview-modal').close()" class="btn btn-sm btn-circle border-2 border-black">✕</button>
+        <button
+          onclick="document.getElementById('preview-modal').close()"
+          class="btn btn-sm btn-circle border-2 border-black">✕</button
+        >
       </div>
       <iframe id="full-preview-iframe" src="" class="w-full h-full"></iframe>
     </div>
@@ -286,56 +397,63 @@ if (Astro.request.method === 'POST') {
 
   <script define:vars={{ projets, tags, technologies }}>
     function openCreateModal() {
-      document.getElementById('modal-title').textContent = 'Nouveau Projet';
-      document.getElementById('form-action').value = 'create';
-      document.getElementById('projet-id').value = '';
-      document.getElementById('projet-form').reset();
-      document.getElementById('preview-iframe').src = '';
-      document.getElementById('edit-modal').showModal();
+      document.getElementById("modal-title").textContent = "Nouveau Projet";
+      document.getElementById("form-action").value = "create";
+      document.getElementById("projet-id").value = "";
+      document.getElementById("projet-form").reset();
+      document.getElementById("preview-iframe").src = "";
+      document.getElementById("edit-modal").showModal();
     }
 
     async function openEditModal(projetId) {
-      const projet = projets.find(p => p.id === projetId);
+      const projet = projets.find((p) => p.id === projetId);
       if (!projet) return;
 
-      document.getElementById('modal-title').textContent = 'Modifier le Projet';
-      document.getElementById('form-action').value = 'update';
-      document.getElementById('projet-id').value = projet.id;
-      
-      document.getElementById('titre').value = projet.titre || '';
-      document.getElementById('description').value = projet.description || '';
-      document.getElementById('contenu').value = projet.contenu || '';
-      document.getElementById('lien_github').value = projet.lien_github || '';
-      document.getElementById('lien_demo').value = projet.lien_demo || '';
-      document.getElementById('statut').value = projet.statut || 'brouillon';
-      document.getElementById('ordre_affichage').value = projet.ordre_affichage || 0;
+      document.getElementById("modal-title").textContent = "Modifier le Projet";
+      document.getElementById("form-action").value = "update";
+      document.getElementById("projet-id").value = projet.id;
+
+      document.getElementById("titre").value = projet.titre || "";
+      document.getElementById("description").value = projet.description || "";
+      document.getElementById("contenu").value = projet.contenu || "";
+      document.getElementById("lien_github").value = projet.lien_github || "";
+      document.getElementById("lien_demo").value = projet.lien_demo || "";
+      document.getElementById("statut").value = projet.statut || "brouillon";
+      document.getElementById("ordre_affichage").value =
+        projet.ordre_affichage || 0;
 
       // Cocher les tags
-      document.querySelectorAll('input[name="tags"]').forEach(checkbox => {
-        checkbox.checked = projet.expand?.tags?.some(t => t.id === checkbox.value) || false;
+      document.querySelectorAll('input[name="tags"]').forEach((checkbox) => {
+        checkbox.checked =
+          projet.expand?.tags?.some((t) => t.id === checkbox.value) || false;
       });
 
       // Cocher les technologies
-      document.querySelectorAll('input[name="technologies"]').forEach(checkbox => {
-        checkbox.checked = projet.expand?.technologies?.some(t => t.id === checkbox.value) || false;
-      });
+      document
+        .querySelectorAll('input[name="technologies"]')
+        .forEach((checkbox) => {
+          checkbox.checked =
+            projet.expand?.technologies?.some((t) => t.id === checkbox.value) ||
+            false;
+        });
 
       // Aperçu
-      document.getElementById('preview-iframe').src = `/projets/${projet.id}`;
-      
-      document.getElementById('edit-modal').showModal();
+      document.getElementById("preview-iframe").src = `/projets/${projet.id}`;
+
+      document.getElementById("edit-modal").showModal();
     }
 
     function openPreviewModal(projetId) {
-      document.getElementById('full-preview-iframe').src = `/projets/${projetId}`;
-      document.getElementById('preview-modal').showModal();
+      document.getElementById("full-preview-iframe").src =
+        `/projets/${projetId}`;
+      document.getElementById("preview-modal").showModal();
     }
 
     async function deleteProjet(projetId) {
-      if (!confirm('Êtes-vous sûr de vouloir supprimer ce projet ?')) return;
-      
-      const form = document.createElement('form');
-      form.method = 'POST';
+      if (!confirm("Êtes-vous sûr de vouloir supprimer ce projet ?")) return;
+
+      const form = document.createElement("form");
+      form.method = "POST";
       form.innerHTML = `
         <input type="hidden" name="action" value="delete" />
         <input type="hidden" name="id" value="${projetId}" />

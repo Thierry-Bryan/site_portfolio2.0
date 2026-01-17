@@ -25,29 +25,47 @@ const { title } = Astro.props;
         </div>
         <nav class="p-4">
           <div class="space-y-1">
-            <a href="/admin/dashboard" class="block px-4 py-3 hover:bg-white hover:text-black transition-colors font-bold uppercase text-sm border-2 border-transparent hover:border-white">
+            <a
+              href="/admin/dashboard"
+              class="block px-4 py-3 hover:bg-white hover:text-black transition-colors font-bold uppercase text-sm border-2 border-transparent hover:border-white"
+            >
               📊 Dashboard
             </a>
-            <a href="/admin/projets" class="block px-4 py-3 hover:bg-white hover:text-black transition-colors font-bold uppercase text-sm border-2 border-transparent hover:border-white">
+            <a
+              href="/admin/projets"
+              class="block px-4 py-3 hover:bg-white hover:text-black transition-colors font-bold uppercase text-sm border-2 border-transparent hover:border-white"
+            >
               🚀 Projets
             </a>
-            <a href="/admin/themes" class="block px-4 py-3 hover:bg-white hover:text-black transition-colors font-bold uppercase text-sm border-2 border-transparent hover:border-white">
+            <a
+              href="/admin/themes"
+              class="block px-4 py-3 hover:bg-white hover:text-black transition-colors font-bold uppercase text-sm border-2 border-transparent hover:border-white"
+            >
               🎨 Thèmes
             </a>
-            <a href="/admin/tags" class="block px-4 py-3 hover:bg-white hover:text-black transition-colors font-bold uppercase text-sm border-2 border-transparent hover:border-white">
+            <a
+              href="/admin/tags"
+              class="block px-4 py-3 hover:bg-white hover:text-black transition-colors font-bold uppercase text-sm border-2 border-transparent hover:border-white"
+            >
               🏷️ Tags
             </a>
-            <a href="/admin/technologies" class="block px-4 py-3 hover:bg-white hover:text-black transition-colors font-bold uppercase text-sm border-2 border-transparent hover:border-white">
+            <a
+              href="/admin/technologies"
+              class="block px-4 py-3 hover:bg-white hover:text-black transition-colors font-bold uppercase text-sm border-2 border-transparent hover:border-white"
+            >
               💻 Tech
             </a>
-            <hr class="border-white/30 my-4">
-            <a href="/" class="block px-4 py-3 hover:bg-white hover:text-black transition-colors font-bold uppercase text-sm border-2 border-transparent hover:border-white">
+            <hr class="border-white/30 my-4" />
+            <a
+              href="/"
+              class="block px-4 py-3 hover:bg-white hover:text-black transition-colors font-bold uppercase text-sm border-2 border-transparent hover:border-white"
+            >
               ← Site
             </a>
           </div>
         </nav>
       </div>
-      
+
       <!-- Contenu principal -->
       <div class="flex-1 bg-base-100">
         <slot />

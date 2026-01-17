@@ -3,6 +3,7 @@
 ## Accès au Backoffice
 
 ### URL de connexion
+
 ```
 https://portfolio.bryan-thierry.fr/admin
 ```
@@ -10,12 +11,14 @@ https://portfolio.bryan-thierry.fr/admin
 ### Créer ton compte admin PocketBase
 
 **Option 1 : Via le terminal PocketBase (sur le serveur)**
+
 ```bash
 cd /srv/customer/sites/portfolio.bryan-thierry.fr/Backend/pocketbase
 ./pocketbase admin create email@example.com motdepasse123
 ```
 
-**Option 2 : Via l'interface PocketBase** 
+**Option 2 : Via l'interface PocketBase**
+
 1. Va sur `https://portfolio.bryan-thierry.fr/_/`
 2. Crée un compte admin
 3. Utilise ces identifiants sur `/admin`
@@ -25,14 +28,17 @@ cd /srv/customer/sites/portfolio.bryan-thierry.fr/Backend/pocketbase
 ## 📋 Fonctionnalités du Backoffice
 
 ### 1. **Dashboard** (`/admin/dashboard`)
+
 - Vue d'ensemble des statistiques
 - Nombre de projets, thèmes, tags, technologies
 - Accès rapide aux différentes sections
 
 ### 2. **Gestion des Thèmes** (`/admin/themes`)
+
 ✨ **NOUVEAUTÉ : Color Picker Visuel**
 
 **Créer un nouveau thème :**
+
 1. Cliquer sur "NOUVEAU THÈME"
 2. Choisir un nom (slug, ex: "mon-super-theme")
 3. Sélectionner les couleurs avec les color pickers :
@@ -46,22 +52,28 @@ cd /srv/customer/sites/portfolio.bryan-thierry.fr/Backend/pocketbase
 6. Enregistrer
 
 **Modifier un thème existant :**
+
 - Cliquer sur "MODIFIER" sur un thème
 - Ajuster les couleurs
 - Enregistrer
 
 **Supprimer un thème :**
+
 - Cliquer sur 🗑️
 - Confirmer la suppression
 
 ### 3. **Gestion des Projets** (`/admin/projets`)
-*(À venir dans la prochaine version)*
+
+_(À venir dans la prochaine version)_
+
 - Créer, modifier, supprimer des projets
 - Upload d'images
 - Association avec tags, technologies et thèmes
 
 ### 4. **Gestion des Tags & Technologies**
-*(À venir)*
+
+_(À venir)_
+
 - Gérer les catégories
 - Gérer les technologies
 
@@ -91,17 +103,20 @@ Une fois ton thème créé via le backoffice :
 ## 💡 Astuces
 
 ### Tester un thème rapidement
+
 1. Crée le thème dans `/admin/themes`
 2. Utilise l'aperçu en temps réel pour voir le rendu
 3. Applique-le à un projet de test
 4. Visite la page du projet pour voir le résultat final
 
 ### Cohérence des couleurs
+
 - Utilise des couleurs contrastées entre fond (b1) et texte (bc)
 - La couleur primaire (p) doit ressortir sur le fond
 - Teste avec et sans mode sombre
 
 ### Nommage des thèmes
+
 - Utilise des noms descriptifs : `projet-rba`, `ca-va-trailer`, etc.
 - Évite les espaces (utilise des tirets)
 - Minuscules uniquement
@@ -111,6 +126,7 @@ Une fois ton thème créé via le backoffice :
 ## 🚀 Déploiement automatique
 
 Toute modification dans le backoffice met à jour **immédiatement** PocketBase, donc :
+
 - ✅ Les changements sont instantanés
 - ✅ Pas besoin de redéployer le site
 - ✅ Les thèmes sont synchronisés automatiquement
@@ -120,6 +136,7 @@ Toute modification dans le backoffice met à jour **immédiatement** PocketBase,
 ## 📞 Support
 
 En cas de problème :
+
 1. Vérifie que tu es bien connecté en tant qu'admin
 2. Consulte la console du navigateur (F12) pour les erreurs
 3. Vérifie que PocketBase est accessible sur `https://portfolio.bryan-thierry.fr/_/`

@@ -1,124 +1,162 @@
 ---
-import LayoutAdmin from '../../layouts/LayoutAdmin.astro';
-import { pb } from '../../utils/pb';
+import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
+import { pb } from "../../utils/pb";
 
-let message = '';
-let messageType = 'success';
-let themes = [];
+let message = "";
+let messageType = "success";
+let projets = [];
+let selectedProjetId = "";
 
 try {
-  themes = await pb.collection('themes').getFullList({ sort: 'nom' });
+  projets = await pb.collection("projets").getFullList({ 
+    sort: "-created",
+    filter: 'statut = "publié"'
+  });
+  if (projets.length > 0) {
+    selectedProjetId = projets[0].id;
+  }
 } catch (error) {
+  console.error("Erreur chargement:", error);
   message = `Erreur: ${error.message}`;
-  messageType = 'error';
+  messageType = "error";
 }
 
-if (Astro.request.method === 'POST') {
+if (Astro.request.method === "POST") {
   try {
     const formData = await Astro.request.formData();
-    const action = formData.get('action');
-    
-    if (action === 'update') {
-      const id = formData.get('id');
-      const data = {
-        primary: formData.get('primary'),
-        secondary: formData.get('secondary'),
-        accent: formData.get('accent'),
-        neutral: formData.get('neutral'),
-        base_100: formData.get('base_100'),
-        info: formData.get('info'),
-        success: formData.get('success'),
-        warning: formData.get('warning'),
-        error: formData.get('error')
-      };
+    const action = formData.get("action");
+
+    if (action === "update_theme") {
+      const projetId = formData.get("projet_id");
+      const themeNom = formData.get("theme_nom");
       
-      await pb.collection('themes').update(id, data);
-      message = 'Thème modifié avec succès!';
-      return Astro.redirect('/admin/themes-simple');
+      // Mettre à jour le thème du projet
+      await pb.collection("projets").update(projetId, {
+        theme: themeNom,
+      });
+      
+      message = `Thème "${themeNom}" appliqué au projet !`;
+      selectedProjetId = projetId;
     }
-    
+
+    return Astro.redirect(`/admin/themes?selected=${selectedProjetId}`);
   } catch (error) {
+    console.error("Erreur POST:", error);
     message = `Erreur: ${error.message}`;
-    messageType = 'error';
+    messageType = "error";
   }
+}
+
+// Récupérer le projet sélectionné depuis l'URL
+const urlParams = Astro.url.searchParams;
+const selectedFromUrl = urlParams.get("selected");
+if (selectedFromUrl) {
+  selectedProjetId = selectedFromUrl;
 }
 ---
 
 <LayoutAdmin title="Thèmes">
-  <div class="p-6">
-    <h1 class="text-2xl font-bold mb-6">Gestion des Thèmes</h1>
-
-    {message && (
-      <div class={`alert ${messageType === 'error' ? 'alert-error' : 'alert-success'} mb-4`}>
-        <span>{message}</span>
+  <div class="min-h-screen bg-gradient-to-br from-base-100 to-base-200 p-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="mb-8">
+        <h1 class="text-4xl font-black uppercase tracking-wider text-base-content">Thèmes</h1>
+        <p class="text-base-content/60 mt-2">Modifiez le thème visuel de vos projets</p>
       </div>
-    )}
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- Colonne gauche - Liste des thèmes -->
-      <div class="space-y-4">
-        {themes.map((theme) => (
-          <div class="card bg-base-100 border">
-            <div class="card-body p-4">
-              <h3 class="card-title text-lg mb-3">{theme.nom}</h3>
+      {message && (
+        <div class={`alert ${messageType === 'error' ? 'alert-error' : 'alert-success'} mb-6 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`}>
+          <span class="font-bold">{message}</span>
+        </div>
+      )}
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Liste des projets -->
+        <div class="lg:col-span-1">
+          <h2 class="text-2xl font-black uppercase mb-4">Projets</h2>
+          <div class="space-y-3">
+            {projets.map((projet) => (
+              <button
+                onclick={`selectProjet('${projet.id}')`}
+                class={`w-full text-left p-4 border-4 border-black transition-all ${
+                  selectedProjetId === projet.id
+                    ? 'bg-primary text-primary-content shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]'
+                    : 'bg-base-100 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]'
+                }`}
+              >
+                <h3 class="font-black uppercase text-sm">{projet.titre}</h3>
+                <p class="text-xs opacity-70 mt-1">Thème: {projet.theme || 'omnisphere'}</p>
+              </button>
+            ))}
+          </div>
+
+          <!-- Thèmes disponibles -->
+          <div class="mt-8">
+            <h2 class="text-2xl font-black uppercase mb-4">Thèmes Disponibles</h2>
+            <form method="POST" id="theme-form">
+              <input type="hidden" name="action" value="update_theme" />
+              <input type="hidden" name="projet_id" id="selected-projet-id" value={selectedProjetId} />
               
-              <form method="POST" class="space-y-3" id={`form-${theme.id}`}>
-                <input type="hidden" name="action" value="update" />
-                <input type="hidden" name="id" value={theme.id} />
-                
-                <div class="grid grid-cols-3 gap-3">
-                  <div>
-                    <label class="text-xs font-medium block mb-1">Primary</label>
-                    <input 
-                      type="color" 
-                      name="primary" 
-                      value={theme.primary} 
-                      class="w-full h-10 border rounded cursor-pointer"
-                      onchange={`document.getElementById('preview-frame').contentWindow.postMessage({type: 'updateColor', color: 'primary', value: this.value}, '*')`}
-                    />
-                  </div>
-                  <div>
-                    <label class="text-xs font-medium block mb-1">Secondary</label>
-                    <input 
-                      type="color" 
-                      name="secondary" 
-                      value={theme.secondary} 
-                      class="w-full h-10 border rounded cursor-pointer"
-                      onchange={`document.getElementById('preview-frame').contentWindow.postMessage({type: 'updateColor', color: 'secondary', value: this.value}, '*')`}
-                    />
-                  </div>
-                  <div>
-                    <label class="text-xs font-medium block mb-1">Accent</label>
-                    <input 
-                      type="color" 
-                      name="accent" 
-                      value={theme.accent} 
-                      class="w-full h-10 border rounded cursor-pointer"
-                      onchange={`document.getElementById('preview-frame').contentWindow.postMessage({type: 'updateColor', color: 'accent', value: this.value}, '*')`}
-                    />
-                  </div>
+              <div class="space-y-2">
+                {['omnisphere', 'rba', 'ca-va-trailer', 'les-12-fragments', 'echo-safe'].map((theme) => (
+                  <button
+                    type="button"
+                    onclick={`applyTheme('${theme}')`}
+                    class="w-full text-left p-3 border-2 border-black bg-base-100 hover:bg-secondary hover:text-secondary-content transition-all font-bold uppercase text-sm"
+                  >
+                    {theme}
+                  </button>
+                ))}
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Aperçu du projet -->
+        <div class="lg:col-span-2">
+          <div class="sticky top-4">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-2xl font-black uppercase">Aperçu Temps Réel</h2>
+              <a 
+                href={`/projets/${selectedProjetId}`}
+                target="_blank"
+                class="btn btn-sm border-2 border-black font-bold uppercase"
+              >
+                Ouvrir dans un nouvel onglet
+              </a>
+            </div>
+            <div class="border-4 border-black rounded-lg overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-white" style="height: 700px;">
+              {selectedProjetId ? (
+                <iframe 
+                  id="preview-iframe"
+                  src={`/projets/${selectedProjetId}`}
+                  class="w-full h-full"
+                  title="Aperçu du projet"
+                ></iframe>
+              ) : (
+                <div class="flex items-center justify-center h-full">
+                  <p class="text-xl font-bold text-gray-400">Sélectionnez un projet</p>
                 </div>
-                
-                <button type="submit" class="btn btn-primary btn-sm w-full">Sauvegarder {theme.nom}</button>
-              </form>
+              )}
             </div>
           </div>
-        ))}
-      </div>
-      
-      <!-- Colonne droite - Aperçu -->
-      <div>
-        <h2 class="text-xl font-semibold mb-4">Aperçu temps réel</h2>
-        <p class="text-sm text-gray-600 mb-4">Modifiez les couleurs pour voir l'effet en direct</p>
-        <div class="border rounded-lg overflow-hidden bg-white" style="height: 600px;">
-          <iframe 
-            id="preview-frame"
-            src="/projets" 
-            class="w-full h-full" 
-            title="Aperçu des projets"
-          ></iframe>
         </div>
       </div>
     </div>
   </div>
+
+  <script define:vars={{ selectedProjetId }}>
+    function selectProjet(projetId) {
+      window.location.href = `/admin/themes?selected=${projetId}`;
+    }
+
+    function applyTheme(themeName) {
+      const form = document.getElementById('theme-form');
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'theme_nom';
+      input.value = themeName;
+      form.appendChild(input);
+      form.submit();
+    }
+  </script>
 </LayoutAdmin>

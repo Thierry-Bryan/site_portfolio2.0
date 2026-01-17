@@ -35,19 +35,28 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
 
     <h2 class="text-xl font-semibold mb-4">Actions rapides</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <a href="/admin/projets-simple" class="card bg-primary text-primary-content hover:shadow-lg transition-shadow">
+      <a
+        href="/admin/projets-simple"
+        class="card bg-primary text-primary-content hover:shadow-lg transition-shadow"
+      >
         <div class="card-body p-4">
           <h3 class="font-bold">Nouveau Projet</h3>
           <p class="text-sm opacity-80">Créer un nouveau projet</p>
         </div>
       </a>
-      <a href="/admin/themes-simple" class="card bg-secondary text-secondary-content hover:shadow-lg transition-shadow">
+      <a
+        href="/admin/themes-simple"
+        class="card bg-secondary text-secondary-content hover:shadow-lg transition-shadow"
+      >
         <div class="card-body p-4">
           <h3 class="font-bold">Gérer les Thèmes</h3>
           <p class="text-sm opacity-80">Modifier les couleurs</p>
         </div>
       </a>
-      <a href="/admin/tags" class="card bg-accent text-accent-content hover:shadow-lg transition-shadow">
+      <a
+        href="/admin/tags"
+        class="card bg-accent text-accent-content hover:shadow-lg transition-shadow"
+      >
         <div class="card-body p-4">
           <h3 class="font-bold">Tags & Technologies</h3>
           <p class="text-sm opacity-80">Gérer les catégories</p>
@@ -64,17 +73,21 @@ import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
 
   async function loadStats() {
     try {
-      const projets = await pb.collection('projets').getFullList();
-      const themes = await pb.collection('themes').getFullList();
-      const tags = await pb.collection('tags').getFullList();
-      const technologies = await pb.collection('technologies').getFullList();
+      const projets = await pb.collection("projets").getFullList();
+      const themes = await pb.collection("themes").getFullList();
+      const tags = await pb.collection("tags").getFullList();
+      const technologies = await pb.collection("technologies").getFullList();
 
-      document.getElementById('stat-projets')!.textContent = projets.length.toString();
-      document.getElementById('stat-themes')!.textContent = themes.length.toString();
-      document.getElementById('stat-tags')!.textContent = tags.length.toString();
-      document.getElementById('stat-technologies')!.textContent = technologies.length.toString();
+      document.getElementById("stat-projets")!.textContent =
+        projets.length.toString();
+      document.getElementById("stat-themes")!.textContent =
+        themes.length.toString();
+      document.getElementById("stat-tags")!.textContent =
+        tags.length.toString();
+      document.getElementById("stat-technologies")!.textContent =
+        technologies.length.toString();
     } catch (error) {
-      console.error('Erreur chargement stats:', error);
+      console.error("Erreur chargement stats:", error);
     }
   }
 
