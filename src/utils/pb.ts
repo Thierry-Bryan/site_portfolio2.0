@@ -108,8 +108,29 @@ export function generateThemeCSS(themeRecord: any): string {
         return '';
     }
     
-    const cssVars = themeRecord.css_variables;
-    const darkVars = themeRecord.dark_mode_colors || {};
+    // Helper pour convertir HEX en RGB
+    const hexToRgb = (hex: string) => {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : null;
+    };
+
+    const cssVars = { ...themeRecord.css_variables };
+    const darkVars = { ...(themeRecord.dark_mode_colors || {}) };
+    
+    // Valeurs par défaut vitales si manquantes
+    if (!cssVars.b1) cssVars.b1 = "#faf9f7";
+    if (!cssVars.bc) cssVars.bc = "#000000";
+    if (cssVars.b1 && !cssVars["b1-rgb"]) {
+        const rgb = hexToRgb(cssVars.b1);
+        if (rgb) cssVars["b1-rgb"] = rgb;
+    }
+    
+    if (!darkVars.b1) darkVars.b1 = "#000000";
+    if (!darkVars.bc) darkVars.bc = "#faf9f7";
+    if (darkVars.b1 && !darkVars["b1-rgb"]) {
+        const rgb = hexToRgb(darkVars.b1);
+        if (rgb) darkVars["b1-rgb"] = rgb;
+    }
     
     // CSS pour le mode clair
     let css = `[data-theme="${themeRecord.name}"] {\n`;
@@ -119,13 +140,14 @@ export function generateThemeCSS(themeRecord: any): string {
     css += `}\n\n`;
     
     // CSS pour le mode sombre
+    // Force la création du sélecteur dark même si vide pour éviter le crash du thème
+    css += `[data-theme="${themeRecord.name}-dark"] {\n`;
     if (Object.keys(darkVars).length > 0) {
-        css += `[data-theme="${themeRecord.name}-dark"] {\n`;
         Object.entries(darkVars).forEach(([key, value]) => {
             css += `  --${key}: ${value};\n`;
         });
-        css += `}\n`;
     }
+    css += `}\n`;
     
     console.log('CSS généré pour', themeRecord.name, ':', css.length, 'caractères');
     return css;

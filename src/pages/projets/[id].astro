@@ -35,7 +35,16 @@ if (!projet) {
 }
 
 // Gestion du thème dynamique via PocketBase
-const themeData = projet.expand?.theme;
+const themeExpand = projet.expand?.theme;
+// Sécurisation : expand peut être un tableau ou un objet selon le client PB
+const themeData = Array.isArray(themeExpand) ? themeExpand[0] : themeExpand;
+
+// Debug log pour le serveur
+console.log(`[Projet ${projet.slug}] Theme Data:`, themeData ? `Found (${themeData.name})` : "Not found, using basique");
+if (themeData) {
+  console.log('CSS Variables keys:', Object.keys(themeData.css_variables || {}));
+}
+
 const themeName = themeData?.name || "basique";
 // Si on a un thème personnalisé, on génère le CSS
 // Sinon on utilise le CSS par défaut (basique)
