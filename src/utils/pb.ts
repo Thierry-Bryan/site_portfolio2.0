@@ -8,7 +8,7 @@ import PocketBase from "pocketbase";
 const POCKETBASE_URL =
   import.meta.env.POCKETBASE_URL ||
   process.env.POCKETBASE_URL ||
-  'https://portfolio.bryan-thierry.fr/_/';
+  'https://portfolio.bryan-thierry.fr/';
 console.log('PocketBase URL:', POCKETBASE_URL);
 
 // Créer l'instance PocketBase avec gestion d'erreur
