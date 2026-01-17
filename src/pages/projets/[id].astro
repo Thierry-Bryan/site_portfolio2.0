@@ -199,31 +199,72 @@ const projetTechnologies = projet.expand?.technologies || [];
   </style>
 
   <script>
-    import {
-      generateProjetsData,
-      initializeProjetTheme,
-      setupArrowListeners,
-      listenThemeChanges,
-    } from "../../scripts/projet-navigation";
-
-    const currentTheme =
-      document.documentElement.dataset.currentTheme || "ca-va-trailer";
-    const allProjetsData = JSON.parse(
-      document.documentElement.dataset.allProjets || "[]"
-    );
-
     document.addEventListener("DOMContentLoaded", () => {
+      const currentTheme =
+        document.documentElement.dataset.currentTheme || "ca-va-trailer";
+      const allProjetsData = JSON.parse(
+        document.documentElement.dataset.allProjets || "[]"
+      );
+
+      // Fonction pour générer la map de projets avec navigation circulaire
+      function generateProjetsData(allProjets) {
+        const projetsData = {};
+        
+        allProjets.forEach((p, index) => {
+          const currentTags = p.tags || [];
+          const primaryTag = currentTags.length > 0 ? currentTags[0].name : null;
+          
+          const projetsInSameCategory = primaryTag 
+            ? allProjets.filter(proj => {
+                const pTags = proj.tags || [];
+                return pTags.some(tag => tag.name === primaryTag);
+              })
+            : allProjets;
+
+          const categoryIndex = projetsInSameCategory.findIndex(proj => proj.slug === p.slug);
+          const categoryTotal = projetsInSameCategory.length;
+          
+          const prevIndex = categoryIndex > 0 ? categoryIndex - 1 : categoryTotal - 1;
+          const nextIndex = categoryIndex < categoryTotal - 1 ? categoryIndex + 1 : 0;
+          
+          projetsData[p.slug] = {
+            ...p,
+            primaryTag: primaryTag,
+            prevId: projetsInSameCategory[prevIndex]?.slug,
+            nextId: projetsInSameCategory[nextIndex]?.slug,
+          };
+        });
+        
+        return projetsData;
+      }
+
       // Générer projetsData avec navigation circulaire
       const projetsData = generateProjetsData(allProjetsData);
 
-      // Initialiser le thème du projet
-      initializeProjetTheme(currentTheme);
-
-      // Configurer les event listeners pour les flèches
-      setupArrowListeners(projetsData, currentTheme);
-
-      // Écouter les changements de thème avec projetsData pour récupérer le thème actuel
-      listenThemeChanges(projetsData);
+      // Configuration des flèches de navigation
+      const prevButton = document.querySelector(".arrow-prev");
+      const nextButton = document.querySelector(".arrow-next");
+      
+      if (prevButton && nextButton) {
+        const currentSlug = window.location.pathname.split("/").pop();
+        const currentProjet = projetsData[currentSlug];
+        
+        if (currentProjet) {
+          prevButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (currentProjet.prevId) {
+              window.location.href = `/projets/${currentProjet.prevId}`;
+            }
+          });
+          
+          nextButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (currentProjet.nextId) {
+              window.location.href = `/projets/${currentProjet.nextId}`;
+            }
+          });
+        }
+      }
     });
   </script>
   <script
