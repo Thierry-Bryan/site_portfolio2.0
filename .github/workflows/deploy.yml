@@ -74,7 +74,7 @@ jobs:
           strip_components: 0
 
       - name: Setup PocketBase
-        uses: appleboy/ssh-aion@v1.0.3
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
