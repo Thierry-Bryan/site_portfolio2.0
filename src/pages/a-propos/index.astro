@@ -224,18 +224,25 @@ const categoryOrder = ["Design", "Frontend", "Productivité"];
                   <div class="space-y-3 mt-8">
                     {techs.map((tech) => {
                       const logoUrl = getFileUrl(tech, tech.logo);
+                      const logoDarkUrl = tech.logo_dark ? getFileUrl(tech, tech.logo_dark) : null;
+                      const isDarkMode = false; // Sera géré par le script client
+                      const currentLogo = logoDarkUrl ? logoUrl : logoUrl;
+                      
                       return (
                         <button
                           type="button"
                           class="w-full flex items-center gap-4 p-4 border-2 border-[var(--bc)] bg-[var(--b1)] hover:bg-[var(--p)] hover:border-[var(--p)] group transition-all duration-300 cursor-pointer relative overflow-hidden"
                           style="box-shadow: -4px 4px 0 0 var(--bc);"
-                          onclick={`openCompetenceModal('${tech.name}', '${logoUrl}', '${tech.category}', '${tech.description?.replace(/'/g, "\\'")}', 'orange')`}
+                          onclick={`openCompetenceModal('${tech.name}', '${logoUrl}', '${tech.category}', '${tech.description?.replace(/'/g, "\\'")}', 'orange', '${logoDarkUrl || ""}')`}
                         >
                           <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-transparent group-hover:scale-110 transition-transform duration-300 relative z-10">
                             <img
                               src={logoUrl}
+                              data-logo-light={logoUrl}
+                              data-logo-dark={logoDarkUrl || logoUrl}
+                              data-tech-name={tech.name}
                               alt={tech.name}
-                              class="max-w-full max-h-full object-contain"
+                              class="tech-logo max-w-full max-h-full object-contain"
                             />
                           </div>
                           <p class="font-primary text-sm text-left text-[var(--bc)] group-hover:text-[var(--b1)] transition-colors relative z-10">
@@ -522,4 +529,34 @@ const categoryOrder = ["Design", "Frontend", "Productivité"];
       applyModalTheme();
     }
   });
+
+  // Gérer le changement de logo selon le thème clair/sombre
+  function updateTechLogos() {
+    const isDarkMode = localStorage.getItem("darkMode") === "true";
+    const logos = document.querySelectorAll(".tech-logo");
+    
+    logos.forEach((logo) => {
+      const lightLogo = logo.getAttribute("data-logo-light");
+      const darkLogo = logo.getAttribute("data-logo-dark");
+      
+      if (isDarkMode && darkLogo && darkLogo !== lightLogo) {
+        logo.src = darkLogo;
+      } else {
+        logo.src = lightLogo;
+      }
+    });
+  }
+
+  // Mettre à jour les logos au chargement
+  document.addEventListener("DOMContentLoaded", updateTechLogos);
+  updateTechLogos();
+
+  // Écouter les changements de thème pour mettre à jour les logos
+  window.addEventListener("storage", (e) => {
+    if (e.key === "darkMode") {
+      updateTechLogos();
+    }
+  });
+
+  window.addEventListener("themeChanged", updateTechLogos);
 </script>
