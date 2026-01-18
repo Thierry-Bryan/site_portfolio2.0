@@ -4,8 +4,8 @@ import Button from "../../components/Button.astro";
 import CompetenceModal from "../../components/CompetenceModal.astro";
 import { getTechnologies, getFileUrl } from "../../utils/pb";
 
-const theme = "les-12-fragments"; // Thème pour la page à propos
-const firstSectionTheme = "echo-safe"; // Thème de la première section pour le header
+const theme = "vert"; // Thème pour la page à propos
+const firstSectionTheme = "bleu"; // Thème de la première section pour le header
 
 // Récupérer toutes les technologies depuis PocketBase
 const allTechnologies = await getTechnologies();
@@ -31,7 +31,7 @@ const categoryOrder = ["Design", "Frontend", "Productivité"];
 >
   <section
     class="mx-4 md:mx-8 lg:mx-16 py-10 pt-25 bg-[var(--b1)]"
-    data-theme="echo-safe"
+    data-theme="bleu"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div class="md:col-span-1 flex justify-center items-center">
@@ -73,7 +73,7 @@ const categoryOrder = ["Design", "Frontend", "Productivité"];
   <!-- Section Parcours avec frise chronologique -->
   <section
     class="mx-4 md:mx-8 lg:mx-16 py-10 bg-[var(--b1)]"
-    data-theme="omnisphere"
+    data-theme="rose"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <!-- Frise chronologique à gauche (2/3) -->
@@ -162,7 +162,7 @@ const categoryOrder = ["Design", "Frontend", "Productivité"];
                 <Button
                   href="/projets"
                   className="bg-white text-purple-900 hover:bg-purple-100 font-primary text-lg"
-                  theme="omnisphere"
+                  theme="rose"
                 >
                   VOIR MES PROJETS !
                 </Button>
@@ -263,7 +263,7 @@ const categoryOrder = ["Design", "Frontend", "Productivité"];
   <!-- Section Mon Prochain Chapitre -->
   <section
     class="mx-4 md:mx-8 lg:mx-16 py-10 bg-[var(--b1)]"
-    data-theme="les-12-fragments"
+    data-theme="vert"
   >
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
       <!-- Contenu texte à gauche (2/3) -->
@@ -327,7 +327,7 @@ const categoryOrder = ["Design", "Frontend", "Productivité"];
           <Button
             href="#contact"
             className="font-primary text-xl px-8 py-4"
-            theme="les-12-fragments"
+            theme="vert"
           >
             COLLABORONS ENSEMBLE !
           </Button>

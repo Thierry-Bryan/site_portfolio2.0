@@ -54,7 +54,7 @@ html[data-theme]:not([data-theme*="-dark"]) {
 
 /* === THÈMES DAISYUI PERSONNALISÉS === */
 
-[data-theme="les-12-fragments"] {
+[data-theme="vert"] {
   --p: #1db954;
   --s: #1db954; 
   --a: #1db954; 
@@ -62,7 +62,7 @@ html[data-theme]:not([data-theme*="-dark"]) {
   --b1-rgb: 250, 249, 247;
   --bc: #000000;
 }
-[data-theme="les-12-fragments-dark"] {
+[data-theme="vert-dark"] {
   --p: #1ac656; 
   --s: #1ac656; 
   --a: #1ac656; 
@@ -71,7 +71,7 @@ html[data-theme]:not([data-theme*="-dark"]) {
   --bc: #faf9f7;
 }
 
-[data-theme="echo-safe"] {
+[data-theme="bleu"] {
   --p: #546bfd; 
   --s: #546bfd; 
   --a: #b3d1ff; 
@@ -79,7 +79,7 @@ html[data-theme]:not([data-theme*="-dark"]) {
   --b1-rgb: 250, 249, 247;
   --bc: #000000;
 }
-[data-theme="echo-safe-dark"] {
+[data-theme="bleu-dark"] {
   --p: #546bfd; 
   --s: #546bfd; 
   --a: #b3d1ff; 
@@ -88,7 +88,7 @@ html[data-theme]:not([data-theme*="-dark"]) {
   --bc: #faf9f7;
 }
 
-[data-theme="omnisphere"] {
+[data-theme="rose"] {
   --p: #7c3aed; 
   --s: #7c3aed; 
   --a: #7c3aed; 
@@ -96,7 +96,7 @@ html[data-theme]:not([data-theme*="-dark"]) {
   --b1-rgb: 250, 249, 247;
   --bc: #000000;
 }
-[data-theme="omnisphere-dark"] {
+[data-theme="rose-dark"] {
   --p: #fd6eff; 
   --s: #fd6eff; 
   --a: #fd6eff; 
