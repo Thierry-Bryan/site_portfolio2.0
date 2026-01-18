@@ -118,93 +118,6 @@ const firstSectionTheme = "echo-safe"; // Thème de la première section pour le
             </div>
           </div>
 
-          <!-- Projets pratiques -->
-          <div class="relative flex items-start mb-10">
-            <div
-              class="shrink-0 w-14 h-14 shadow-xl flex items-center justify-center z-10 transform-rotate-neg-12 transition-colors duration-300 timeline-badge-accent"
-            >
-              <span
-                class="font-primary text-xs transform-rotate-12 timeline-badge-text"
-              >
-                PRO
-              </span>
-            </div>
-            <div
-              class="ml-8 p-6 rounded-none shadow-lg transform-rotate-neg-1 hover-rotate-0 transition-all duration-300 timeline-card-accent"
-            >
-              <h3 class="font-primary text-xl mb-3 timeline-card-title-accent">
-                MISE EN PRATIQUE
-              </h3>
-              <p class="font-medium mb-4">
-                J'ai mis ces bases en pratique à travers une série de projets
-                concrets et variés, prouvant ma capacité à traduire une vision
-                créative en un produit technique solide et performant.
-              </p>
-
-              <!-- Liste des projets - Descriptions détaillées -->
-              <div class="grid grid-cols-2 gap-2">
-                <div
-                  class="p-3 shadow-sm transform-rotate-1 hover-rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center timeline-project-card"
-                >
-                  <h4 class="font-primary text-sm mb-1 timeline-project-title">
-                    ECHO SAFE
-                  </h4>
-                  <p class="text-xs timeline-project-text">
-                    Application solidaire contre le harcèlement avec messagerie
-                    sécurisée
-                  </p>
-                </div>
-
-                <div
-                  class="p-3 shadow-sm transform-rotate-neg-1 hover-rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center timeline-project-card"
-                >
-                  <h4 class="font-primary text-sm mb-1 timeline-project-title">
-                    ÇA VA TRAILER
-                  </h4>
-                  <p class="text-xs timeline-project-text">
-                    Vitrine immersive pour un festival de cinéma avec identité
-                    visuelle forte
-                  </p>
-                </div>
-
-                <div
-                  class="p-3 shadow-sm transform-rotate-1 hover-rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center timeline-project-card"
-                >
-                  <h4 class="font-primary text-sm mb-1 timeline-project-title">
-                    RBA
-                  </h4>
-                  <p class="text-xs timeline-project-text">
-                    Refonte complète de l'identité visuelle pour l'association
-                    biodiversité
-                  </p>
-                </div>
-
-                <div
-                  class="p-3 shadow-sm transform-rotate-neg-1 hover-rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center timeline-project-card"
-                >
-                  <h4 class="font-primary text-sm mb-1 timeline-project-title">
-                    12 FRAGMENTS
-                  </h4>
-                  <p class="text-xs timeline-project-text">
-                    Site créatif et narratif autour de 12 avatars en pixel art
-                  </p>
-                </div>
-
-                <div
-                  class="p-3 shadow-sm transform-rotate-1 hover-rotate-0 transition-all duration-300 h-32 flex flex-col justify-center text-center col-span-2 timeline-project-card"
-                >
-                  <h4 class="font-primary text-sm mb-1 timeline-project-title">
-                    OMNISPHERE
-                  </h4>
-                  <p class="text-xs timeline-project-text">
-                    Site immersif questionnant l'avenir des relations humaines
-                    avec design futuriste
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- Objectif -->
           <div class="relative flex items-start">
             <div
@@ -532,6 +445,9 @@ const firstSectionTheme = "echo-safe"; // Thème de la première section pour le
 </Layout>
 
 <script>
+  // Variable globale pour stocker le thème actuel
+  let currentSectionTheme = null;
+
   // Script pour changer la couleur de la barre de défilement selon la section visible
   function updateScrollbarTheme() {
     const sections = document.querySelectorAll("section[data-theme]");
@@ -540,7 +456,10 @@ const firstSectionTheme = "echo-safe"; // Thème de la première section pour le
     // Détecter la section visible
     sections.forEach((section) => {
       const rect = section.getBoundingClientRect();
-      if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+      if (
+        rect.top <= window.innerHeight / 2 &&
+        rect.bottom >= window.innerHeight / 2
+      ) {
         const sectionTheme = section.getAttribute("data-theme") || "";
         currentBaseTheme = sectionTheme.replace("-dark", "");
       }
@@ -549,11 +468,19 @@ const firstSectionTheme = "echo-safe"; // Thème de la première section pour le
     // Mettre à jour la couleur de la scrollbar
     if (currentBaseTheme) {
       const isDarkMode = localStorage.getItem("darkMode") === "true";
-      const scrollbarTheme = isDarkMode ? currentBaseTheme + "-dark" : currentBaseTheme;
-      
+      const scrollbarTheme = isDarkMode
+        ? currentBaseTheme + "-dark"
+        : currentBaseTheme;
+
+      // Stocker le thème actuel pour le modal
+      currentSectionTheme = currentBaseTheme;
+
       // Appliquer le thème au html pour que les variables CSS soient disponibles
-      document.documentElement.setAttribute("data-scrollbar-theme", scrollbarTheme);
-      
+      document.documentElement.setAttribute(
+        "data-scrollbar-theme",
+        scrollbarTheme,
+      );
+
       // Mettre à jour les couleurs de la scrollbar via les variables CSS
       updateScrollbarColors();
     }
@@ -562,7 +489,7 @@ const firstSectionTheme = "echo-safe"; // Thème de la première section pour le
   function updateScrollbarColors() {
     const html = document.documentElement;
     const theme = html.getAttribute("data-scrollbar-theme");
-    
+
     if (theme) {
       // Créer un élément temporaire avec le bon thème pour récupérer les couleurs
       const tempElement = document.createElement("div");
@@ -621,15 +548,15 @@ const firstSectionTheme = "echo-safe"; // Thème de la première section pour le
   // Fonction de throttle pour optimiser les performances
   function throttle(func, limit) {
     let inThrottle;
-    return function() {
+    return function () {
       const args = arguments;
       const context = this;
       if (!inThrottle) {
         func.apply(context, args);
         inThrottle = true;
-        setTimeout(() => inThrottle = false, limit);
+        setTimeout(() => (inThrottle = false), limit);
       }
-    }
+    };
   }
 
   // Écouter le scroll avec throttle
@@ -648,4 +575,51 @@ const firstSectionTheme = "echo-safe"; // Thème de la première section pour le
   // Initialisation au chargement
   document.addEventListener("DOMContentLoaded", updateScrollbarTheme);
   updateScrollbarTheme();
+
+  // Fonction pour appliquer le thème au modal de contact
+  function applyModalTheme() {
+    const modal = document.getElementById("contact-modal");
+    const modalCard = document.getElementById("modal-card");
+
+    if (modal && modalCard && currentSectionTheme) {
+      const isDarkMode = localStorage.getItem("darkMode") === "true";
+      const modalTheme = isDarkMode
+        ? currentSectionTheme + "-dark"
+        : currentSectionTheme;
+
+      // Appliquer le thème au modal
+      modal.setAttribute("data-theme", modalTheme);
+      modalCard.setAttribute("data-theme", modalTheme);
+    }
+  }
+
+  // Surcharger la fonction openContactModal pour appliquer le thème
+  const originalOpenModal = (window as any).openContactModal;
+  (window as any).openContactModal = function () {
+    // Mettre à jour le thème avant d'ouvrir
+    updateScrollbarTheme();
+    applyModalTheme();
+
+    // Appeler la fonction originale
+    if (originalOpenModal) {
+      originalOpenModal();
+    }
+  };
+
+  // Écouter les changements de thème pour mettre à jour le modal s'il est ouvert
+  window.addEventListener("storage", (e) => {
+    if (e.key === "darkMode") {
+      const modal = document.getElementById("contact-modal");
+      if (modal && modal.classList.contains("show")) {
+        applyModalTheme();
+      }
+    }
+  });
+
+  window.addEventListener("themeChanged", () => {
+    const modal = document.getElementById("contact-modal");
+    if (modal && modal.classList.contains("show")) {
+      applyModalTheme();
+    }
+  });
 </script>
