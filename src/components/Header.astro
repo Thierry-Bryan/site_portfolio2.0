@@ -276,9 +276,10 @@ const headerClass =
     window.location.pathname.startsWith("/projets/");
   const isAProposPage = window.location.pathname.includes("/a-propos");
 
-  // Fonction pour gérer la couleur du bouton contact sur la page projet
-  function updateProjetButtonColor() {
-    if (!isProjetPage || window.location.pathname === "/projets") return;
+  // Fonction pour gérer la couleur du bouton contact sur toutes les pages sauf accueil
+  function updateButtonColor() {
+    // Ne rien faire sur la page d'accueil
+    if (isHomePage) return;
     
     const headerButton = document.querySelector(".header-button");
     const btnText = headerButton?.querySelector(".btn-text");
@@ -287,12 +288,13 @@ const headerClass =
       const isDarkMode = localStorage.getItem("darkMode") === "true";
       
       if (isDarkMode) {
-        // En mode sombre sur page projet [id]: texte noir et ombre blanche
+        // En mode sombre: texte noir et ombre blanche
         btnText.style.color = "#181818";
         headerButton.style.boxShadow = "-5px 5px 0 0 #ffffff";
       } else {
         // En mode clair: texte blanc et ombre noire (par défaut)
         btnText.style.color = "white";
+        // Si page projet ou page à propos, s'assurer que l'ombre est par défaut
         headerButton.style.boxShadow = "-5px 5px 0 0 #000000";
       }
     }
@@ -607,8 +609,8 @@ const headerClass =
         if (desktopLogo) desktopLogo.style.color = "var(--p)";
         if (mobileLogo) mobileLogo.style.color = "var(--p)";
       }
-      // Mettre à jour la couleur du bouton sur page projet
-      updateProjetButtonColor();
+      // Mettre à jour la couleur du bouton
+      updateButtonColor();
       updateHeaderStyle();
       applyHeaderContrast();
     }
@@ -624,8 +626,8 @@ const headerClass =
       if (desktopLogo) desktopLogo.style.color = "var(--p)";
       if (mobileLogo) mobileLogo.style.color = "var(--p)";
     }
-    // Mettre à jour la couleur du bouton sur page projet
-    updateProjetButtonColor();
+    // Mettre à jour la couleur du bouton
+    updateButtonColor();
     updateHeaderStyle();
     applyHeaderContrast();
   });
@@ -666,9 +668,11 @@ const headerClass =
 
     updateHeaderStyle();
     applyHeaderContrast();
+    // Appliquer logic bouton page à propos qui n'est pas homepage
+    updateButtonColor();
   } else {
-    // Initialiser la couleur du bouton sur page projet
-    updateProjetButtonColor();
+    // Initialiser la couleur du bouton sur les autres pages
+    updateButtonColor();
     updateHeaderStyle();
     applyHeaderContrast();
   }
