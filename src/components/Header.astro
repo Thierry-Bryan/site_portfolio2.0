@@ -332,17 +332,17 @@ const headerClass =
     if (desktopLogo)
       desktopLogo.className = desktopLogo.className.replace(
         /text-\[var\(--\w+\)\]/g,
-        textClass
+        textClass,
       );
     if (mobileLogo)
       mobileLogo.className = mobileLogo.className.replace(
         /text-\[var\(--\w+\)\]/g,
-        textClass
+        textClass,
       );
     navLinks.forEach((link) => {
       link.className = link.className.replace(
         /text-\[var\(--\w+\)\]/g,
-        textClass
+        textClass,
       );
     });
 

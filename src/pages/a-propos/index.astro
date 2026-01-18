@@ -530,3 +530,122 @@ const firstSectionTheme = "echo-safe"; // Thème de la première section pour le
     </div>
   </section>
 </Layout>
+
+<script>
+  // Script pour changer la couleur de la barre de défilement selon la section visible
+  function updateScrollbarTheme() {
+    const sections = document.querySelectorAll("section[data-theme]");
+    let currentBaseTheme = null;
+
+    // Détecter la section visible
+    sections.forEach((section) => {
+      const rect = section.getBoundingClientRect();
+      if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+        const sectionTheme = section.getAttribute("data-theme") || "";
+        currentBaseTheme = sectionTheme.replace("-dark", "");
+      }
+    });
+
+    // Mettre à jour la couleur de la scrollbar
+    if (currentBaseTheme) {
+      const isDarkMode = localStorage.getItem("darkMode") === "true";
+      const scrollbarTheme = isDarkMode ? currentBaseTheme + "-dark" : currentBaseTheme;
+      
+      // Appliquer le thème au html pour que les variables CSS soient disponibles
+      document.documentElement.setAttribute("data-scrollbar-theme", scrollbarTheme);
+      
+      // Mettre à jour les couleurs de la scrollbar via les variables CSS
+      updateScrollbarColors();
+    }
+  }
+
+  function updateScrollbarColors() {
+    const html = document.documentElement;
+    const theme = html.getAttribute("data-scrollbar-theme");
+    
+    if (theme) {
+      // Créer un élément temporaire avec le bon thème pour récupérer les couleurs
+      const tempElement = document.createElement("div");
+      tempElement.setAttribute("data-theme", theme);
+      tempElement.style.position = "absolute";
+      tempElement.style.visibility = "hidden";
+      document.body.appendChild(tempElement);
+
+      // Récupérer les variables CSS calculées
+      const computedStyles = getComputedStyle(tempElement);
+      const primaryColor = computedStyles.getPropertyValue("--p").trim();
+      const backgroundColor = computedStyles.getPropertyValue("--b1").trim();
+
+      // Supprimer l'élément temporaire
+      document.body.removeChild(tempElement);
+
+      // Créer ou mettre à jour le style de la scrollbar
+      let scrollbarStyle = document.getElementById("dynamic-scrollbar-style");
+      if (!scrollbarStyle) {
+        scrollbarStyle = document.createElement("style");
+        scrollbarStyle.id = "dynamic-scrollbar-style";
+        document.head.appendChild(scrollbarStyle);
+      }
+
+      scrollbarStyle.textContent = `
+        /* Firefox */
+        * {
+          scrollbar-width: thin;
+          scrollbar-color: ${primaryColor} ${backgroundColor} !important;
+        }
+
+        /* Chrome, Edge, Safari */
+        ::-webkit-scrollbar {
+          width: 12px;
+          height: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: ${backgroundColor} !important;
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: ${primaryColor} !important;
+          border-radius: 6px;
+          border: 2px solid ${backgroundColor} !important;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: ${primaryColor} !important;
+          filter: brightness(1.1);
+        }
+      `;
+    }
+  }
+
+  // Fonction de throttle pour optimiser les performances
+  function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+      const args = arguments;
+      const context = this;
+      if (!inThrottle) {
+        func.apply(context, args);
+        inThrottle = true;
+        setTimeout(() => inThrottle = false, limit);
+      }
+    }
+  }
+
+  // Écouter le scroll avec throttle
+  const throttledUpdateScrollbar = throttle(updateScrollbarTheme, 100);
+  window.addEventListener("scroll", throttledUpdateScrollbar);
+
+  // Écouter les changements de thème
+  window.addEventListener("storage", (e) => {
+    if (e.key === "darkMode") {
+      updateScrollbarTheme();
+    }
+  });
+
+  window.addEventListener("themeChanged", updateScrollbarTheme);
+
+  // Initialisation au chargement
+  document.addEventListener("DOMContentLoaded", updateScrollbarTheme);
+  updateScrollbarTheme();
+</script>

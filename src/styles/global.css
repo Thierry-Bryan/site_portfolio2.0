@@ -54,18 +54,86 @@ html[data-theme]:not([data-theme*="-dark"]) {
 
 /* === THÈMES DAISYUI PERSONNALISÉS === */
 
+[data-theme="les-12-fragments"] {
+  --p: #1db954;
+  --s: #1db954; 
+  --a: #1db954; 
+  --b1: #faf9f7;
+  --b1-rgb: 250, 249, 247;
+  --bc: #000000;
+}
+[data-theme="les-12-fragments-dark"] {
+  --p: #1ac656; 
+  --s: #1ac656; 
+  --a: #1ac656; 
+  --b1: #000000;
+  --b1-rgb: 0, 0, 0;
+  --bc: #faf9f7;
+}
+
+[data-theme="echo-safe"] {
+  --p: #546bfd; 
+  --s: #546bfd; 
+  --a: #b3d1ff; 
+  --b1: #faf9f7;
+  --b1-rgb: 250, 249, 247;
+  --bc: #000000;
+}
+[data-theme="echo-safe-dark"] {
+  --p: #546bfd; 
+  --s: #546bfd; 
+  --a: #b3d1ff; 
+  --b1: #000000;
+  --b1-rgb: 0, 0, 0;
+  --bc: #faf9f7;
+}
+
+[data-theme="omnisphere"] {
+  --p: #7c3aed; 
+  --s: #7c3aed; 
+  --a: #7c3aed; 
+  --b1: #faf9f7;
+  --b1-rgb: 250, 249, 247;
+  --bc: #000000;
+}
+[data-theme="omnisphere-dark"] {
+  --p: #fd6eff; 
+  --s: #fd6eff; 
+  --a: #fd6eff; 
+  --b1: #000000;
+  --b1-rgb: 0, 0, 0;
+  --bc: #faf9f7;
+}
+
+[data-theme="orange"] {
+  --p: #ff7300; 
+  --s: #ffb300; 
+  --a: #ffe066; 
+  --b1: #faf9f7;
+  --b1-rgb: 250, 249, 247;
+  --bc: #000000;
+}
+[data-theme="orange-dark"] {
+  --p: #f08a2b; 
+  --s: #e7761c; 
+  --a: #f4b44a; 
+  --b1: #000000;
+  --b1-rgb: 0, 0, 0;
+  --bc: #faf9f7;
+}
+
 [data-theme="basique"] {
-  --p: #ee0221; /* rose fuchsia vif */
-  --s: #fa0435; /* rose/rouge vif */
-  --a: #f72c55; /* rose clair */
+  --p: #ee0221; 
+  --s: #fa0435; 
+  --a: #f72c55; 
   --b1: #faf9f7;
   --b1-rgb: 250, 249, 247;
   --bc: #000000;
 }
 [data-theme="basique-dark"] {
-  --p: #ff005c; /* rose saturé */
-  --s: #fa0435; /* rose clair */
-  --a: #f72c55; /* rose pâle */
+  --p: #ff005c; 
+  --s: #fa0435; 
+  --a: #f72c55; 
   --b1: #000000;
   --b1-rgb: 0, 0, 0;
   --bc: #faf9f7;
