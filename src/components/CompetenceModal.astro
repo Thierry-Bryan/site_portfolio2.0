@@ -4,29 +4,31 @@
 
 <div
   id="competence-modal"
-  class="modal-overlay fixed inset-0 z-[9999] hidden items-center justify-center p-4 overflow-y-auto"
+  class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 overflow-y-auto bg-black/30 backdrop-blur-md opacity-0 transition-opacity duration-400"
   onclick="closeCompetenceModal()"
 >
   <div
     id="competence-modal-container"
-    class="modal-container relative w-full max-w-2xl my-auto"
+    class="relative w-full max-w-2xl my-auto translate-y-8 opacity-0 transition-all duration-500"
     onclick="event.stopPropagation()"
   >
     <!-- Modal Card -->
     <div
       id="competence-modal-card"
-      class="modal-card relative bg-[var(--b1)] border-4 border-[var(--bc)] p-6 md:p-12 modal-shadow-primary"
+      class="relative bg-[var(--b1)] border-4 border-[var(--bc)] p-6 md:p-12"
+      style="box-shadow: -8px 8px 0 0 var(--bc);"
     >
       <!-- Bouton fermer -->
       <button
         type="button"
         id="close-competence-modal"
         onclick="closeCompetenceModal()"
-        class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center border-2 border-[var(--bc)] bg-[var(--b1)] hover:bg-[var(--p)] hover:border-[var(--p)] transition-all duration-300 group z-50"
+        class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center border-2 border-[var(--p)] bg-[var(--b1)] hover:bg-[var(--p)] hover:border-[var(--p)] transition-all duration-300 group z-50 cursor-pointer"
+        style="box-shadow: -3px 3px 0 0 var(--bc);"
         aria-label="Fermer"
       >
         <svg
-          class="w-5 h-5 text-[var(--bc)] group-hover:text-[var(--b1)] transition-colors pointer-events-none"
+          class="w-5 h-5 text-[var(--p)] group-hover:text-[var(--b1)] transition-colors pointer-events-none"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -43,10 +45,8 @@
       <div class="absolute top-0 left-0 w-full h-2 bg-[var(--p)]"></div>
 
       <!-- Logo -->
-      <div class="flex justify-center mb-6 mt-4">
-        <div
-          class="w-24 h-24 border-2 border-[var(--bc)] bg-[var(--b1)] flex items-center justify-center p-4"
-        >
+      <div class="flex justify-center mt-4">
+        <div class="w-24 h-24 flex items-center justify-center p-4">
           <img
             id="competence-modal-logo"
             src=""
@@ -85,8 +85,9 @@
   function openCompetenceModal(name, logo, category, description, theme, logoDark) {
     const modal = document.getElementById("competence-modal");
     const modalCard = document.getElementById("competence-modal-card");
+    const modalContainer = document.getElementById("competence-modal-container");
 
-    if (modal && modalCard) {
+    if (modal && modalCard && modalContainer) {
       // Appliquer le thème au modal
       const isDarkMode = localStorage.getItem("darkMode") === "true";
       const modalTheme = isDarkMode ? theme + "-dark" : theme;
@@ -101,87 +102,51 @@
       const logoImg = document.getElementById("competence-modal-logo");
       logoImg.src = currentLogo;
       logoImg.alt = name;
-      logoImg.setAttribute("data-logo-light", logo);
-      logoImg.setAttribute("data-logo-dark", logoDark || logo);
       
       document.getElementById("competence-modal-name").textContent = name;
       document.getElementById("competence-modal-category").textContent = category;
-      document.getElementById("competence-modal-description").textContent = description;
+      document.getElementById("competence-modal-description").innerHTML = description;
 
-      // Afficher le modal
-      modal.classList.add("show");
+      // Afficher le modal avec animation
+      modal.classList.remove("hidden");
       document.body.style.overflow = "hidden";
+      
+      // Forcer un reflow pour que l'animation fonctionne
+      modal.offsetHeight;
+      
+      // Ajouter les classes d'animation
+      modal.classList.remove("opacity-0");
+      modal.classList.add("flex", "opacity-100");
+      modalContainer.classList.remove("translate-y-8", "opacity-0");
+      modalContainer.classList.add("translate-y-0", "opacity-100");
     }
   }
 
   function closeCompetenceModal() {
     const modal = document.getElementById("competence-modal");
+    const modalContainer = document.getElementById("competence-modal-container");
 
-    if (modal) {
-      modal.classList.remove("show");
-      document.body.style.overflow = "";
+    if (modal && modalContainer) {
+      // Animer la fermeture
+      modal.classList.remove("opacity-100");
+      modal.classList.add("opacity-0");
+      modalContainer.classList.remove("translate-y-0", "opacity-100");
+      modalContainer.classList.add("translate-y-8", "opacity-0");
+      
+      // Cacher après l'animation
+      setTimeout(() => {
+        modal.classList.remove("flex");
+        modal.classList.add("hidden");
+        document.body.style.overflow = "";
+      }, 400);
     }
   }
 
   // Fermer avec Escape
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && document.getElementById("competence-modal")?.classList.contains("show")) {
+    if (e.key === "Escape" && document.getElementById("competence-modal")?.classList.contains("flex")) {
       closeCompetenceModal();
     }
   });
 </script>
 
-<style>
-  .modal-overlay {
-    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .modal-overlay.show {
-    display: flex !important;
-    animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes slideUp {
-    from {
-      transform: translateY(30px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-
-  .modal-container {
-    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .modal-shadow-primary {
-    box-shadow: -8px 8px 0 0 var(--bc);
-  }
-
-  .modal-card {
-    position: relative;
-  }
-
-  /* Fond flouté et assombri */
-  .modal-overlay {
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-  }
-
-  .modal-container {
-    position: relative;
-    z-index: 1;
-  }
-</style>
