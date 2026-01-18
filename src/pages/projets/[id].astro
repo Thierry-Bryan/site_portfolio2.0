@@ -194,28 +194,34 @@ const projetTechnologies = projet.expand?.technologies || [];
       </div>
 
       <!-- Flèches de navigation : centrées mobile, positionnées desktop -->
-      <div
-        class="absolute bottom-24 left-8 md:bottom-20 md:left-[35%] z-40 cursor-pointer"
-        id="prev-arrow-wrapper"
-        data-prev-projet={previousProjet?.slug || ""}
-      >
-        <ArrowButton
-          direction="prev"
-          dataAttribute={previousProjet?.slug || ""}
-          theme={themeName as any}
-        />
-      </div>
-      <div
-        class="absolute bottom-24 right-8 md:bottom-20 md:right-[17%] z-40 cursor-pointer"
-        id="next-arrow-wrapper"
-        data-next-projet={nextProjet?.slug || ""}
-      >
-        <ArrowButton
-          direction="next"
-          dataAttribute={nextProjet?.slug || ""}
-          theme={themeName as any}
-        />
-      </div>
+      {
+        totalInCategory > 1 && (
+          <>
+            <div
+              class="absolute bottom-24 left-8 md:bottom-20 md:left-[35%] z-40 cursor-pointer"
+              id="prev-arrow-wrapper"
+              data-prev-projet={previousProjet?.slug || ""}
+            >
+              <ArrowButton
+                direction="prev"
+                dataAttribute={previousProjet?.slug || ""}
+                theme={themeName as any}
+              />
+            </div>
+            <div
+              class="absolute bottom-24 right-8 md:bottom-20 md:right-[17%] z-40 cursor-pointer"
+              id="next-arrow-wrapper"
+              data-next-projet={nextProjet?.slug || ""}
+            >
+              <ArrowButton
+                direction="next"
+                dataAttribute={nextProjet?.slug || ""}
+                theme={themeName as any}
+              />
+            </div>
+          </>
+        )
+      }
     </div>
   </section>
 
