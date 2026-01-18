@@ -274,6 +274,28 @@ const headerClass =
     window.location.pathname.startsWith("/projets/");
   const isAProposPage = window.location.pathname.includes("/a-propos");
 
+  // Fonction pour gérer la couleur du bouton contact sur la page projet
+  function updateProjetButtonColor() {
+    if (!isProjetPage || window.location.pathname === "/projets") return;
+    
+    const headerButton = document.querySelector(".header-button");
+    const btnText = headerButton?.querySelector(".btn-text");
+    
+    if (headerButton && btnText) {
+      const isDarkMode = localStorage.getItem("darkMode") === "true";
+      
+      if (isDarkMode) {
+        // En mode sombre sur page projet [id]: texte noir et ombre blanche
+        btnText.style.color = "#181818";
+        headerButton.style.boxShadow = "-5px 5px 0 0 #ffffff";
+      } else {
+        // En mode clair: texte blanc et ombre noire (par défaut)
+        btnText.style.color = "white";
+        headerButton.style.boxShadow = "-5px 5px 0 0 #000000";
+      }
+    }
+  }
+
   // Gérer le hover du logo sur la page à propos
   if (isAProposPage) {
     const handleLogoHover = () => {
@@ -583,6 +605,8 @@ const headerClass =
         if (desktopLogo) desktopLogo.style.color = "var(--p)";
         if (mobileLogo) mobileLogo.style.color = "var(--p)";
       }
+      // Mettre à jour la couleur du bouton sur page projet
+      updateProjetButtonColor();
       updateHeaderStyle();
       applyHeaderContrast();
     }
@@ -598,6 +622,8 @@ const headerClass =
       if (desktopLogo) desktopLogo.style.color = "var(--p)";
       if (mobileLogo) mobileLogo.style.color = "var(--p)";
     }
+    // Mettre à jour la couleur du bouton sur page projet
+    updateProjetButtonColor();
     updateHeaderStyle();
     applyHeaderContrast();
   });
@@ -639,6 +665,8 @@ const headerClass =
     updateHeaderStyle();
     applyHeaderContrast();
   } else {
+    // Initialiser la couleur du bouton sur page projet
+    updateProjetButtonColor();
     updateHeaderStyle();
     applyHeaderContrast();
   }
