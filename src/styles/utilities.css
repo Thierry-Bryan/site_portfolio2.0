@@ -6,10 +6,57 @@
 /* === BUTTON STYLES === */
 .btn-gradient-primary {
   background: radial-gradient(circle, var(--p), var(--s));
+  position: relative;
+  overflow: hidden; /* Important pour l'effet ripple */
+  isolation: isolate;
+  transition: all 0.3s ease;
 }
 
-.btn-text-white {
-  color: white;
+.btn-gradient-primary .btn-text,
+.btn-gradient-primary .btn-text-white {
+  transition: color 0.3s ease;
+  position: relative;
+  z-index: 10; /* Assure que le texte reste au-dessus de l'overlay */
+}
+
+/* === RIPPLE ANIMATION BASE (Pour reproduire Button.astro) === */
+.btn-gradient-primary::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, #ffffff, #f0f0f0);
+  border-radius: 50%;
+  transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Animation au hover : expansion du cercle */
+.btn-gradient-primary:hover::before {
+  width: 150%;
+  height: 350%;
+}
+
+/* === GESTION MODE SOMBRE (Ripple Noir) === */
+
+/* Configuration du cercle en noir pour le mode sombre */
+[data-theme*="-dark"] .btn-gradient-primary::before {
+  background: #000000 !important;
+}
+
+/* Texte noir par défaut en mode sombre */
+[data-theme*="-dark"] .btn-gradient-primary .btn-text-white {
+  color: #181818 !important;
+  transition: color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+/* Texte blanc au hover en mode sombre */
+[data-theme*="-dark"] .btn-gradient-primary:hover .btn-text-white {
+  color: #ffffff !important;
 }
 
 /* === MODAL STYLES === */

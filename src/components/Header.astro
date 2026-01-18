@@ -105,6 +105,7 @@ const headerClass =
     </ul>
 
     <button
+      id="contact-btn-mobile"
       onclick="window.openContactModal(); document.getElementById('mobile-menu').classList.add('translate-x-full'); document.getElementById('mobile-menu-backdrop').classList.add('opacity-0', 'pointer-events-none'); document.body.style.overflow = '';"
       class="w-full font-primary relative inline-flex h-11 px-8 items-center justify-center overflow-hidden cursor-pointer transition-all duration-200 btn-gradient-primary btn-shadow"
     >
@@ -200,6 +201,7 @@ const headerClass =
     <div class="navbar-end flex items-center gap-4">
       {Astro.url.pathname !== "/" && <ThemeToggle />}
       <button
+        id="contact-btn-desktop"
         onclick="window.openContactModal()"
         aria-label="Me contacter"
         class="header-button font-primary relative inline-flex h-11 px-8 items-center justify-center overflow-hidden cursor-pointer transition-all duration-200 btn-gradient-primary btn-shadow"
