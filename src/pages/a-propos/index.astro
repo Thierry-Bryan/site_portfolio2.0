@@ -1,9 +1,27 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Button from "../../components/Button.astro";
+import CompetenceModal from "../../components/CompetenceModal.astro";
+import { getTechnologies, getFileUrl } from "../../utils/pb";
 
 const theme = "les-12-fragments"; // Thème pour la page à propos
 const firstSectionTheme = "echo-safe"; // Thème de la première section pour le header
+
+// Récupérer toutes les technologies depuis PocketBase
+const allTechnologies = await getTechnologies();
+
+// Organiser les technologies par catégorie
+const technologiesByCategory = allTechnologies.reduce((acc, tech) => {
+  const category = tech.category || "Autre";
+  if (!acc[category]) {
+    acc[category] = [];
+  }
+  acc[category].push(tech);
+  return acc;
+}, {});
+
+// Définir l'ordre des catégories
+const categoryOrder = ["Design", "Frontend", "Productivité"];
 ---
 
 <Layout
@@ -186,172 +204,52 @@ const firstSectionTheme = "echo-safe"; // Thème de la première section pour le
       <!-- Contenu des compétences à droite (2/3) -->
       <div class="lg:col-span-2">
         <!-- Titre principal -->
-        <h2 class="font-primary text-center mb-5">MES COMPÉTENCES</h2>
+        <h2 class="font-primary text-center mb-10">MES COMPÉTENCES</h2>
 
-        <!-- Section Compétences -->
-        <div class="mb-8">
-          <!-- Première ligne : Design et Vidéo -->
-          <div class="flex justify-center mb-6">
-            <div class="grid grid-cols-5 gap-8">
-              <!-- Figma -->
-              <div class="text-center group cursor-pointer">
-                <div
-                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
-                >
-                  <img src="/competences/figma.svg" alt="Figma" class="h-10" />
-                </div>
-                <p class="font-primary text-sm">FIGMA</p>
-              </div>
+        <!-- Grille 2 colonnes de catégories -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+          {
+            categoryOrder.map((category) => {
+              const techs = technologiesByCategory[category];
+              if (!techs || techs.length === 0) return null;
 
-              <!-- Illustrator -->
-              <div class="text-center group cursor-pointer">
-                <div
-                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
-                >
-                  <img
-                    src="/competences/adobe_illustrator.svg"
-                    alt="Illustrator"
-                    class="w-10 h-10"
-                  />
-                </div>
-                <p class="font-primary text-sm">ILLUSTRATOR</p>
-              </div>
+              return (
+                <div class="category-section">
+                  {/* Titre de catégorie */}
+                  <h3 class="font-primary text-2xl text-center mb-6 text-[var(--p)] uppercase relative">
+                    {category}
+                    <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-[var(--p)] mt-2"></div>
+                  </h3>
 
-              <!-- Photoshop -->
-              <div class="text-center group cursor-pointer">
-                <div
-                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
-                >
-                  <img
-                    src="/competences/adobe_photoshop.svg"
-                    alt="Photoshop"
-                    class="w-10 h-10"
-                  />
+                  {/* Liste verticale des compétences */}
+                  <div class="space-y-3 mt-8">
+                    {techs.map((tech) => {
+                      const logoUrl = getFileUrl(tech, tech.logo);
+                      return (
+                        <button
+                          type="button"
+                          class="w-full flex items-center gap-4 p-4 border-2 border-[var(--bc)] bg-[var(--b1)] hover:bg-[var(--p)] hover:border-[var(--p)] group transition-all duration-300 cursor-pointer relative overflow-hidden"
+                          style="box-shadow: -4px 4px 0 0 var(--bc);"
+                          onclick={`openCompetenceModal('${tech.name}', '${logoUrl}', '${tech.category}', '${tech.description?.replace(/'/g, "\\'")}', 'orange')`}
+                        >
+                          <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-transparent group-hover:scale-110 transition-transform duration-300 relative z-10">
+                            <img
+                              src={logoUrl}
+                              alt={tech.name}
+                              class="max-w-full max-h-full object-contain"
+                            />
+                          </div>
+                          <p class="font-primary text-sm text-left text-[var(--bc)] group-hover:text-[var(--b1)] transition-colors relative z-10">
+                            {tech.name.toUpperCase()}
+                          </p>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-                <p class="font-primary text-sm">PHOTOSHOP</p>
-              </div>
-
-              <!-- After Effect -->
-              <div class="text-center group cursor-pointer">
-                <div
-                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
-                >
-                  <img
-                    src="/competences/adobe_after_effects.svg"
-                    alt="After Effects"
-                    class="w-10 h-10"
-                  />
-                </div>
-                <p class="font-primary text-sm">AFTER EFFECT</p>
-              </div>
-
-              <!-- Premiere Pro -->
-              <div class="text-center group cursor-pointer">
-                <div
-                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
-                >
-                  <img
-                    src="/competences/adobe_premiere.svg"
-                    alt="Premiere Pro"
-                    class="w-10 h-10"
-                  />
-                </div>
-                <p class="font-primary text-sm">PREMIERE PRO</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Deuxième ligne : Développement -->
-        <div class="mb-10">
-          <div class="flex justify-center">
-            <div class="grid grid-cols-5 gap-8">
-              <!-- VS Code -->
-              <div class="text-center group cursor-pointer">
-                <div
-                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
-                >
-                  <img
-                    src="/competences/vs_code.svg"
-                    alt="VS Code"
-                    class="w-10 h-10"
-                  />
-                </div>
-                <p class="font-primary text-sm">VS CODE</p>
-              </div>
-
-              <!-- JavaScript -->
-              <div class="text-center group cursor-pointer">
-                <div
-                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
-                >
-                  <img
-                    src="/competences/js.svg"
-                    alt="JavaScript"
-                    class="w-10 h-10"
-                  />
-                </div>
-                <p class="font-primary text-sm">JAVASCRIPT</p>
-              </div>
-
-              <!-- CSS -->
-              <div class="text-center group cursor-pointer">
-                <div
-                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
-                >
-                  <img
-                    src="/competences/css_3.svg"
-                    alt="CSS"
-                    class="w-10 h-10"
-                  />
-                </div>
-                <p class="font-primary text-sm">CSS</p>
-              </div>
-
-              <!-- HTML -->
-              <div class="text-center group cursor-pointer">
-                <div
-                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
-                >
-                  <img
-                    src="/competences/html_5.svg"
-                    alt="HTML"
-                    class="w-10 h-10"
-                  />
-                </div>
-                <p class="font-primary text-sm">HTML</p>
-              </div>
-
-              <!-- WordPress -->
-              <div class="text-center group cursor-pointer">
-                <div
-                  class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
-                >
-                  <img
-                    src="/competences/wordpress-tile1.svg"
-                    alt="WordPress"
-                    class="w-10 h-10"
-                  />
-                </div>
-                <p class="font-primary text-sm">WORDPRESS</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Troisième ligne : Productivité (Notion seul, centré) -->
-        <div class="flex justify-center">
-          <div class="text-center group cursor-pointer">
-            <div
-              class="w-16 h-16 mx-auto mb-2 bg-transparent rounded-xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 p-2"
-            >
-              <img
-                src="/competences/notion.svg"
-                alt="Notion"
-                class="w-10 h-10"
-              />
-            </div>
-            <p class="font-primary text-sm">NOTION</p>
-          </div>
+              );
+            })
+          }
         </div>
       </div>
     </div>
@@ -443,6 +341,9 @@ const firstSectionTheme = "echo-safe"; // Thème de la première section pour le
     </div>
   </section>
 </Layout>
+
+<!-- Modal pour les compétences -->
+<CompetenceModal />
 
 <script>
   // Variable globale pour stocker le thème actuel

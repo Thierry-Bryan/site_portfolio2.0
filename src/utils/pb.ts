@@ -39,6 +39,24 @@ export async function getProjets() {
         console.error('Erreur lors de la récupération des projets:', error);
         return [];
     }
+}
+
+/**
+ * Récupérer toutes les technologies/compétences
+ * @returns {Promise<Array>}
+ */
+export async function getTechnologies() {
+    try {
+        console.log('Tentative de récupération des technologies...');
+        const records = await pb.collection("technologies").getFullList({
+            sort: "name",
+        });
+        console.log('Technologies récupérées:', records.length);
+        return records;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des technologies:', error);
+        return [];
+    }
 }/**
  * Récupérer un projet par son slug avec ses relations (incluant theme)
  * @param {string} slug
