@@ -102,11 +102,16 @@ const imagesUrls = getMultipleFileUrls(projet, "images");
 
 // Récupérer les technologies du projet depuis expand
 const projetTechnologies = projet.expand?.technologies || [];
+
+// Préparer l'image Open Graph - utiliser l'image hero du projet
+const ogImage = heroImageUrl || "/images/og-image.jpg";
 ---
 
 <Layout
   theme={themeName as any}
-  title={`${projet.title} - Portfolio Bryan Thierry`}
+  title={projet.title}
+  description={projet.description || `Découvrez ${projet.title}, un projet de ${projet.type}. Réalisé avec passion et expertise en webdesign et développement.`}
+  image={ogImage}
   dynamicCSS={dynamicThemeCSS}
 >
   <!-- Hero Section -->
