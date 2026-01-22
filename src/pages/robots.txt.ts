@@ -13,6 +13,8 @@ Sitemap: ${siteConfig.url}/sitemap.xml
 Disallow: /admin/
 Disallow: /_/
 Disallow: /Backend/
+Disallow: /portfolio/
+Disallow: /hero/
 
 # Allow images
 Allow: /images/
