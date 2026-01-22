@@ -6,6 +6,7 @@ import Hero from "../components/Hero.astro";
 import BackgroundComics from "../components/BackgroundComics.astro";
 import { getProjets, getFileUrl, generateThemeCSS } from "../utils/pb.ts";
 import { Image } from "astro:assets";
+import { siteConfig } from "../config/site.config";
 
 const theme = "basique";
 
@@ -39,7 +40,8 @@ allThemes.forEach((theme) => {
 
 <Layout
   theme={theme}
-  title="Accueil - Portfolio Bryan Thierry"
+  title={siteConfig.title}
+  description={siteConfig.description}
   dynamicCSS={dynamicThemeCSS}
 >
   <Hero />
