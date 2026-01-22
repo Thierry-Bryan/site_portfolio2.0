@@ -102,6 +102,16 @@ const headerClass =
           A PROPOS
         </a>
       </li>
+      <li>
+        <a
+          href="/CV_Stage_Bryan-Thierry.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="mobile-nav-link font-primary text-2xl block py-3 transition-all duration-300 hover:scale-105 hover:-rotate-1 text-[var(--bc)]"
+        >
+          Voir mon CV
+        </a>
+      </li>
     </ul>
 
     <button
@@ -187,7 +197,7 @@ const headerClass =
         </li>
         <li>
           <a
-            href="https://drive.google.com/file/d/1EzEQnYgxazbyD1uuetc9JN6hzklZ7v2X/view?usp=drive_link"
+            href="/CV_Stage_Bryan-Thierry.pdf"
             target="_blank"
             rel="noopener noreferrer"
             class="nav-link font-primary uppercase text-xl relative transition-all duration-300 hover:scale-105 hover:-rotate-1 comics-glow-hover-link hover:bg-transparent"
@@ -280,13 +290,13 @@ const headerClass =
   function updateButtonColor() {
     // Ne rien faire sur la page d'accueil
     if (isHomePage) return;
-    
+
     const headerButton = document.querySelector(".header-button");
     const btnText = headerButton?.querySelector(".btn-text");
-    
+
     if (headerButton && btnText) {
       const isDarkMode = localStorage.getItem("darkMode") === "true";
-      
+
       if (isDarkMode) {
         // En mode sombre: texte noir et ombre blanche
         btnText.style.color = "#181818";
