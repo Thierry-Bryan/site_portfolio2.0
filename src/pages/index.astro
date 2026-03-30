@@ -54,40 +54,37 @@ allThemes.forEach((theme) => {
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 gap-2 place-items-center mx-auto"
       >
         <Card
+          imgSrc="/card/icon_identite-visuelle.webp"
+          imgAlt="Identité visuelle"
+          theme={theme}
+        >
+          <h3 class="mb-2 text-center flex justify-center">
+            Identité visuelle
+          </h3>
+          <p class="">
+            Logo, charte graphique et supports pour une identité qui vous
+            ressemble.
+          </p>
+        </Card>
+        <Card
+          imgSrc="/card/icon_video.webp"
+          imgAlt="Vidéo & motion"
+          theme={theme}
+        >
+          <h3 class="mb-2 text-center flex justify-center">Vidéo & motion</h3>
+          <p class="">
+            Montage et motion design pour des contenus qui captent l'attention.
+          </p>
+        </Card>
+        <Card
           imgSrc="/card/icon_sur-mesure.webp"
-          imgAlt="Site web sur-mesure"
+          imgAlt="Site web"
           theme={theme}
         >
-          <h3 class="mb-2 text-center flex justify-center">
-            Sites web sur mesure
-          </h3>
+          <h3 class="mb-2 text-center flex justify-center">Site web</h3>
           <p class="">
-            Je conçois des sites web uniques, pensés pour vous et votre
-            activité.
-          </p>
-        </Card>
-        <Card
-          imgSrc="/card/icon_refonte.webp"
-          imgAlt="Refontes de sites"
-          theme={theme}
-        >
-          <h3 class="mb-2 text-center flex justify-center">
-            Refontes de sites
-          </h3>
-          <p class="">
-            Je redonne vie à votre site pour qu'il soit moderne, rapide et
-            agréable à utiliser.
-          </p>
-        </Card>
-        <Card
-          imgSrc="/card/icon_wordpress.webp"
-          imgAlt="Site web sur-mesure"
-          theme={theme}
-        >
-          <h3 class="mb-2 text-center flex justify-center">Wordpress</h3>
-          <p class="">
-            Je redonne vie à votre site pour qu'il soit moderne, rapide et
-            agréable à utiliser.
+            Création ou refonte, sur-mesure ou WordPress, pour un site rapide et
+            efficace.
           </p>
         </Card>
       </div>
