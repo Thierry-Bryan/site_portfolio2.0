@@ -24,11 +24,12 @@ const serviceOffers: ServiceOffer[] = [
     imgSrc: "/card/icon_identite-visuelle.webp",
     imgAlt: "Identité visuelle",
     title: "Identité visuelle",
-    price: "À partir de 90 €",
+    price: "À partir de 100 €",
     duration: "2 semaines",
     description:
       "Je crée une identité visuelle propre et claire pour ton activité.",
-    idealFor: "Idéal si tu lances un projet ou que tu veux rafraîchir ton image.",
+    idealFor:
+      "Idéal si tu lances un projet ou que tu veux rafraîchir ton image.",
     points: [
       "Une direction visuelle claire",
       "Couleurs et polices adaptées à ton activité",
@@ -43,16 +44,15 @@ const serviceOffers: ServiceOffer[] = [
       "Autre support (ex : carte, bannière, menu)",
     ],
     optionsNote:
-      "Les modalités sont définies après prise de contact, selon vos besoins et vos priorités.",
+      "Les modalités sont définies après prise de contact, selon tes besoins et tes priorités.",
   },
   {
     imgSrc: "/card/icon_video.webp",
     imgAlt: "Vidéo & motion",
     title: "Vidéo & motion",
-    price: "À partir de 130 €",
+    price: "À partir de 150 €",
     duration: "2 semaines",
-    description:
-      "Je réalise des vidéos courtes, propres et dynamiques.",
+    description: "Je réalise des vidéos courtes, propres et dynamiques.",
     idealFor: "Parfait pour un teaser, une présentation rapide ou les réseaux.",
     points: [
       "Montage fluide et lisible",
@@ -77,7 +77,8 @@ const serviceOffers: ServiceOffer[] = [
       "Bases SEO (titres, descriptions, performance)",
       "Intégration de ton contenu",
     ],
-    delivery: "Je peux livrer le site prêt à publier ou t'aider à la mise en ligne.",
+    delivery:
+      "Je peux livrer le site prêt à publier ou t'aider à la mise en ligne. L'hébergement et le nom de domaine sont à ta charge.",
   },
 ];
 ---
@@ -90,7 +91,9 @@ const serviceOffers: ServiceOffer[] = [
   <section class="pt-32 pb-6 bg-(--b1)" data-theme="basique">
     <div class="mx-4 md:mx-25">
       <div class="max-w-5xl mx-auto text-center">
-        <p class="font-primary text-sm uppercase tracking-[0.25em] text-color-p mb-4">
+        <p
+          class="font-primary text-sm uppercase tracking-[0.25em] text-color-p mb-4"
+        >
           Offres & tarifs
         </p>
         <h1 class="text-5xl md:text-7xl uppercase tracking-tight mb-4">
@@ -103,81 +106,121 @@ const serviceOffers: ServiceOffer[] = [
   <section class="pb-16 bg-(--b1)" data-theme="basique" id="offres">
     <div class="mx-4 md:mx-25">
       <div class="max-w-6xl mx-auto space-y-3">
-        {serviceOffers.map((offer: ServiceOffer, index: number) => (
-          <article class="border-b-2 border-(--bc)/20 pb-3">
-            <button
-              type="button"
-              class="w-full text-left"
-              data-service-toggle
-              data-target={`service-detail-${index}`}
-              aria-expanded="false"
-            >
-              <div class="flex flex-col md:flex-row md:items-center gap-5 md:gap-8 py-4 md:py-5 hover:bg-(--bc)/5 px-2 rounded-md transition-colors duration-200">
-                <div class="flex items-center gap-4 md:gap-5 min-w-0 flex-1">
-                  <div class="shrink-0 w-24 h-24 md:w-24 md:h-24 overflow-hidden bg-(--b1) flex items-center justify-center">
-                    <img src={offer.imgSrc} alt={offer.imgAlt} class="w-20 h-20 md:w-20 md:h-20 object-contain" />
+        {
+          serviceOffers.map((offer: ServiceOffer, index: number) => (
+            <article class="border-b-2 border-(--bc)/20 pb-3">
+              <button
+                type="button"
+                class="w-full text-left"
+                data-service-toggle
+                data-target={`service-detail-${index}`}
+                aria-expanded="false"
+              >
+                <div class="flex flex-col md:flex-row md:items-center gap-5 md:gap-8 py-4 md:py-5 hover:bg-(--bc)/5 px-2 rounded-md transition-colors duration-200">
+                  <div class="flex items-center gap-4 md:gap-5 min-w-0 flex-1">
+                    <div class="shrink-0 w-24 h-24 md:w-24 md:h-24 overflow-hidden bg-(--b1) flex items-center justify-center">
+                      <img
+                        src={offer.imgSrc}
+                        alt={offer.imgAlt}
+                        class="w-20 h-20 md:w-20 md:h-20 object-contain"
+                      />
+                    </div>
+                    <div class="min-w-0">
+                      <h3 class="text-2xl md:text-3xl uppercase mb-2">
+                        {offer.title}
+                      </h3>
+                      <p class="font-secondary text-(--bc) opacity-85 mb-0 max-w-2xl">
+                        {offer.description}
+                      </p>
+                    </div>
                   </div>
-                  <div class="min-w-0">
-                    <h3 class="text-2xl md:text-3xl uppercase mb-2">{offer.title}</h3>
-                    <p class="font-secondary text-(--bc) opacity-85 mb-0 max-w-2xl">{offer.description}</p>
+
+                  <div class="flex flex-col md:items-end gap-2 md:text-right shrink-0">
+                    <div class="font-primary text-3xl md:text-4xl text-color-p uppercase leading-none">
+                      {offer.price}
+                    </div>
+                    <div class="font-secondary text-sm uppercase tracking-[0.18em] text-(--bc) opacity-70">
+                      {offer.duration}
+                    </div>
+                    <div class="font-secondary text-sm text-(--bc) opacity-80 max-w-md">
+                      {offer.idealFor}
+                    </div>
                   </div>
-                </div>
 
-                <div class="flex flex-col md:items-end gap-2 md:text-right shrink-0">
-                  <div class="font-primary text-3xl md:text-4xl text-color-p uppercase leading-none">{offer.price}</div>
-                  <div class="font-secondary text-sm uppercase tracking-[0.18em] text-(--bc) opacity-70">{offer.duration}</div>
-                  <div class="font-secondary text-sm text-(--bc) opacity-80 max-w-md">{offer.idealFor}</div>
-                </div>
-
-                <div class="flex items-center justify-end md:justify-center">
-                  <div class="flex items-center gap-2 border border-(--bc)/25 px-3 py-1 rounded-full">
-                    <span data-toggle-label class="font-secondary text-xs uppercase tracking-[0.14em] opacity-80">Voir détail</span>
-                    <svg data-toggle-icon class="w-4 h-4 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <path d="M6 9l6 6 6-6"></path>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </button>
-
-            <div id={`service-detail-${index}`} class="hidden px-2 pb-4 md:pb-6">
-              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div>
-                  <p class="font-primary text-xl uppercase mb-2">Ce qui est inclus</p>
-                  <ul class="list-disc pl-6 space-y-2 font-secondary text-(--bc) opacity-90">
-                    {offer.points.map((point: string) => (
-                      <li>{point}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <p class="font-primary text-xl uppercase mb-2">Précisions</p>
-                  <p class="font-secondary text-(--bc) opacity-90 mb-0 leading-relaxed">
-                    {offer.delivery}
-                  </p>
-                </div>
-              </div>
-
-              {offer.options && offer.options.length > 0 && (
-                <div class="mt-5 pt-4">
-                  <p class="font-primary text-xl uppercase mb-2">Possibilités de prestation</p>
-                  <div class="flex flex-wrap gap-2 mb-3">
-                    {offer.options.map((option: string) => (
-                      <span class="px-3 py-1 border border-(--bc)/30 font-secondary text-sm opacity-90">
-                        {option}
+                  <div class="flex items-center justify-end md:justify-center">
+                    <div class="flex items-center gap-2 border border-(--bc)/25 px-3 py-1 rounded-full">
+                      <span
+                        data-toggle-label
+                        class="font-secondary text-xs uppercase tracking-[0.14em] opacity-80"
+                      >
+                        Voir détail
                       </span>
-                    ))}
+                      <svg
+                        data-toggle-icon
+                        class="w-4 h-4 transition-transform duration-300"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M6 9l6 6 6-6" />
+                      </svg>
+                    </div>
                   </div>
-                  {offer.optionsNote && (
-                    <p class="font-secondary text-(--bc) opacity-80 mb-0 leading-relaxed">
-                      {offer.optionsNote}
-                    </p>
-                  )}
                 </div>
-              )}
-            </div>
-          </article>
-        ))}
+              </button>
+
+              <div
+                id={`service-detail-${index}`}
+                class="hidden px-2 pb-4 md:pb-6"
+              >
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div>
+                    <p class="font-primary text-xl uppercase mb-2">
+                      Ce qui est inclus
+                    </p>
+                    <ul class="list-disc pl-6 space-y-2 font-secondary text-(--bc) opacity-90">
+                      {offer.points.map((point: string) => (
+                        <li>{point}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <p class="font-primary text-xl uppercase mb-2">
+                      Précisions
+                    </p>
+                    <p class="font-secondary text-(--bc) opacity-90 mb-0 leading-relaxed">
+                      {offer.delivery}
+                    </p>
+                  </div>
+                </div>
+
+                {offer.options && offer.options.length > 0 && (
+                  <div class="mt-5 pt-4">
+                    <p class="font-primary text-xl uppercase mb-2">
+                      Possibilités de prestation
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-3">
+                      {offer.options.map((option: string) => (
+                        <span class="px-3 py-1 border border-(--bc)/30 font-secondary text-sm opacity-90">
+                          {option}
+                        </span>
+                      ))}
+                    </div>
+                    {offer.optionsNote && (
+                      <p class="font-secondary text-(--bc) opacity-80 mb-0 leading-relaxed">
+                        {offer.optionsNote}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </article>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -185,7 +228,9 @@ const serviceOffers: ServiceOffer[] = [
   <section class="pb-20 bg-(--b1)" data-theme="basique" id="contact">
     <div class="mx-4 md:mx-25">
       <div class="max-w-4xl mx-auto text-center">
-        <p class="font-primary text-sm uppercase tracking-[0.25em] text-color-p mb-4">
+        <p
+          class="font-primary text-sm uppercase tracking-[0.25em] text-color-p mb-4"
+        >
           Besoin d'un devis
         </p>
         <h2 class="text-4xl md:text-5xl uppercase mb-6">On affine ensemble</h2>
@@ -200,7 +245,9 @@ const serviceOffers: ServiceOffer[] = [
   </section>
 
   <script is:inline>
-    const toggles = Array.from(document.querySelectorAll("[data-service-toggle]"));
+    const toggles = Array.from(
+      document.querySelectorAll("[data-service-toggle]"),
+    );
 
     toggles.forEach((toggle) => {
       toggle.addEventListener("click", () => {

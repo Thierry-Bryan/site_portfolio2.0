@@ -5,7 +5,7 @@ export const siteConfig = {
   name: "Bryan Thierry",
   title: "Portfolio Bryan Thierry",
   url: "https://portfolio.bryan-thierry.fr",
-  description: "Portfolio de Bryan Thierry - Webdesigner & Développeur Front-End",
+  description: "Portfolio de Bryan Thierry - Identité visuelle, vidéo et développement front-end",
   
   author: {
     name: "Bryan Thierry",
