@@ -50,44 +50,44 @@ html {
 
 [data-theme="vert"] {
   --p: #1db954;
-  --s: #1db954; 
-  --a: #1db954; 
+  --s: #1db954;
+  --a: #1db954;
   --b1: #faf9f7;
   --b1-rgb: 250, 249, 247;
   --bc: #000000;
 }
 
 [data-theme="bleu"] {
-  --p: #546bfd; 
-  --s: #546bfd; 
-  --a: #b3d1ff; 
+  --p: #546bfd;
+  --s: #546bfd;
+  --a: #b3d1ff;
   --b1: #faf9f7;
   --b1-rgb: 250, 249, 247;
   --bc: #000000;
 }
 
 [data-theme="rose"] {
-  --p: #7c3aed; 
-  --s: #7c3aed; 
-  --a: #7c3aed; 
+  --p: #7c3aed;
+  --s: #7c3aed;
+  --a: #7c3aed;
   --b1: #faf9f7;
   --b1-rgb: 250, 249, 247;
   --bc: #000000;
 }
 
 [data-theme="orange"] {
-  --p: #ff7300; 
-  --s: #ffb300; 
-  --a: #ffe066; 
+  --p: #ff7300;
+  --s: #ffb300;
+  --a: #ffe066;
   --b1: #faf9f7;
   --b1-rgb: 250, 249, 247;
   --bc: #000000;
 }
 
 [data-theme="basique"] {
-  --p: #ee0221; 
-  --s: #fa0435; 
-  --a: #f72c55; 
+  --p: #ee0221;
+  --s: #fa0435;
+  --a: #f72c55;
   --b1: #faf9f7;
   --b1-rgb: 250, 249, 247;
   --bc: #000000;

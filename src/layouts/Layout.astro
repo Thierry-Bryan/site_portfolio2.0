@@ -45,31 +45,34 @@ const initialTheme = theme;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    
+
     <!-- SEO Meta Tags -->
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
-    
+
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:url" content={canonicalURL} />
-    
+
     <!-- Structured Data -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Person",
-      name: siteConfig.author.name,
-      url: siteConfig.url,
-      jobTitle: "Webdesigner & Développeur Front-End",
-      sameAs: [
-        siteConfig.social.find(s => s.name === 'LinkedIn')?.url,
-        siteConfig.social.find(s => s.name === 'Behance')?.url,
-        siteConfig.social.find(s => s.name === 'Instagram')?.url
-      ].filter(Boolean)
-    })}></script>
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: siteConfig.author.name,
+        url: siteConfig.url,
+        jobTitle: "Webdesigner & Développeur Front-End",
+        sameAs: [
+          siteConfig.social.find((s) => s.name === "LinkedIn")?.url,
+          siteConfig.social.find((s) => s.name === "Behance")?.url,
+          siteConfig.social.find((s) => s.name === "Instagram")?.url,
+        ].filter(Boolean),
+      })}
+    />
 
     <!-- Préchargement des fonts critiques -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
@@ -97,7 +100,9 @@ const initialTheme = theme;
         localStorage.setItem("theme", finalTheme);
 
         window.changeTheme = function () {
-          return document.documentElement.getAttribute("data-theme") || finalTheme;
+          return (
+            document.documentElement.getAttribute("data-theme") || finalTheme
+          );
         };
 
         window.addEventListener("DOMContentLoaded", function () {

@@ -72,10 +72,7 @@ const categoryOrder = ["Design", "Frontend", "Productivité"];
     </div>
   </section>
   <!-- Section Parcours avec frise chronologique -->
-  <section
-    class="mx-4 md:mx-8 lg:mx-16 py-10 bg-[var(--b1)]"
-    data-theme="rose"
-  >
+  <section class="mx-4 md:mx-8 lg:mx-16 py-10 bg-[var(--b1)]" data-theme="rose">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <!-- Frise chronologique à gauche (2/3) -->
       <div class="md:col-span-2 order-2 md:order-1">
@@ -225,7 +222,7 @@ const categoryOrder = ["Design", "Frontend", "Productivité"];
                   <div class="space-y-3 mt-8">
                     {techs.map((tech) => {
                       const logoUrl = getFileUrl(tech, tech.logo);
-                      
+
                       return (
                         <button
                           type="button"
@@ -257,10 +254,7 @@ const categoryOrder = ["Design", "Frontend", "Productivité"];
     </div>
   </section>
   <!-- Section Mon Prochain Chapitre -->
-  <section
-    class="mx-4 md:mx-8 lg:mx-16 py-10 bg-[var(--b1)]"
-    data-theme="vert"
-  >
+  <section class="mx-4 md:mx-8 lg:mx-16 py-10 bg-[var(--b1)]" data-theme="vert">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
       <!-- Contenu texte à gauche (2/3) -->
       <div class="lg:col-span-2 order-2 lg:order-1">
@@ -493,7 +487,7 @@ const categoryOrder = ["Design", "Frontend", "Productivité"];
   // Gérer les logos de technologies
   function updateTechLogos() {
     const logos = document.querySelectorAll(".tech-logo");
-    
+
     logos.forEach((logo) => {
       const lightLogo = logo.getAttribute("data-logo-light");
       logo.src = lightLogo;
@@ -503,5 +497,4 @@ const categoryOrder = ["Design", "Frontend", "Productivité"];
   // Mettre à jour les logos au chargement
   document.addEventListener("DOMContentLoaded", updateTechLogos);
   updateTechLogos();
-
 </script>

@@ -74,7 +74,10 @@
 
       <!-- Description -->
       <div class="text-center">
-        <p id="competence-modal-description" class="text-[var(--bc)] leading-relaxed font-medium">
+        <p
+          id="competence-modal-description"
+          class="text-[var(--bc)] leading-relaxed font-medium"
+        >
         </p>
       </div>
     </div>
@@ -85,7 +88,9 @@
   function openCompetenceModal(name, logo, category, description, theme) {
     const modal = document.getElementById("competence-modal");
     const modalCard = document.getElementById("competence-modal-card");
-    const modalContainer = document.getElementById("competence-modal-container");
+    const modalContainer = document.getElementById(
+      "competence-modal-container",
+    );
 
     if (modal && modalCard && modalContainer) {
       // Appliquer le thème au modal
@@ -96,18 +101,20 @@
       const logoImg = document.getElementById("competence-modal-logo");
       logoImg.src = logo;
       logoImg.alt = name;
-      
+
       document.getElementById("competence-modal-name").textContent = name;
-      document.getElementById("competence-modal-category").textContent = category;
-      document.getElementById("competence-modal-description").innerHTML = description;
+      document.getElementById("competence-modal-category").textContent =
+        category;
+      document.getElementById("competence-modal-description").innerHTML =
+        description;
 
       // Afficher le modal avec animation
       modal.classList.remove("hidden");
       document.body.style.overflow = "hidden";
-      
+
       // Forcer un reflow pour que l'animation fonctionne
       modal.offsetHeight;
-      
+
       // Ajouter les classes d'animation
       modal.classList.remove("opacity-0");
       modal.classList.add("flex", "opacity-100");
@@ -118,7 +125,9 @@
 
   function closeCompetenceModal() {
     const modal = document.getElementById("competence-modal");
-    const modalContainer = document.getElementById("competence-modal-container");
+    const modalContainer = document.getElementById(
+      "competence-modal-container",
+    );
 
     if (modal && modalContainer) {
       // Animer la fermeture
@@ -126,7 +135,7 @@
       modal.classList.add("opacity-0");
       modalContainer.classList.remove("translate-y-0", "opacity-100");
       modalContainer.classList.add("translate-y-8", "opacity-0");
-      
+
       // Cacher après l'animation
       setTimeout(() => {
         modal.classList.remove("flex");
@@ -138,9 +147,11 @@
 
   // Fermer avec Escape
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && document.getElementById("competence-modal")?.classList.contains("flex")) {
+    if (
+      e.key === "Escape" &&
+      document.getElementById("competence-modal")?.classList.contains("flex")
+    ) {
       closeCompetenceModal();
     }
   });
 </script>
-
