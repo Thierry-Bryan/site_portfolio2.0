@@ -1,31 +1,83 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import Card from "../../components/Card.astro";
 import Button from "../../components/Button.astro";
 
 const theme = "basique";
 
-const services = [
+type ServiceOffer = {
+  imgSrc: string;
+  imgAlt: string;
+  title: string;
+  price: string;
+  duration: string;
+  description: string;
+  idealFor: string;
+  points: string[];
+  delivery: string;
+  options?: string[];
+  optionsNote?: string;
+};
+
+// Modifie uniquement ce tableau pour ajuster tes offres, prix et délais.
+const serviceOffers: ServiceOffer[] = [
+  {
+    imgSrc: "/card/icon_identite-visuelle.webp",
+    imgAlt: "Identité visuelle",
+    title: "Identité visuelle",
+    price: "À partir de 90 €",
+    duration: "2 semaines",
+    description:
+      "Je crée une identité visuelle propre et claire pour ton activité.",
+    idealFor: "Idéal si tu lances un projet ou que tu veux rafraîchir ton image.",
+    points: [
+      "Une direction visuelle claire",
+      "Couleurs et polices adaptées à ton activité",
+      "Fichiers livrés prêts à l'emploi",
+      "2 retours de correction inclus",
+    ],
+    delivery: "Tu reçois des fichiers prêts pour le web et l'impression.",
+    options: [
+      "Création d'un logo",
+      "Création d'un flyer ou d'une affiche",
+      "Visuels pour réseaux sociaux",
+      "Autre support (ex : carte, bannière, menu)",
+    ],
+    optionsNote:
+      "Les modalités sont définies après prise de contact, selon vos besoins et vos priorités.",
+  },
+  {
+    imgSrc: "/card/icon_video.webp",
+    imgAlt: "Vidéo & motion",
+    title: "Vidéo & motion",
+    price: "À partir de 130 €",
+    duration: "2 semaines",
+    description:
+      "Je réalise des vidéos courtes, propres et dynamiques.",
+    idealFor: "Parfait pour un teaser, une présentation rapide ou les réseaux.",
+    points: [
+      "Montage fluide et lisible",
+      "Titres et transitions simples",
+      "Format adapté à la plateforme",
+      "1 à 2 retouches incluses",
+    ],
+    delivery: "Tu reçois une vidéo prête à publier.",
+  },
   {
     imgSrc: "/card/icon_sur-mesure.webp",
-    imgAlt: "Site web sur-mesure",
-    title: "Sites web sur mesure",
+    imgAlt: "Site web",
+    title: "Site web",
+    price: "À partir de 600 €",
+    duration: "1 mois",
     description:
-      "Je conçois des sites web uniques, pensés pour vous et votre activité.",
-  },
-  {
-    imgSrc: "/card/icon_refonte.webp",
-    imgAlt: "Refontes de sites",
-    title: "Refontes de sites",
-    description:
-      "Je redonne vie à votre site pour qu'il soit moderne, rapide et agréable à utiliser.",
-  },
-  {
-    imgSrc: "/card/icon_wordpress.webp",
-    imgAlt: "WordPress",
-    title: "WordPress",
-    description:
-      "Je crée et personnalise votre site WordPress pour qu'il soit performant et facile à gérer.",
+      "Je crée ou je refais un site vitrine simple, rapide et efficace.",
+    idealFor: "Idéal pour présenter ton activité, ton offre ou ton portfolio.",
+    points: [
+      "Structure claire et bien organisée",
+      "Version mobile et ordinateur",
+      "Bases SEO (titres, descriptions, performance)",
+      "Intégration de ton contenu",
+    ],
+    delivery: "Je peux livrer le site prêt à publier ou t'aider à la mise en ligne.",
   },
 ];
 ---
@@ -33,136 +85,154 @@ const services = [
 <Layout
   theme={theme}
   title="Mes Services"
-  description="Services de webdesign et développement front-end : sites web sur mesure, refontes, optimisations, et accompagnement personnalisé."
+  description="Services de design et de webdesign avec tarifs clairs, offres modulables et délais adaptés à un rythme de stage."
 >
-  <section class="bg-[var(--b1)] pt-32 pb-20" data-theme="basique">
-    <div class="flex items-center justify-center mb-12">
-      <h1
-        class="text-5xl md:text-6xl font-primary text-[var(--bc)] uppercase tracking-tight"
-      >
-        MES SERVICES
-      </h1>
-    </div>
-
-    <div class="mx-4 md:mx-25 mb-16">
-      <div class="max-w-3xl mx-auto text-center mb-12">
-        <p
-          class="text-lg md:text-xl font-secondary text-[var(--bc)] opacity-80 leading-relaxed"
-        >
-          Je vous accompagne dans la création et l'amélioration de votre
-          présence en ligne avec des solutions adaptées à vos besoins.
-        </p>
-      </div>
-
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 gap-2 place-items-center mx-auto"
-      >
-        {
-          services.map((service) => (
-            <Card imgSrc={service.imgSrc} imgAlt={service.imgAlt} theme={theme}>
-              <h3 class="mb-2 text-center flex justify-center">
-                {service.title}
-              </h3>
-              <p class="">{service.description}</p>
-            </Card>
-          ))
-        }
-      </div>
-    </div>
-
-    <div class="flex justify-center mt-12">
-      <Button
-        label="Me Contacter"
-        onClick="window.openContactModal()"
-        className="text-[var(--bc)]"
-        theme={theme}
-      />
-    </div>
-  </section>
-
-  <!-- Section détails des services -->
-  <section class="bg-[var(--b1)] pb-20" data-theme="basique">
+  <section class="pt-32 pb-6 bg-(--b1)" data-theme="basique">
     <div class="mx-4 md:mx-25">
-      <div class="max-w-4xl mx-auto">
-        <h2
-          class="text-4xl font-primary text-[var(--bc)] mb-12 text-center uppercase"
-        >
-          Ce que je peux faire pour vous
-        </h2>
-
-        <!-- Cartes en grille responsive (1/2/3 colonnes) -->
-        <div
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mx-auto"
-        >
-          <!-- Card 1: Sur mesure -->
-          <div class="comics-card p-8 card-border-bc">
-            <h3 class="text-2xl font-primary mb-4 uppercase text-color-bc">
-              Sites web sur mesure
-            </h3>
-            <ul
-              class="list-disc pl-6 space-y-3 font-secondary text-[var(--bc)] opacity-90"
-            >
-              <li>Création de sites vitrines, portfolios, landing pages</li>
-              <li>Design moderne et responsive (adapté à tous les écrans)</li>
-              <li>Optimisation SEO technique et sémantique</li>
-              <li>Performance et rapidité optimales</li>
-            </ul>
-          </div>
-
-          <!-- Card 2: Refonte -->
-          <div class="comics-card p-8 card-border-bc">
-            <h3 class="text-2xl font-primary mb-4 uppercase text-color-bc">
-              Refontes de sites
-            </h3>
-            <ul
-              class="list-disc pl-6 space-y-3 font-secondary text-[var(--bc)] opacity-90"
-            >
-              <li>Modernisation du design et de l'interface</li>
-              <li>Amélioration de l'expérience utilisateur (UX)</li>
-              <li>Migration vers des technologies modernes</li>
-              <li>Correction des problèmes de performance</li>
-            </ul>
-          </div>
-
-          <!-- Card 3: WordPress -->
-          <div class="comics-card p-8 card-border-bc">
-            <h3 class="text-2xl font-primary mb-4 uppercase text-color-bc">
-              WordPress
-            </h3>
-            <ul
-              class="list-disc pl-6 space-y-3 font-secondary text-[var(--bc)] opacity-90"
-            >
-              <li>Installation et configuration personnalisée</li>
-              <li>Création de thèmes sur mesure</li>
-              <li>Formation pour gérer votre site en autonomie</li>
-              <li>Maintenance et mises à jour</li>
-            </ul>
-          </div>
-        </div>
+      <div class="max-w-5xl mx-auto text-center">
+        <p class="font-primary text-sm uppercase tracking-[0.25em] text-color-p mb-4">
+          Offres & tarifs
+        </p>
+        <h1 class="text-5xl md:text-7xl uppercase tracking-tight mb-4">
+          Mes services
+        </h1>
       </div>
     </div>
   </section>
 
-  <!-- Section CTA -->
-  <section class="bg-[var(--b1)] pb-20" data-theme="basique">
-    <div class="max-w-3xl mx-auto text-center px-4">
-      <h2
-        class="text-4xl md:text-5xl font-primary text-[var(--bc)] mb-6 uppercase"
-      >
-        Prêt à démarrer ?
-      </h2>
-      <p
-        class="text-lg md:text-xl font-secondary text-[var(--bc)] opacity-80 mb-8 leading-relaxed"
-      >
-        Que vous ayez un projet complet ou juste besoin d'un coup de main,
-        contactez-moi et discutons de vos besoins.
-      </p>
-      <Button
-        label="Parlons de votre projet"
-        onClick="window.openContactModal()"
-        className="text-[var(--bc)]"
-        theme={theme}
-      />
+  <section class="pb-16 bg-(--b1)" data-theme="basique" id="offres">
+    <div class="mx-4 md:mx-25">
+      <div class="max-w-6xl mx-auto space-y-3">
+        {serviceOffers.map((offer: ServiceOffer, index: number) => (
+          <article class="border-b-2 border-(--bc)/20 pb-3">
+            <button
+              type="button"
+              class="w-full text-left"
+              data-service-toggle
+              data-target={`service-detail-${index}`}
+              aria-expanded="false"
+            >
+              <div class="flex flex-col md:flex-row md:items-center gap-5 md:gap-8 py-4 md:py-5 hover:bg-(--bc)/5 px-2 rounded-md transition-colors duration-200">
+                <div class="flex items-center gap-4 md:gap-5 min-w-0 flex-1">
+                  <div class="shrink-0 w-24 h-24 md:w-24 md:h-24 overflow-hidden bg-(--b1) flex items-center justify-center">
+                    <img src={offer.imgSrc} alt={offer.imgAlt} class="w-20 h-20 md:w-20 md:h-20 object-contain" />
+                  </div>
+                  <div class="min-w-0">
+                    <h3 class="text-2xl md:text-3xl uppercase mb-2">{offer.title}</h3>
+                    <p class="font-secondary text-(--bc) opacity-85 mb-0 max-w-2xl">{offer.description}</p>
+                  </div>
+                </div>
+
+                <div class="flex flex-col md:items-end gap-2 md:text-right shrink-0">
+                  <div class="font-primary text-3xl md:text-4xl text-color-p uppercase leading-none">{offer.price}</div>
+                  <div class="font-secondary text-sm uppercase tracking-[0.18em] text-(--bc) opacity-70">{offer.duration}</div>
+                  <div class="font-secondary text-sm text-(--bc) opacity-80 max-w-md">{offer.idealFor}</div>
+                </div>
+
+                <div class="flex items-center justify-end md:justify-center">
+                  <div class="flex items-center gap-2 border border-(--bc)/25 px-3 py-1 rounded-full">
+                    <span data-toggle-label class="font-secondary text-xs uppercase tracking-[0.14em] opacity-80">Voir détail</span>
+                    <svg data-toggle-icon class="w-4 h-4 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M6 9l6 6 6-6"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </button>
+
+            <div id={`service-detail-${index}`} class="hidden px-2 pb-4 md:pb-6">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
+                  <p class="font-primary text-xl uppercase mb-2">Ce qui est inclus</p>
+                  <ul class="list-disc pl-6 space-y-2 font-secondary text-(--bc) opacity-90">
+                    {offer.points.map((point: string) => (
+                      <li>{point}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <p class="font-primary text-xl uppercase mb-2">Précisions</p>
+                  <p class="font-secondary text-(--bc) opacity-90 mb-0 leading-relaxed">
+                    {offer.delivery}
+                  </p>
+                </div>
+              </div>
+
+              {offer.options && offer.options.length > 0 && (
+                <div class="mt-5 pt-4">
+                  <p class="font-primary text-xl uppercase mb-2">Possibilités de prestation</p>
+                  <div class="flex flex-wrap gap-2 mb-3">
+                    {offer.options.map((option: string) => (
+                      <span class="px-3 py-1 border border-(--bc)/30 font-secondary text-sm opacity-90">
+                        {option}
+                      </span>
+                    ))}
+                  </div>
+                  {offer.optionsNote && (
+                    <p class="font-secondary text-(--bc) opacity-80 mb-0 leading-relaxed">
+                      {offer.optionsNote}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          </article>
+        ))}
+      </div>
     </div>
   </section>
+
+  <section class="pb-20 bg-(--b1)" data-theme="basique" id="contact">
+    <div class="mx-4 md:mx-25">
+      <div class="max-w-4xl mx-auto text-center">
+        <p class="font-primary text-sm uppercase tracking-[0.25em] text-color-p mb-4">
+          Besoin d'un devis
+        </p>
+        <h2 class="text-4xl md:text-5xl uppercase mb-6">On affine ensemble</h2>
+        <Button
+          label="Me contacter"
+          onClick="window.openContactModal()"
+          className="text-(--bc)"
+          theme={theme}
+        />
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    const toggles = Array.from(document.querySelectorAll("[data-service-toggle]"));
+
+    toggles.forEach((toggle) => {
+      toggle.addEventListener("click", () => {
+        const targetId = toggle.getAttribute("data-target");
+        if (!targetId) return;
+
+        const isOpen = toggle.classList.contains("is-open");
+
+        toggles.forEach((otherToggle) => {
+          const otherTargetId = otherToggle.getAttribute("data-target");
+          if (!otherTargetId) return;
+          const otherDetail = document.getElementById(otherTargetId);
+          const otherIcon = otherToggle.querySelector("[data-toggle-icon]");
+          const otherLabel = otherToggle.querySelector("[data-toggle-label]");
+          otherToggle.classList.remove("is-open");
+          otherToggle.setAttribute("aria-expanded", "false");
+          otherDetail?.classList.add("hidden");
+          otherIcon?.classList.remove("rotate-180");
+          if (otherLabel) otherLabel.textContent = "Voir détail";
+        });
+
+        if (!isOpen) {
+          const detail = document.getElementById(targetId);
+          const icon = toggle.querySelector("[data-toggle-icon]");
+          const label = toggle.querySelector("[data-toggle-label]");
+          toggle.classList.add("is-open");
+          toggle.setAttribute("aria-expanded", "true");
+          detail?.classList.remove("hidden");
+          icon?.classList.add("rotate-180");
+          if (label) label.textContent = "Masquer";
+        }
+      });
+    });
+  </script>
 </Layout>
