@@ -242,23 +242,6 @@ const svgMap: Record<string, string> = {
     color: #181818 !important;
   }
 
-  /* === GESTION MODE SOMBRE (Overrides) === */
-  
-  /* Fond du ripple devient noir en mode sombre */
-  :global([data-theme*="-dark"]) #submit-btn::before {
-    background: #000000 !important;
-  }
-
-  /* Texte départ noir en mode sombre */
-  :global([data-theme*="-dark"]) #submit-btn .btn-text {
-    color: #181818 !important;
-  }
-
-  /* Texte devient blanc au hover en mode sombre */
-  :global([data-theme*="-dark"]) #submit-btn:hover .btn-text {
-    color: #ffffff !important;
-  }
-
   /* Disabled state pour le bouton */
   #submit-btn:disabled {
     opacity: 0.5;

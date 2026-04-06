@@ -6,7 +6,6 @@ export { siteConfig, type SiteConfig } from "./site.config";
 export {
   themes,
   getThemeConfig,
-  getHeaderContrast,
   isValidTheme,
   type ThemeName,
   type ThemesConfig,

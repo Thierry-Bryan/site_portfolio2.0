@@ -4,14 +4,8 @@
 @import "./utilities.css";
 @plugin "daisyui";
 
-/* === FOND NOIR PAR DÉFAUT POUR ÉVITER LE FLASH BLANC === */
+/* === FOND PAR DÉFAUT === */
 html {
-  background-color: #000;
-  color: #faf9f7;
-}
-
-/* Sera écrasé par le script si mode clair */
-html[data-theme]:not([data-theme*="-dark"]) {
   background-color: #faf9f7;
   color: #000;
 }
@@ -62,14 +56,6 @@ html[data-theme]:not([data-theme*="-dark"]) {
   --b1-rgb: 250, 249, 247;
   --bc: #000000;
 }
-[data-theme="vert-dark"] {
-  --p: #1ac656; 
-  --s: #1ac656; 
-  --a: #1ac656; 
-  --b1: #000000;
-  --b1-rgb: 0, 0, 0;
-  --bc: #faf9f7;
-}
 
 [data-theme="bleu"] {
   --p: #546bfd; 
@@ -78,14 +64,6 @@ html[data-theme]:not([data-theme*="-dark"]) {
   --b1: #faf9f7;
   --b1-rgb: 250, 249, 247;
   --bc: #000000;
-}
-[data-theme="bleu-dark"] {
-  --p: #546bfd; 
-  --s: #546bfd; 
-  --a: #b3d1ff; 
-  --b1: #000000;
-  --b1-rgb: 0, 0, 0;
-  --bc: #faf9f7;
 }
 
 [data-theme="rose"] {
@@ -96,14 +74,6 @@ html[data-theme]:not([data-theme*="-dark"]) {
   --b1-rgb: 250, 249, 247;
   --bc: #000000;
 }
-[data-theme="rose-dark"] {
-  --p: #fd6eff; 
-  --s: #fd6eff; 
-  --a: #fd6eff; 
-  --b1: #000000;
-  --b1-rgb: 0, 0, 0;
-  --bc: #faf9f7;
-}
 
 [data-theme="orange"] {
   --p: #ff7300; 
@@ -113,14 +83,6 @@ html[data-theme]:not([data-theme*="-dark"]) {
   --b1-rgb: 250, 249, 247;
   --bc: #000000;
 }
-[data-theme="orange-dark"] {
-  --p: #f08a2b; 
-  --s: #e7761c; 
-  --a: #f4b44a; 
-  --b1: #000000;
-  --b1-rgb: 0, 0, 0;
-  --bc: #faf9f7;
-}
 
 [data-theme="basique"] {
   --p: #ee0221; 
@@ -129,14 +91,6 @@ html[data-theme]:not([data-theme*="-dark"]) {
   --b1: #faf9f7;
   --b1-rgb: 250, 249, 247;
   --bc: #000000;
-}
-[data-theme="basique-dark"] {
-  --p: #ff005c; 
-  --s: #fa0435; 
-  --a: #f72c55; 
-  --b1: #000000;
-  --b1-rgb: 0, 0, 0;
-  --bc: #faf9f7;
 }
 
 body {
@@ -500,19 +454,10 @@ body {
   transition: all 0.3s ease;
 }
 
-/* En mode clair: noir (--bc = #000) */
-[data-theme*="-dark"] .social-icon-img {
-  filter: brightness(0) saturate(100%) invert(100%);
-}
-
 /* Effet hover via la card parente */
 .comics-card:hover .social-icon-img {
   transform: scale(1.1);
   filter: brightness(0) saturate(100%) invert(var(--icon-invert, 0%));
-}
-
-[data-theme*="-dark"] .comics-card:hover .social-icon-img {
-  filter: brightness(0) saturate(100%) invert(100%);
 }
 
 /* === SOCIAL ICONS (INLINE SVG) === */

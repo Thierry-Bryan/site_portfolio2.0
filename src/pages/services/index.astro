@@ -165,38 +165,3 @@ const services = [
   </section>
 </Layout>
 
-<style>
-  /* Inversion des images en mode sombre */
-  [data-theme="basique-dark"] img {
-    filter: invert(1);
-  }
-</style>
-
-<script>
-  // Synchroniser le thème avec le toggle
-  function updateTheme() {
-    const isDarkMode = localStorage.getItem("darkMode") === "true";
-    const sections = document.querySelectorAll("section[data-theme]");
-
-    sections.forEach((section) => {
-      const baseTheme =
-        section.getAttribute("data-theme")?.replace("-dark", "") || "basique";
-      section.setAttribute(
-        "data-theme",
-        isDarkMode ? `${baseTheme}-dark` : baseTheme
-      );
-    });
-  }
-
-  // Initialiser au chargement
-  updateTheme();
-
-  // Écouter les changements de thème
-  window.addEventListener("storage", (e) => {
-    if (e.key === "darkMode") {
-      updateTheme();
-    }
-  });
-
-  window.addEventListener("themeChanged", updateTheme);
-</script>

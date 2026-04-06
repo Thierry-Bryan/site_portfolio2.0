@@ -37,7 +37,6 @@ export const siteConfig = {
   },
   
   features: {
-    enableThemeToggle: true,
     enableContactModal: true,
   },
 } as const;

@@ -1,6 +1,5 @@
 ---
 import Button from "./Button.astro";
-import ThemeToggle from "./ThemeToggle.astro";
 import { navigationConfig } from "../config";
 import type { ThemeName } from "../types";
 
@@ -209,7 +208,6 @@ const headerClass =
     </div>
 
     <div class="navbar-end flex items-center gap-4">
-      {Astro.url.pathname !== "/" && <ThemeToggle />}
       <button
         id="contact-btn-desktop"
         onclick="window.openContactModal()"
@@ -271,8 +269,6 @@ const headerClass =
 
 <script>
   // @ts-nocheck
-  import { getHeaderContrast } from "../config/themes.config";
-
   let lastScrollY = 0;
   let ticking = false;
   let isInHero = true; // Track si on est dans le hero
@@ -295,18 +291,8 @@ const headerClass =
     const btnText = headerButton?.querySelector(".btn-text");
 
     if (headerButton && btnText) {
-      const isDarkMode = localStorage.getItem("darkMode") === "true";
-
-      if (isDarkMode) {
-        // En mode sombre: texte noir et ombre blanche
-        btnText.style.color = "#181818";
-        headerButton.style.boxShadow = "-5px 5px 0 0 #ffffff";
-      } else {
-        // En mode clair: texte blanc et ombre noire (par défaut)
-        btnText.style.color = "white";
-        // Si page projet ou page à propos, s'assurer que l'ombre est par défaut
-        headerButton.style.boxShadow = "-5px 5px 0 0 #000000";
-      }
+      btnText.style.color = "white";
+      headerButton.style.boxShadow = "-5px 5px 0 0 #000000";
     }
   }
 
@@ -316,14 +302,11 @@ const headerClass =
       const header = document.getElementById("header");
       const desktopLogo = header?.querySelector(".desktop-logo-link");
       const mobileLogo = header?.querySelector(".mobile-logo-link");
-      const isDarkMode = localStorage.getItem("darkMode") === "true";
-      const hoverColor = isDarkMode ? "white" : "black";
 
       const setHoverColor = (logo) => {
         if (!logo) return;
         logo.addEventListener("mouseenter", () => {
-          const currentDarkMode = localStorage.getItem("darkMode") === "true";
-          logo.style.color = currentDarkMode ? "white" : "black";
+          logo.style.color = "black";
         });
         logo.addEventListener("mouseleave", () => {
           logo.style.color = "var(--p)";
@@ -346,9 +329,6 @@ const headerClass =
   function getHeaderTextClass() {
     const header = document.getElementById("header");
     if (!header) return "text-[var(--bc)]";
-
-    const currentTheme = header.getAttribute("data-theme") || "ca-va-trailer";
-    const isDarkMode = localStorage.getItem("darkMode") === "true";
 
     // Simplification : on utilise toujours var(--bc) qui s'adapte automatiquement
     return "text-[var(--bc)]";
@@ -382,21 +362,14 @@ const headerClass =
       );
     });
 
-    // Gérer la couleur du logo selon le mode et la page
-    const isDarkMode = localStorage.getItem("darkMode") === "true";
-
     // Sur la page à propos, toujours utiliser --p
     if (isAProposPage) {
       if (desktopLogo) desktopLogo.style.color = "var(--p)";
       if (mobileLogo) mobileLogo.style.color = "var(--p)";
     } else {
-      // Sur les autres pages, blanc en mode sombre, couleur par défaut en mode clair
+      // Sur les autres pages, utiliser la couleur par défaut du thème
       if (desktopLogo) {
-        if (isDarkMode) {
-          desktopLogo.style.color = "white";
-        } else {
-          desktopLogo.style.color = "";
-        }
+        desktopLogo.style.color = "";
       }
     }
   }
@@ -528,7 +501,7 @@ const headerClass =
       header.style.backdropFilter = "blur(10px)";
       header.style.transform = "translateY(0)"; // Toujours visible
 
-      // Détecter la section visible et extraire le thème de base (sans -dark)
+      // Détecter la section visible
       const sections = document.querySelectorAll("section[data-theme]");
       let currentBaseTheme = null;
 
@@ -536,16 +509,13 @@ const headerClass =
         const rect = section.getBoundingClientRect();
         if (rect.top <= 100 && rect.bottom >= 100) {
           const sectionTheme = section.getAttribute("data-theme") || "";
-          currentBaseTheme = sectionTheme.replace("-dark", "");
+          currentBaseTheme = sectionTheme;
         }
       });
 
-      // Mettre à jour le thème du header avec le mode sombre si activé
+      // Mettre à jour le thème du header
       if (currentBaseTheme) {
-        const isDarkMode = localStorage.getItem("darkMode") === "true";
-        const headerTheme = isDarkMode
-          ? currentBaseTheme + "-dark"
-          : currentBaseTheme;
+        const headerTheme = currentBaseTheme;
         header.setAttribute("data-theme", headerTheme);
 
         // Mettre à jour le background avec le nouveau thème
@@ -607,40 +577,6 @@ const headerClass =
   }
 
   window.addEventListener("scroll", onScroll);
-
-  // Écouter les changements de thème pour TOUTES les pages
-  window.addEventListener("storage", (e) => {
-    if (e.key === "darkMode") {
-      // Forcer la mise à jour immédiate du logo sur la page à propos
-      if (isAProposPage) {
-        const header = document.getElementById("header");
-        const desktopLogo = header?.querySelector(".desktop-logo-link");
-        const mobileLogo = header?.querySelector(".mobile-logo-link");
-        if (desktopLogo) desktopLogo.style.color = "var(--p)";
-        if (mobileLogo) mobileLogo.style.color = "var(--p)";
-      }
-      // Mettre à jour la couleur du bouton
-      updateButtonColor();
-      updateHeaderStyle();
-      applyHeaderContrast();
-    }
-  });
-
-  // Écouter les changements via l'événement custom (pour le même onglet)
-  window.addEventListener("themeChanged", () => {
-    // Forcer la mise à jour immédiate du logo sur la page à propos
-    if (isAProposPage) {
-      const header = document.getElementById("header");
-      const desktopLogo = header?.querySelector(".desktop-logo-link");
-      const mobileLogo = header?.querySelector(".mobile-logo-link");
-      if (desktopLogo) desktopLogo.style.color = "var(--p)";
-      if (mobileLogo) mobileLogo.style.color = "var(--p)";
-    }
-    // Mettre à jour la couleur du bouton
-    updateButtonColor();
-    updateHeaderStyle();
-    applyHeaderContrast();
-  });
 
   // Initialisation au chargement
   if (isHomePage) {

@@ -156,15 +156,4 @@ export function isValidTheme(themeName: string): themeName is ThemeName {
   return themeName in themes;
 }
 
-/**
- * Obtenir le contraste du header selon le thème et le mode
- */
-export function getHeaderContrast(
-  themeName: string,
-  isDarkMode: boolean
-): "light" | "dark" {
-  const theme = getThemeConfig(themeName);
-  return isDarkMode ? theme.headerContrast.dark : theme.headerContrast.light;
-}
-
 export type ThemesConfig = typeof themes;

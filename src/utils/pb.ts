@@ -133,7 +133,6 @@ export function generateThemeCSS(themeRecord: any): string {
     };
 
     const cssVars = { ...themeRecord.css_variables };
-    const darkVars = { ...(themeRecord.dark_mode_colors || {}) };
     
     // Valeurs par défaut vitales si manquantes
     if (!cssVars.b1) cssVars.b1 = "#faf9f7";
@@ -143,28 +142,11 @@ export function generateThemeCSS(themeRecord: any): string {
         if (rgb) cssVars["b1-rgb"] = rgb;
     }
     
-    if (!darkVars.b1) darkVars.b1 = "#000000";
-    if (!darkVars.bc) darkVars.bc = "#faf9f7";
-    if (darkVars.b1 && !darkVars["b1-rgb"]) {
-        const rgb = hexToRgb(darkVars.b1);
-        if (rgb) darkVars["b1-rgb"] = rgb;
-    }
-    
-    // CSS pour le mode clair
+    // CSS pour le thème principal
     let css = `[data-theme="${themeRecord.name}"] {\n`;
     Object.entries(cssVars).forEach(([key, value]) => {
         css += `  --${key}: ${value};\n`;
     });
-    css += `}\n\n`;
-    
-    // CSS pour le mode sombre
-    // Force la création du sélecteur dark même si vide pour éviter le crash du thème
-    css += `[data-theme="${themeRecord.name}-dark"] {\n`;
-    if (Object.keys(darkVars).length > 0) {
-        Object.entries(darkVars).forEach(([key, value]) => {
-            css += `  --${key}: ${value};\n`;
-        });
-    }
     css += `}\n`;
     
     console.log('CSS généré pour', themeRecord.name, ':', css.length, 'caractères');

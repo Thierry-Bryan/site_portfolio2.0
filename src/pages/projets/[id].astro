@@ -304,8 +304,7 @@ const ogImage = heroImageUrl || "/images/og-image.jpg";
       // Fonction pour initialiser le thème de la page projet
       function initializeProjetTheme(currentTheme) {
         const htmlElement = document.documentElement;
-        const isDarkMode = localStorage.getItem("darkMode") === "true";
-        const themeToApply = isDarkMode ? currentTheme + "-dark" : currentTheme;
+        const themeToApply = currentTheme;
         htmlElement.setAttribute("data-theme", themeToApply);
 
         // Mettre à jour le data-theme du header et footer avec le thème du projet
@@ -374,11 +373,7 @@ const ogImage = heroImageUrl || "/images/og-image.jpg";
         heroDevice.style.opacity = "0";
         await new Promise((resolve) => setTimeout(resolve, 500));
 
-        // Gérer le mode sombre
-        const isDarkMode = localStorage.getItem("darkMode") === "true";
-        const themeToApply = isDarkMode
-          ? project.theme + "-dark"
-          : project.theme;
+        const themeToApply = project.theme;
 
         // Mise à jour du thème global
         const htmlElement = document.documentElement;
@@ -558,17 +553,14 @@ const ogImage = heroImageUrl || "/images/og-image.jpg";
         }
       });
 
-      // Écouter les changements de mode sombre/clair pour mettre à jour les flèches
+      // Mettre à jour les flèches lors d'un changement de thème global
       function handleThemeChange() {
         // Sauvegarder la position de scroll avant les changements
         const scrollPosition = window.scrollY;
 
         const currentSlug = window.location.pathname.split("/").pop();
         if (projetsData[currentSlug]) {
-          const isDarkMode = localStorage.getItem("darkMode") === "true";
-          const themeToApply = isDarkMode
-            ? projetsData[currentSlug].theme + "-dark"
-            : projetsData[currentSlug].theme;
+          const themeToApply = projetsData[currentSlug].theme;
           updateArrowsTheme(themeToApply);
         }
 
@@ -577,14 +569,6 @@ const ogImage = heroImageUrl || "/images/og-image.jpg";
           window.scrollTo(0, scrollPosition);
         });
       }
-
-      // Observer les changements de localStorage pour le mode sombre
-      window.addEventListener("storage", (e) => {
-        if (e.key === "darkMode") {
-          // Petit délai pour laisser le système de thème global se terminer
-          setTimeout(() => handleThemeChange(), 50);
-        }
-      });
 
       // Observer les changements d'attribut data-theme sur documentElement
       const themeObserver = new MutationObserver((mutations) => {

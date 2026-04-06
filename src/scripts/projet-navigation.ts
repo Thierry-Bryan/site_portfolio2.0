@@ -113,8 +113,7 @@ export function getCurrentProjetId(): string | null {
  */
 export function initializeProjetTheme(currentTheme: string): void {
   const htmlElement = document.documentElement;
-  const isDarkMode = localStorage.getItem("darkMode") === "true";
-  const themeToApply = isDarkMode ? currentTheme + "-dark" : currentTheme;
+  const themeToApply = currentTheme;
   htmlElement.setAttribute("data-theme", themeToApply);
 
   // Mettre à jour le data-theme du header et footer avec le thème du projet
@@ -189,9 +188,7 @@ export async function handleArrowClick(
   heroDevice.style.opacity = "0";
   await new Promise((resolve) => setTimeout(resolve, 500));
 
-  // Gérer le mode sombre
-  const isDarkMode = localStorage.getItem("darkMode") === "true";
-  const themeToApply = isDarkMode ? newProjet.theme + "-dark" : newProjet.theme;
+  const themeToApply = newProjet.theme;
 
   // Mise à jour du thème global
   const htmlElement = document.documentElement;
@@ -479,8 +476,7 @@ export function listenThemeChanges(projetsData: ProjetsDataMap): void {
     if (!currentId || !projetsData[currentId]) return;
     
     const currentProjet = projetsData[currentId];
-    const isDarkMode = localStorage.getItem("darkMode") === "true";
-    const themeToApply = isDarkMode ? currentProjet.theme + "-dark" : currentProjet.theme;
+    const themeToApply = currentProjet.theme;
     
     // Mettre à jour header, footer et flèches avec le thème du projet
     updateHeaderFooter(themeToApply);

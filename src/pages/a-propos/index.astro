@@ -225,21 +225,17 @@ const categoryOrder = ["Design", "Frontend", "Productivité"];
                   <div class="space-y-3 mt-8">
                     {techs.map((tech) => {
                       const logoUrl = getFileUrl(tech, tech.logo);
-                      const logoDarkUrl = tech.logo_dark ? getFileUrl(tech, tech.logo_dark) : null;
-                      const isDarkMode = false; // Sera géré par le script client
-                      const currentLogo = logoDarkUrl ? logoUrl : logoUrl;
                       
                       return (
                         <button
                           type="button"
                           class="w-full flex items-center gap-4 p-4 border-2 border-[var(--bc)] bg-[var(--b1)] hover:bg-[var(--p)] hover:border-[var(--bc)] group transition-all duration-300 cursor-pointer relative overflow-hidden shadow-[-4px_4px_0_0_var(--p)] hover:shadow-[-4px_4px_0_0_var(--bc)]"
-                          onclick={`openCompetenceModal('${tech.name}', '${logoUrl}', '${tech.category}', '${tech.description?.replace(/'/g, "\\'")}', 'orange', '${logoDarkUrl || ""}')`}
+                          onclick={`openCompetenceModal('${tech.name}', '${logoUrl}', '${tech.category}', '${tech.description?.replace(/'/g, "\\'")}', 'orange')`}
                         >
                           <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-transparent group-hover:scale-110 transition-transform duration-300 relative z-10">
                             <img
                               src={logoUrl}
                               data-logo-light={logoUrl}
-                              data-logo-dark={logoDarkUrl || logoUrl}
                               data-tech-name={tech.name}
                               alt={tech.name}
                               class="tech-logo max-w-full max-h-full object-contain"
@@ -368,24 +364,19 @@ const categoryOrder = ["Design", "Frontend", "Productivité"];
         rect.bottom >= window.innerHeight / 2
       ) {
         const sectionTheme = section.getAttribute("data-theme") || "";
-        currentBaseTheme = sectionTheme.replace("-dark", "");
+        currentBaseTheme = sectionTheme;
       }
     });
 
     // Mettre à jour la couleur de la scrollbar
     if (currentBaseTheme) {
-      const isDarkMode = localStorage.getItem("darkMode") === "true";
-      const scrollbarTheme = isDarkMode
-        ? currentBaseTheme + "-dark"
-        : currentBaseTheme;
-
       // Stocker le thème actuel pour le modal
       currentSectionTheme = currentBaseTheme;
 
       // Appliquer le thème au html pour que les variables CSS soient disponibles
       document.documentElement.setAttribute(
         "data-scrollbar-theme",
-        scrollbarTheme,
+        currentBaseTheme,
       );
 
       // Mettre à jour les couleurs de la scrollbar via les variables CSS
@@ -470,15 +461,6 @@ const categoryOrder = ["Design", "Frontend", "Productivité"];
   const throttledUpdateScrollbar = throttle(updateScrollbarTheme, 100);
   window.addEventListener("scroll", throttledUpdateScrollbar);
 
-  // Écouter les changements de thème
-  window.addEventListener("storage", (e) => {
-    if (e.key === "darkMode") {
-      updateScrollbarTheme();
-    }
-  });
-
-  window.addEventListener("themeChanged", updateScrollbarTheme);
-
   // Initialisation au chargement
   document.addEventListener("DOMContentLoaded", updateScrollbarTheme);
   updateScrollbarTheme();
@@ -489,14 +471,9 @@ const categoryOrder = ["Design", "Frontend", "Productivité"];
     const modalCard = document.getElementById("modal-card");
 
     if (modal && modalCard && currentSectionTheme) {
-      const isDarkMode = localStorage.getItem("darkMode") === "true";
-      const modalTheme = isDarkMode
-        ? currentSectionTheme + "-dark"
-        : currentSectionTheme;
-
       // Appliquer le thème au modal
-      modal.setAttribute("data-theme", modalTheme);
-      modalCard.setAttribute("data-theme", modalTheme);
+      modal.setAttribute("data-theme", currentSectionTheme);
+      modalCard.setAttribute("data-theme", currentSectionTheme);
     }
   }
 
@@ -513,37 +490,13 @@ const categoryOrder = ["Design", "Frontend", "Productivité"];
     }
   };
 
-  // Écouter les changements de thème pour mettre à jour le modal s'il est ouvert
-  window.addEventListener("storage", (e) => {
-    if (e.key === "darkMode") {
-      const modal = document.getElementById("contact-modal");
-      if (modal && modal.classList.contains("show")) {
-        applyModalTheme();
-      }
-    }
-  });
-
-  window.addEventListener("themeChanged", () => {
-    const modal = document.getElementById("contact-modal");
-    if (modal && modal.classList.contains("show")) {
-      applyModalTheme();
-    }
-  });
-
-  // Gérer le changement de logo selon le thème clair/sombre
+  // Gérer les logos de technologies
   function updateTechLogos() {
-    const isDarkMode = localStorage.getItem("darkMode") === "true";
     const logos = document.querySelectorAll(".tech-logo");
     
     logos.forEach((logo) => {
       const lightLogo = logo.getAttribute("data-logo-light");
-      const darkLogo = logo.getAttribute("data-logo-dark");
-      
-      if (isDarkMode && darkLogo && darkLogo !== lightLogo) {
-        logo.src = darkLogo;
-      } else {
-        logo.src = lightLogo;
-      }
+      logo.src = lightLogo;
     });
   }
 
@@ -551,12 +504,4 @@ const categoryOrder = ["Design", "Frontend", "Productivité"];
   document.addEventListener("DOMContentLoaded", updateTechLogos);
   updateTechLogos();
 
-  // Écouter les changements de thème pour mettre à jour les logos
-  window.addEventListener("storage", (e) => {
-    if (e.key === "darkMode") {
-      updateTechLogos();
-    }
-  });
-
-  window.addEventListener("themeChanged", updateTechLogos);
 </script>

@@ -41,24 +41,6 @@
   height: 350%;
 }
 
-/* === GESTION MODE SOMBRE (Ripple Noir) === */
-
-/* Configuration du cercle en noir pour le mode sombre */
-[data-theme*="-dark"] .btn-gradient-primary::before {
-  background: #000000 !important;
-}
-
-/* Texte noir par défaut en mode sombre */
-[data-theme*="-dark"] .btn-gradient-primary .btn-text-white {
-  color: #181818 !important;
-  transition: color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
-}
-
-/* Texte blanc au hover en mode sombre */
-[data-theme*="-dark"] .btn-gradient-primary:hover .btn-text-white {
-  color: #ffffff !important;
-}
-
 /* === MODAL STYLES === */
 .modal-overlay-bg {
   background: rgba(0, 0, 0, 0.85);

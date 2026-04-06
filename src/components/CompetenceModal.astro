@@ -82,25 +82,19 @@
 </div>
 
 <script is:inline>
-  function openCompetenceModal(name, logo, category, description, theme, logoDark) {
+  function openCompetenceModal(name, logo, category, description, theme) {
     const modal = document.getElementById("competence-modal");
     const modalCard = document.getElementById("competence-modal-card");
     const modalContainer = document.getElementById("competence-modal-container");
 
     if (modal && modalCard && modalContainer) {
       // Appliquer le thème au modal
-      const isDarkMode = localStorage.getItem("darkMode") === "true";
-      const modalTheme = isDarkMode ? theme + "-dark" : theme;
-
-      modal.setAttribute("data-theme", modalTheme);
-      modalCard.setAttribute("data-theme", modalTheme);
-
-      // Choisir le bon logo selon le mode
-      const currentLogo = (isDarkMode && logoDark && logoDark !== "") ? logoDark : logo;
+      modal.setAttribute("data-theme", theme);
+      modalCard.setAttribute("data-theme", theme);
 
       // Remplir le contenu
       const logoImg = document.getElementById("competence-modal-logo");
-      logoImg.src = currentLogo;
+      logoImg.src = logo;
       logoImg.alt = name;
       
       document.getElementById("competence-modal-name").textContent = name;
